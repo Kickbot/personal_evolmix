@@ -24,12 +24,6 @@ export function Header() {
       ? techNavigation
       : navigation.filter((item) => item.roles.includes(role));
 
-  // TODO: заменить на данные из API
-  // const badges: Record<string, number> = {
-  //   recipes: 3,
-  //   tasks: 5,
-  // };
-
   const handleLogout = () => {
     localStorage.removeItem('access_token');
     setCurrentUser(null);
@@ -49,13 +43,7 @@ export function Header() {
             {menuItems.map((item) => (
               <li key={item.to}>
                 <NavLink to={item.to}>
-                  {/* <img src={item.icon} alt="" className="nav-link-icon" /> */}
                   <span>{item.label}</span>
-                  {/* {item.badgeKey && badges[item.badgeKey] > 0 && (
-                    <span className="nav-link-badge">
-                      {badges[item.badgeKey]}
-                    </span>
-                  )} */}
                 </NavLink>
               </li>
             ))}
