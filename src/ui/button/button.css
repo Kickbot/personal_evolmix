@@ -70,14 +70,15 @@
 
 .secondary {
   color: var(--main-text-color);
-  background-color: #fff;
+  background-color: #F1F1F1;
+  border: 1px solid #F1F1F1;
   border-radius: var(--bs-border-radius);
   font-weight: 500;
   &.has-icon {
     padding: 4px 24px;
   }
   &:hover {
-    background-color: #f0f0f0;
+    background-color: #eaeff2;
   }
 }
 

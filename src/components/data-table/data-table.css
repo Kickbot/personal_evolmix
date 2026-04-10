@@ -121,9 +121,10 @@
   }
 }
 
-.dt-details-data {
-  background-color: #eaeff2;
-  border-radius: 10px;
+.dt-details-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .dt-item.is-open .dt-details {

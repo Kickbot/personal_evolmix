@@ -1,5 +1,7 @@
 import { ROLE_NAMES } from 'const/roles';
 import type { IUserListItem } from 'types/users.types';
+import { Button } from 'ui/button';
+import { ArchiveIcon, CloseIcon } from 'ui/icons';
 import { formatDateTime } from 'utils/date';
 
 export function UserDetails({ user }: { user: IUserListItem }) {
@@ -35,9 +37,18 @@ export function UserDetails({ user }: { user: IUserListItem }) {
               {formatDateTime(user.registration_date)}
             </p>
             <p>
-              <strong>Последний вход:</strong>{' '}
-              {formatDateTime(user.last_login)}
+              <strong>Последний вход:</strong> {formatDateTime(user.last_login)}
             </p>
+          </div>
+        </div>
+        <div className="col-12">
+          <div className="dt-details-btn">
+            <Button className="bordered has-icon" iconAfter={<ArchiveIcon />}>
+              Переместить в архив
+            </Button>
+            <Button className="secondary has-icon" iconBefore={<CloseIcon />}>
+              Закрыть
+            </Button>
           </div>
         </div>
       </div>
