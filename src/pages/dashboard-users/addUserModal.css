@@ -1,0 +1,95 @@
+.add-user-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.add-user-form__fields {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+.add-user-form__left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.add-user-form__photo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #EAEFF2;
+  border-radius: 10px;
+  overflow: hidden;
+  padding: 24px;
+  max-width: 300px;
+}
+
+.add-user-form__photo-area {
+  width: 100%;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: #fff;
+  transition: border-color 0.2s;
+  border-radius: 10px;
+  &:hover {
+    border-color: var(--main-color);
+  }
+}
+
+.add-user-form__photo-label {
+  margin-top: 24px;
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--second-text-color);
+}
+
+#addUserModal {
+  & .modal-header {
+    position: relative;
+    padding: 0 0 24px 0;
+    border-bottom: 2px solid var(--main-color);
+  }
+  & .modal-title {
+    font-size: 18px;
+    line-height: 1;
+  }
+  & .modal-content {
+    border-radius: 20px;
+    padding: 24px;
+  }
+  & .modal-body {
+    padding: 24px 0 0;
+  }
+  & .btn-close {
+    position: absolute;
+    font-size: 6px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1px solid #292c2e;
+    color: #fff;
+    opacity: 1;
+    top: 8px;
+    right: 8px;
+    padding: 0;
+    box-sizing: border-box;
+    box-shadow: none;
+    &:hover {
+      background-color: var(--main-color-hover);
+    }
+  }
+}
+
+@media (min-width: 576px) {
+  #addUserModal .modal-dialog {
+    max-width: 672px;
+  }
+}

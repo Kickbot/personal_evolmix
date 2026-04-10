@@ -1,0 +1,15 @@
+.form-label.required {
+  position: relative;
+  display: inline-block;
+  padding-right: 10px;
+}
+
+.form-label.required::after {
+  content: '*';
+  position: absolute;
+  top: -2px;
+  right: 0;
+  color: #fe322b;
+  font-size: 14px;
+  line-height: 1;
+}

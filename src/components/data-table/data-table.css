@@ -1,0 +1,131 @@
+.dt {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dt-header,
+.dt-row {
+  display: grid;
+  grid-template-columns: var(--dt-columns);
+  align-items: center;
+}
+
+.dt-header {
+  min-height: 56px;
+  border-radius: 10px;
+  background-color: #eaeff2;
+}
+
+.dt-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dt-item {
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: #eaeff2;
+}
+
+.dt-row {
+  width: 100%;
+  min-height: 48px;
+  border: 0;
+  padding: 0;
+  border-radius: 10px;
+  background-color: #fafafa;
+  text-align: left;
+  outline: none;
+  transition:
+    background-color 0.2s ease-in-out,
+    transform 0.2s ease-in-out;
+  &:hover {
+    background-color: #e6f1f5;
+  }
+}
+
+.dt-cell {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  font-size: 14px;
+  color: var(--main-text-color);
+  height: 100%;
+  padding: 0 24px;
+}
+
+.dt-header .dt-cell {
+  position: relative;
+  font-weight: 500;
+  font-size: 12px;
+  border-left: 1px solid #c9d1d4;
+}
+
+.dt-header .dt-cell:first-child {
+  border-left: none;
+}
+
+.dt-row .dt-cell:first-child {
+  font-weight: 600;
+}
+
+.dt-cell--date {
+  width: 120px;
+  min-width: 120px;
+  max-width: 120px;
+  text-align: center;
+}
+
+.dt-empty {
+  padding: 16px 24px;
+  border-radius: 10px;
+  background-color: #fafafa;
+  font-size: 14px;
+}
+
+.dt-details-wrap {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  margin-top: 0;
+  transition:
+    max-height 0.3s ease-in-out,
+    opacity 0.3s ease-in-out,
+    margin-top 0.3s ease-in-out;
+}
+
+.dt-item.is-open {
+  & .dt-details-wrap {
+    background-color: #fff;
+    border: 2px solid #eaeff2;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    max-height: 340px;
+    opacity: 1;
+  }
+  & .dt-row {
+    background-color: #eaeff2;
+  }
+}
+
+.dt-details {
+  background-color: #fff;
+  transform: translateY(-6px);
+  transition: 0.3s ease-in-out;
+  & p {
+    margin-bottom: 6px;
+    font-size: 14px;
+  }
+}
+
+.dt-details-data {
+  background-color: #eaeff2;
+  border-radius: 10px;
+}
+
+.dt-item.is-open .dt-details {
+  transform: translateY(0);
+}

@@ -1,0 +1,75 @@
+.register-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 669px;
+  background-color: #fff;
+  padding: 32px;
+  border-radius: 20px;
+  box-shadow: 0 0 48px rgba(0, 0, 0, 0.15);
+  font-size: 14px;
+  & h2 {
+    width: 100%;
+  }
+  & .form-control,
+  & .form-select {
+    line-height: 1;
+    color: var(--main-text-color) !important;
+    font-size: 14px;
+    padding: 12px 16px;
+    border: 1px solid var(--bs-border-color);
+    box-shadow: none;
+  }
+  & .form-control:hover,
+  & .form-control:focus,
+  & .form-select:hover,
+  & .form-select:focus,
+  & .password-field:hover .form-control,
+  & .password-field:focus-within .form-control {
+    border: 1px solid var(--main-text-color);
+    box-shadow: none;
+  }
+}
+
+.form-label.required {
+  position: relative;
+  display: inline-block;
+  padding-right: 10px;
+}
+
+.form-label.required::after {
+  content: '*';
+  position: absolute;
+  top: -2px;
+  right: 0;
+  color: #fe322b;
+  font-size: 14px;
+  line-height: 1;
+}
+
+@media (max-width: 767.98px) {
+  .field-role { order: 1; }
+  .field-email { order: 2; }
+  .field-firstname { order: 3; }
+  .field-lastname { order: 4; }
+  .field-middlename { order: 5; }
+  .field-password { order: 6; }
+  .field-confirm { order: 7; }
+  .field-error { order: 8; }
+  .field-submit { order: 9; }
+}
+
+.register-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  gap: 8px;
+  font-size: 16px;
+  margin-top: 16px;
+  & span {
+    color: var(--second-text-color);
+  }
+}

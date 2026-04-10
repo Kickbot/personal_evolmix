@@ -1,0 +1,14 @@
+{
+  "register": {
+    "createUser": "auth/register"
+  },
+  "auth": {
+    "login": "auth/login"
+  },
+  "user": {
+    "getCurrentUser": "user/me",
+    "getAllUser": "user/",
+    "getSearchUser": "user/search",
+    "patchUserPassword": "user/password/{user_id}"
+  }
+}
