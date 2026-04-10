@@ -79,7 +79,7 @@ function Register() {
               placeholder="Выберите должность"
               options={[
                 { value: 'admin', label: 'Администратор' },
-                { value: 'doctor', label: 'Врач' },
+                { value: 'doctor', label: 'Доктор' },
                 { value: 'pharmacist', label: 'Фармацевт' },
                 { value: 'tech', label: 'Оператор' },
               ]}

@@ -1,16 +1,15 @@
 ﻿import ROLES, { ROLE_NAMES } from 'const/roles';
-import type { IUserListItem } from 'types/users.types';
 import { Button } from 'ui/button';
 import { ArchiveIcon } from 'ui/icons';
 import Loader from 'ui/loader';
 import addPlusIcon from 'assets/icons/addPlusIcon.svg';
-import { formatDate, formatDateTime } from 'utils/date';
 import { DataTable } from 'components/data-table';
-import type { ColumnDef } from 'components/data-table';
 import { SearchInput } from 'components/search-input';
 import { PageToolbar } from 'components/page-toolbar';
 import { Pagination } from 'components/pagination';
 import { AddUserModal } from './AddUserModal';
+import { userColumns } from './userColumns';
+import { UserDetails } from './UserDetails';
 import { useUsers } from './useUsers';
 import './users.css';
 
@@ -20,73 +19,6 @@ const TABS = [
   { key: ROLES.PHARMACIST, id: 'pharmacists-pane' },
   { key: ROLES.OPERATOR, id: 'operators-pane' },
 ];
-
-const columns: ColumnDef<IUserListItem>[] = [
-  {
-    key: 'name',
-    header: 'ФИО',
-    sortable: true,
-    width: '1.2fr',
-    render: (u) => `${u.last_name} ${u.first_name} ${u.middle_name}`,
-  },
-  {
-    key: 'email',
-    header: 'Email',
-    width: '1.4fr',
-    render: (u) => u.email_address,
-  },
-  {
-    key: 'date',
-    header: 'Дата',
-    sortable: true,
-    width: '120px',
-    className: 'dt-cell--date',
-    render: (u) => formatDate(u.registration_date),
-  },
-];
-
-function UserDetails({ user }: { user: IUserListItem }) {
-  return (
-    <div className="dt-details p-3">
-      <div className="row">
-        <div className="col-md-6">
-          <div className="dt-details-data p-3">
-            <p>
-              <strong>Фамилия:</strong> {user.last_name}
-            </p>
-            <p>
-              <strong>Имя:</strong> {user.first_name}
-            </p>
-            <p>
-              <strong>Отчество:</strong> {user.middle_name}
-            </p>
-            <p>
-              <strong>Email:</strong> {user.email_address}
-            </p>
-          </div>
-        </div>
-        <div className="col-md-6">
-          <div className="dt-details-data p-3">
-            <p>
-              <strong>Роль:</strong> {ROLE_NAMES[user.role] ?? user.role}
-            </p>
-            <p>
-              <strong>Статус:</strong> {user.status}
-            </p>
-            <p>
-              <strong>Дата регистрации:</strong>{' '}
-              {formatDateTime(user.registration_date)}
-            </p>
-            <p>
-              <strong>Последний вход:</strong>{' '}
-              {formatDateTime(user.last_login)}
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 function Users() {
   const {
@@ -181,7 +113,7 @@ function Users() {
           >
             {activeTab === tab.key && (
               <DataTable
-                columns={columns}
+                columns={userColumns}
                 data={displayedUsers}
                 keyExtractor={(u) => u.id}
                 expandedId={expandedUserId}

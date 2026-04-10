@@ -124,7 +124,7 @@ export function AddUserModal({ onSuccess }: AddUserModalProps) {
                     placeholder="– Выбрать из списка –"
                     options={[
                       { value: 'admin', label: 'Администратор' },
-                      { value: 'doctor', label: 'Врач' },
+                      { value: 'doctor', label: 'Доктор' },
                       { value: 'pharmacist', label: 'Фармацевт' },
                       { value: 'tech', label: 'Оператор' },
                     ]}

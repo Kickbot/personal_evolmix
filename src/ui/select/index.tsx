@@ -23,7 +23,7 @@ placeholder — автоматически рендерит <option value="" dis
     Выберите должность
   </option>
   <option value="admin">Администратор</option>
-  <option value="doctor">Врач</option>
+  <option value="doctor">Доктор</option>
   <option value="pharmacist">Фармацевт</option>
   <option value="tech">Оператор</option>
 </Select> */}
