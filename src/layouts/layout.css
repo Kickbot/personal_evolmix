@@ -6,7 +6,7 @@
 
 .dashboard-content {
   background-color: #e5edf5;
-  padding: 40px;
+  padding: 30px;
   width: 100%;
   min-width: fit-content;
   flex-grow: 1;
@@ -16,7 +16,7 @@
     flex-direction: column;
     width: 100%;
     background-color: #fff;
-    padding: 40px;
+    padding: 24px;
     height: 100%;
     min-height: 100%;
     border-radius: 20px;

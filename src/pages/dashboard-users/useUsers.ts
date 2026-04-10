@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { user as userApi } from 'api';
 import ROLES from 'const/roles';
 import { useDebounce } from 'hooks/useDebounce';
@@ -16,12 +16,10 @@ export function useUsers() {
   const [searchName, setSearchName] = useState('');
   const [searchResults, setSearchResults] = useState<IUserListItem[]>([]);
   const [isSearchLoading, setIsSearchLoading] = useState(false);
-  const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [expandedUserId, setExpandedUserId] = useState<string | null>(null);
   const [sortField, setSortField] = useState<string | undefined>();
   const [sortDirection, setSortDirection] = useState<SortDirection>('none');
-  const searchRef = useRef<HTMLDivElement | null>(null);
   const debouncedSearchName = useDebounce(searchName.trim(), 300);
 
   const handleTabChange = (tabKey: string) => {
@@ -48,7 +46,6 @@ export function useUsers() {
   };
 
   const handleSearchResultClick = (user: IUserListItem) => {
-    setIsSearchFocused(false);
     setExpandedUserId(user.id);
 
     if (user.role !== activeTab) {
@@ -108,21 +105,6 @@ export function useUsers() {
       .finally(() => setIsSearchLoading(false));
   }, [archivedStatus, debouncedSearchName]);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (!searchRef.current?.contains(event.target as Node)) {
-        setIsSearchFocused(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-
-  const showSearchDropdown = isSearchFocused;
   const visibleSearchResults = debouncedSearchName ? searchResults : [];
 
   const displayedUsers =
@@ -149,10 +131,6 @@ export function useUsers() {
     searchName,
     setSearchName,
     isSearchLoading,
-    isSearchFocused,
-    setIsSearchFocused,
-    searchRef,
-    showSearchDropdown,
     visibleSearchResults,
     displayedUsers,
     expandedUserId,

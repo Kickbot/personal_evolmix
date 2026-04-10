@@ -2,12 +2,13 @@
 import type { IUserListItem } from 'types/users.types';
 import { Button } from 'ui/button';
 import { ArchiveIcon } from 'ui/icons';
-import { Input } from 'ui/input';
 import Loader from 'ui/loader';
 import addPlusIcon from 'assets/icons/addPlusIcon.svg';
 import { formatDate, formatDateTime } from 'utils/date';
 import { DataTable } from 'components/data-table';
 import type { ColumnDef } from 'components/data-table';
+import { SearchInput } from 'components/search-input';
+import { PageToolbar } from 'components/page-toolbar';
 import { Pagination } from 'components/pagination';
 import { AddUserModal } from './AddUserModal';
 import { useUsers } from './useUsers';
@@ -95,9 +96,6 @@ function Users() {
     searchName,
     setSearchName,
     isSearchLoading,
-    setIsSearchFocused,
-    searchRef,
-    showSearchDropdown,
     visibleSearchResults,
     displayedUsers,
     expandedUserId,
@@ -131,69 +129,31 @@ function Users() {
             </li>
           ))}
         </ul>
-        <div className="users-header">
-          <div ref={searchRef} className="users-search-dropdown-anchor">
-            <div className="users-search-box">
-              <Input
-                id="usersSearch"
-                className="users-search"
-                type="text"
-                value={searchName}
-                wrapperClassName="users-search-wrapper"
-                autoComplete="off"
-                placeholder="Поиск"
-                aria-label="Search"
-                onChange={(event) => setSearchName(event.target.value)}
-                onFocus={() => setIsSearchFocused(true)}
-              />
-
-              {searchName.trim() ? (
-                <button
-                  type="button"
-                  className="users-search-action"
-                  aria-label="Очистить поиск"
-                  onClick={() => setSearchName('')}
-                >
-                  +
-                </button>
-              ) : (
-                <span
-                  className="users-search-action users-search-action--icon"
-                  aria-hidden="true"
-                />
-              )}
-            </div>
-            {showSearchDropdown ? (
-              <div className="users-search-dropdown">
-                {isSearchLoading ? (
-                  <div className="users-search-dropdown__state">
-                    Идет поиск...
-                  </div>
-                ) : visibleSearchResults.length > 0 ? (
-                  visibleSearchResults.map((user) => (
-                    <button
-                      key={user.id}
-                      type="button"
-                      className="users-search-dropdown__item"
-                      onClick={() => handleSearchResultClick(user)}
-                    >
-                      <span className="users-search-dropdown__role">
-                        {ROLE_NAMES[user.role] ?? user.role}
-                      </span>
-                      <span className="users-search-dropdown__name">
-                        <strong>{user.last_name}</strong> {user.first_name}{' '}
-                        {user.middle_name}
-                      </span>
-                    </button>
-                  ))
-                ) : (
-                  <div className="users-search-dropdown__state">
-                    Нет результатов
-                  </div>
-                )}
-              </div>
-            ) : null}
-          </div>
+        <PageToolbar>
+          <SearchInput
+            value={searchName}
+            onChange={setSearchName}
+            isLoading={isSearchLoading}
+          >
+            {visibleSearchResults.length > 0
+              ? visibleSearchResults.map((user) => (
+                  <button
+                    key={user.id}
+                    type="button"
+                    className="users-search-dropdown__item"
+                    onClick={() => handleSearchResultClick(user)}
+                  >
+                    <span className="users-search-dropdown__role">
+                      {ROLE_NAMES[user.role] ?? user.role}
+                    </span>
+                    <span className="users-search-dropdown__name">
+                      <strong>{user.last_name}</strong> {user.first_name}{' '}
+                      {user.middle_name}
+                    </span>
+                  </button>
+                ))
+              : null}
+          </SearchInput>
           <Button
             className="primary has-icon"
             iconBefore={<img src={addPlusIcon} alt="add" />}
@@ -209,7 +169,7 @@ function Users() {
           >
             {archivedStatus === 'archived' ? 'Активные' : 'Архив'}
           </Button>
-        </div>
+        </PageToolbar>
       </div>
       <div className="tab-content">
         {TABS.map((tab) => (
