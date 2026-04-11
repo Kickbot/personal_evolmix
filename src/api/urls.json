@@ -9,6 +9,36 @@
     "getCurrentUser": "user/me",
     "getAllUser": "user/",
     "getSearchUser": "user/search",
-    "patchUserPassword": "user/password/{user_id}"
+    "getUser": "user/{user_id}",
+    "patchUser": "user/{user_id}",
+    "patchUserPassword": "user/password/{user_id}",
+    "deleteUser": "user/{user_id}"
+  },
+  "patient": {
+    "getAllPatient": "patient/",
+    "getSearchPatient": "patient/search",
+    "getPatientById": "patient/{patient_id}",
+    "postCreatePatient": "patient/",
+    "patchPatient": "patient/{patient_id}",
+    "deletePatient": "patient/{patient_id}"
+  },
+  "task": {
+    "getAllTask": "task/",
+    "getSearchTask": "task/search",
+    "patchTask": "task/{task_id}"
+  },
+  "recipe": {
+    "getAllRecipe": "recipe/",
+    "getSearchRecipe": "recipe/search",
+    "patchRecipe": "recipe/{recipe_id}"
+  },
+  "substance": {
+    "getAllSubstance": "substance/",
+    "getSearchSubstance": "substance/search",
+    "patchSubstance": "substance/{substance_id}"
+  },
+  "warehouse": {
+    "getAllWarehouse": "warehouse/",
+    "getSearchWarehouse": "warehouse/search"
   }
 }

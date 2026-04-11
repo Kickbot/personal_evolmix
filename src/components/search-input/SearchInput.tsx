@@ -42,6 +42,7 @@ export function SearchInput({
       <div className="search-input-box">
         <Input
           className="search-input-field"
+          id={`search-input`}
           type="text"
           value={value}
           wrapperClassName="search-input-wrapper"

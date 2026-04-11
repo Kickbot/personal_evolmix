@@ -20,7 +20,7 @@ const TABS = [
   { key: ROLES.OPERATOR, id: 'operators-pane' },
 ];
 
-function Users() {
+export default function Users() {
   const {
     isLoading,
     activeTab,
@@ -137,5 +137,3 @@ function Users() {
     </>
   );
 }
-
-export default Users;

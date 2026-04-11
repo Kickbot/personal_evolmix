@@ -1,4 +1,4 @@
-import { post, get } from './client'
+import { post, get, patch, remove } from './client'
 import URLS from './urls.json'
 
 export const auth = {
@@ -10,6 +10,15 @@ export const user = {
   getCurrent: () => get(URLS.user.getCurrentUser, {}, { skipAuthRedirect: true }),
   getAll: bind(get, URLS.user.getAllUser),
   search: bind(get, URLS.user.getSearchUser),
+}
+
+export const patient = {
+  getAllPatient: bind(get, URLS.patient.getAllPatient),
+  searchPatient: bind(get, URLS.patient.getSearchPatient),
+  getPatientById: bind(get, URLS.patient.getPatientById),
+  createPatient: bind(post, URLS.patient.postCreatePatient),
+  patchPatient: bind(patch, URLS.patient.patchPatient),
+  deletePatient: bind(remove, URLS.patient.deletePatient),
 }
 
 function bind(f, arg) {

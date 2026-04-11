@@ -91,6 +91,7 @@ export function AddUserModal({ onSuccess }: AddUserModalProps) {
                     label="Имя"
                     placeholder="Имя"
                     required
+                    autoComplete="off"
                     error={errors.first_name?.message}
                   />
                   <Input
@@ -101,6 +102,7 @@ export function AddUserModal({ onSuccess }: AddUserModalProps) {
                     label="Фамилия"
                     placeholder="Фамилия"
                     required
+                    autoComplete="off"
                     error={errors.last_name?.message}
                   />
                   <Input
