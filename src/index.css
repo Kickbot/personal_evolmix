@@ -199,3 +199,8 @@ hr {
     display: block;
   }
 }
+
+.alert {
+  border-radius: 10px;
+  font-size: 14px;
+}

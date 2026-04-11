@@ -23,10 +23,11 @@ const TABS = [
 export default function Users() {
   const {
     isLoading,
+    error,
     activeTab,
     archivedStatus,
     searchName,
-    setSearchName,
+    handleSearchNameChange,
     isSearchLoading,
     visibleSearchResults,
     displayedUsers,
@@ -35,6 +36,7 @@ export default function Users() {
     sortDirection,
     handleTabChange,
     handleArchiveToggle,
+    handleArchiveUser,
     handleRowClick,
     handleSearchResultClick,
     handleSort,
@@ -64,7 +66,7 @@ export default function Users() {
         <PageToolbar>
           <SearchInput
             value={searchName}
-            onChange={setSearchName}
+            onChange={handleSearchNameChange}
             isLoading={isSearchLoading}
           >
             {visibleSearchResults.length > 0
@@ -103,6 +105,11 @@ export default function Users() {
           </Button>
         </PageToolbar>
       </div>
+      {error && (
+        <div className="alert alert-danger" role="alert">
+          {error}
+        </div>
+      )}
       <div className="tab-content">
         {TABS.map((tab) => (
           <div
@@ -118,7 +125,13 @@ export default function Users() {
                 keyExtractor={(u) => u.id}
                 expandedId={expandedUserId}
                 onRowClick={handleRowClick}
-                renderExpanded={(u) => <UserDetails user={u} />}
+                renderExpanded={(u) => (
+                  <UserDetails
+                    user={u}
+                    onClose={() => handleRowClick(u.id)}
+                    onArchive={() => handleArchiveUser(u.id)}
+                  />
+                )}
                 sortField={sortField}
                 sortDirection={sortDirection}
                 onSort={handleSort}
@@ -128,11 +141,7 @@ export default function Users() {
           </div>
         ))}
       </div>
-      <Pagination
-        currentPage={1}
-        totalPages={10}
-        onPageChange={() => {}}
-      />
+      <Pagination currentPage={1} totalPages={10} onPageChange={() => {}} />
       <AddUserModal />
     </>
   );

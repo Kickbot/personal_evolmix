@@ -1,10 +1,10 @@
 import { ROLE_NAMES } from 'const/roles';
-import type { IUserListItem } from 'types/users.types';
+import type { UserDetailsProps } from 'types/users.types';
 import { Button } from 'ui/button';
 import { ArchiveIcon, CloseIcon } from 'ui/icons';
 import { formatDateTime } from 'utils/date';
 
-export function UserDetails({ user }: { user: IUserListItem }) {
+export function UserDetails({ user, onClose, onArchive }: UserDetailsProps) {
   return (
     <div className="dt-details p-3">
       <div className="row">
@@ -43,10 +43,20 @@ export function UserDetails({ user }: { user: IUserListItem }) {
         </div>
         <div className="col-12">
           <div className="dt-details-btn">
-            <Button className="bordered has-icon" iconAfter={<ArchiveIcon />}>
-              Переместить в архив
-            </Button>
-            <Button className="secondary has-icon" iconBefore={<CloseIcon />}>
+            {!user.is_archived && (
+              <Button
+                className="bordered has-icon"
+                iconAfter={<ArchiveIcon />}
+                onClick={onArchive}
+              >
+                Переместить в архив
+              </Button>
+            )}
+            <Button
+              className="secondary has-icon ms-auto"
+              iconBefore={<CloseIcon />}
+              onClick={onClose}
+            >
               Закрыть
             </Button>
           </div>

@@ -10,6 +10,7 @@ export const user = {
   getCurrent: () => get(URLS.user.getCurrentUser, {}, { skipAuthRedirect: true }),
   getAll: bind(get, URLS.user.getAllUser),
   search: bind(get, URLS.user.getSearchUser),
+  patchUser: (userId, data) => patch(URLS.user.patchUser.replace('{user_id}', userId), data),
 }
 
 export const patient = {

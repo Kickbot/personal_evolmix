@@ -10,6 +10,7 @@ const DEFAULT_OFFSET = 0;
 
 export function useUsers() {
   const [users, setUsers] = useState<IUserListItem[]>([]);
+  const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<string>(ROLES.ADMIN);
   const [archivedStatus, setArchivedStatus] =
     useState<IUserSearchParams['archived_status']>('nonarchived');
@@ -27,6 +28,8 @@ export function useUsers() {
 
     setIsLoading(true);
     setExpandedUserId(null);
+    setSortField(undefined);
+    setSortDirection('none');
     setActiveTab(tabKey);
   };
 
@@ -36,9 +39,21 @@ export function useUsers() {
       setIsSearchLoading(true);
     }
     setExpandedUserId(null);
+    setSortField(undefined);
+    setSortDirection('none');
     setArchivedStatus((current) =>
       current === 'nonarchived' ? 'archived' : 'nonarchived',
     );
+  };
+
+  const handleSearchNameChange = (value: string) => {
+    setSearchName(value);
+    if (value.trim()) {
+      setIsSearchLoading(true);
+    } else {
+      setIsSearchLoading(false);
+      setSearchResults([]);
+    }
   };
 
   const handleRowClick = (userId: string) => {
@@ -54,6 +69,17 @@ export function useUsers() {
     }
   };
 
+  const handleArchiveUser = (userId: string) => {
+    userApi
+      .patchUser(userId, { is_archived: true })
+      .then((data) => {
+        if ((data as { success: boolean }).success) {
+          setUsers((current) => current.filter((u) => u.id !== userId));
+          setExpandedUserId(null);
+        }
+      });
+  };
+
   const handleSort = (field: string) => {
     if (sortField !== field) {
       setSortField(field);
@@ -64,46 +90,53 @@ export function useUsers() {
   };
 
   useEffect(() => {
-    const params: IUserSearchParams = {
-      role: activeTab,
-      status: 'active',
-      archived_status: archivedStatus,
-      limit: DEFAULT_LIMIT,
-      offset: DEFAULT_OFFSET,
-      ...(debouncedSearchName ? { name: debouncedSearchName } : {}),
-    };
+    if (debouncedSearchName) {
+      const params: IUserSearchParams = {
+        name: debouncedSearchName,
+        status: 'active',
+        archived_status: archivedStatus,
+        limit: DEFAULT_LIMIT,
+        offset: DEFAULT_OFFSET,
+      };
 
-    userApi
-      .search(params)
-      .then((data: { users: IUserListItem[] }) => {
-        setUsers(data.users);
-      })
-      .finally(() => setIsLoading(false));
-  }, [activeTab, archivedStatus, debouncedSearchName]);
+      userApi
+        .search(params)
+        .then((data: { users: IUserListItem[] }) => {
+          setError(null);
+          setSearchResults(data.users);
+          setUsers(data.users.filter((u) => u.role === activeTab));
+        })
+        .catch(() => {
+          setUsers([]);
+          setSearchResults([]);
+          setError('Не удалось загрузить пользователей');
+        })
+        .finally(() => {
+          setIsLoading(false);
+          setIsSearchLoading(false);
+        });
+    } else {
+      const params: IUserSearchParams = {
+        role: activeTab,
+        status: 'active',
+        archived_status: archivedStatus,
+        limit: DEFAULT_LIMIT,
+        offset: DEFAULT_OFFSET,
+      };
 
-  useEffect(() => {
-    if (!debouncedSearchName) {
-      return;
+      userApi
+        .search(params)
+        .then((data: { users: IUserListItem[] }) => {
+          setError(null);
+          setUsers(data.users);
+        })
+        .catch(() => {
+          setUsers([]);
+          setError('Не удалось загрузить пользователей');
+        })
+        .finally(() => setIsLoading(false));
     }
-
-    const params: IUserSearchParams = {
-      name: debouncedSearchName,
-      status: 'active',
-      archived_status: archivedStatus,
-      limit: DEFAULT_LIMIT,
-      offset: DEFAULT_OFFSET,
-    };
-
-    userApi
-      .search(params)
-      .then((data: { users: IUserListItem[] }) => {
-        setSearchResults(data.users);
-      })
-      .catch(() => {
-        setSearchResults([]);
-      })
-      .finally(() => setIsSearchLoading(false));
-  }, [archivedStatus, debouncedSearchName]);
+  }, [activeTab, archivedStatus, debouncedSearchName]);
 
   const visibleSearchResults = debouncedSearchName ? searchResults : [];
 
@@ -126,10 +159,11 @@ export function useUsers() {
 
   return {
     isLoading,
+    error,
     activeTab,
     archivedStatus,
     searchName,
-    setSearchName,
+    handleSearchNameChange,
     isSearchLoading,
     visibleSearchResults,
     displayedUsers,
@@ -138,6 +172,7 @@ export function useUsers() {
     sortDirection,
     handleTabChange,
     handleArchiveToggle,
+    handleArchiveUser,
     handleRowClick,
     handleSearchResultClick,
     handleSort,

@@ -20,3 +20,25 @@ export interface IUserSearchParams {
   limit: number;
   offset: number;
 }
+
+export interface UserDetailsProps {
+  user: IUserListItem;
+  onClose: () => void;
+  onArchive: () => void;
+}
+
+export interface IUserPatchData {
+  first_name?: string;
+  middle_name?: string;
+  last_name?: string;
+  email_address?: string;
+  status?: 'active' | 'inactive' | 'blocked';
+  password?: string;
+  role?: string;
+  is_archived?: boolean;
+}
+
+export interface IUserPatchResponse {
+  success: boolean;
+  user: IUserListItem;
+}
