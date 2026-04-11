@@ -1,0 +1,9 @@
+.patients-header {
+  & .search-input-anchor {
+    max-width: none;
+    min-width: 0;
+  }
+  & .search-input-dropdown {
+    max-width: none;
+  }
+}
