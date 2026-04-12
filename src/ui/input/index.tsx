@@ -26,7 +26,6 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       labelClassName,
       inputClassName,
       required,
-      requiredMark = true,
       error,
       hint,
       isInvalid,
@@ -44,7 +43,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             htmlFor={inputId}
             className={cn(
               'form-label',
-              required && requiredMark && 'required',
+              required && 'required', 
               labelClassName,
             )}
           >

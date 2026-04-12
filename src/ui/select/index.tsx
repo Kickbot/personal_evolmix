@@ -58,7 +58,6 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
       labelClassName,
       selectClassName,
       required,
-      requiredMark = true,
       error,
       hint,
       isInvalid,
@@ -79,7 +78,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
             htmlFor={selectId}
             className={cn(
               'form-label',
-              required && requiredMark && 'required',
+              required && 'required', 
               labelClassName,
             )}
           >

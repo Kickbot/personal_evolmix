@@ -17,7 +17,7 @@ import { applyServerErrors } from 'features/form/lib/applyServerErrors';
 import { loginSchema, type LoginFormValues } from 'features/auth/model/login.schema';
 import './login.css';
 
-function Login() {
+export default function Login() {
   const appContext = useContext(Context);
   const navigate = useNavigate();
   const {
@@ -112,5 +112,3 @@ function Login() {
     </>
   );
 }
-
-export default Login;

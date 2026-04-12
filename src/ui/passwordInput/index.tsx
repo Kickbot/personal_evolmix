@@ -1,8 +1,6 @@
 import './passwordInput.css'
 import React, { useState } from 'react'
-
-import hidePasswordIcon from 'assets/icons/hide_password.svg'
-import visiblePasswordIcon from 'assets/icons/visible_password.svg'
+import { HidePasswordIcon, VisiblePasswordIcon } from 'ui/icons'
 import { cn } from 'utils'
 
 interface PasswordInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'> {
@@ -27,7 +25,6 @@ export const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputPro
       labelClassName,
       inputClassName,
       required,
-      requiredMark = true,
       error,
       hint,
       isInvalid,
@@ -46,7 +43,7 @@ export const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputPro
             htmlFor={inputId}
             className={cn(
               'form-label',
-              required && requiredMark && 'required',
+              required && 'required', 
               labelClassName,
             )}
           >
@@ -74,11 +71,7 @@ export const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputPro
             aria-label={isVisible ? 'Hide password' : 'Show password'}
             aria-controls={inputId}
           >
-            <img
-              src={isVisible ? visiblePasswordIcon : hidePasswordIcon}
-              alt=""
-              aria-hidden="true"
-            />
+            {isVisible ? <VisiblePasswordIcon /> : <HidePasswordIcon />} 
           </button>
         </div>
 

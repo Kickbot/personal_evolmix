@@ -147,7 +147,7 @@ export function AddUserModal({ onSuccess }: AddUserModalProps) {
                     {...register('password', {
                       onChange: () => clearErrors('password'),
                     })}
-                    label="Password"
+                    label="Пароль"
                     required
                     error={errors.password?.message}
                   />

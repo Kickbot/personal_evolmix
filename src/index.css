@@ -54,7 +54,7 @@
   --bs-white-rgb: 255, 255, 255;
   --link-color: #0783b9;
   --bs-border-color: #c1c7c9;
-  --bs-border-radius: 2rem;
+  --bs-border-radius: 34px;
 }
 
 @view-transition {
