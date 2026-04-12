@@ -31,7 +31,7 @@ export function DataTableRow<T>({
       </button>
       {renderExpanded && (
         <div className="dt-details-wrap">
-          {renderExpanded(item)}
+          {isExpanded ? renderExpanded(item) : null}
         </div>
       )}
     </div>

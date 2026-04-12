@@ -6,3 +6,4 @@ export * from './AddPlusIcon';
 export * from './EditIcon';
 export * from './HidePasswordIcon';
 export * from './VisiblePasswordIcon';
+export * from './DefaultUserIcon';

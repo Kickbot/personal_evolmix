@@ -103,7 +103,8 @@
     border: 2px solid #eaeff2;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
-    max-height: 340px;
+    height: 100%;
+    max-height: 620px;
     opacity: 1;
   }
   & .dt-row {
@@ -125,6 +126,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-top: 24px;
 }
 
 .dt-item.is-open .dt-details {

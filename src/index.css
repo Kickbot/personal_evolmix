@@ -39,8 +39,8 @@
   --main-color: #00b0f0;
   --main-bg-color: #00b0f0;
   --main-bg-color-hover: #1cbfff;
-  --button-green-bg-color: #44ad70;
-  --button-orange-bg-color: #f66f35;
+  --green-color: #44ad70;
+  --orange-color: #f66f35;
   --bs-font-sans-serif: 'Roboto', sans-serif;
   --bs-font-monospace:
     SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New',

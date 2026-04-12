@@ -15,7 +15,7 @@ export const user = {
 
 export const patient = {
   getAllPatient: bind(get, URLS.patient.getAllPatient),
-  searchPatient: bind(get, URLS.patient.getSearchPatient),
+  getSearchPatient: bind(get, URLS.patient.getSearchPatient),
   getPatientById: bind(get, URLS.patient.getPatientById),
   createPatient: bind(post, URLS.patient.postCreatePatient),
   patchPatient: bind(patch, URLS.patient.patchPatient),

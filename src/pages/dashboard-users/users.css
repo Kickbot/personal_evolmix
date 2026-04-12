@@ -51,3 +51,257 @@
   color: var(--main-text-color);
   line-height: 1.2;
 }
+
+/* ── User Details Card ────────────────────────────── */
+
+.ud-card {
+  position: relative;
+  background-color: #eaeff2;
+  border-radius: 12px;
+  padding: 24px;
+  height: 100%;
+}
+
+.ud-card__edit-btn {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  width: 48px;
+  height: 48px;
+  border: none;
+  outline: none;
+  padding: 0;
+  border-radius: 50%;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--main-text-color);
+  transition: background-color 0.3s ease-in-out;
+  &:hover {
+    background-color: #dde6ea;
+  }
+}
+
+.ud-card__body {
+  display: flex;
+  gap: 24px;
+}
+
+.ud-card__left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.ud-card__avatar {
+  width: 128px;
+  height: 128px;
+  border-radius: 10px;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--main-text-color);
+}
+
+.ud-card__right {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+.ud-card__role-badge {
+  display: inline-block;
+  align-self: flex-start;
+  padding: 4px 14px;
+  background-color: var(--main-color);
+  color: #fff;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.ud-card__right {
+  & .ud-card__full-name {
+    font-size: 18px;
+    color: var(--second-text-color);
+    margin-bottom: 0;
+  }
+}
+
+.ud-card__display-role {
+  font-size: 20px;
+  font-weight: 400;
+  margin-bottom: 0;
+  color: var(--main-text-color);
+}
+
+.ud-card__email {
+  font-size: 16px;
+  color: var(--link-color);
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.ud-card__password-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ud-card__password-text {
+  font-size: 14px;
+  letter-spacing: 2px;
+  color: var(--main-text-color);
+}
+
+.ud-card__password-toggle {
+  border: 0;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  color: var(--main-text-color);
+  display: flex;
+  align-items: center;
+  transition: color 0.3s ease-in-out;
+  &:hover {
+    color: var(--second-text-color);
+  }
+}
+
+.ud-card__reg {
+  display: flex;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.ud-card__reg-label {
+  color: var(--second-text-color);
+}
+
+/* ── Patients Panel ───────────────────────────────── */
+
+.ud-patients {
+  background-color: #eaeff2;
+  border-radius: 10px;
+  padding: 24px;
+  height: 100%;
+}
+
+.ud-patients__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.ud-patients__title {
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 0;
+  color: var(--main-text-color);
+}
+
+.ud-patients__link {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--link-color);
+  text-decoration: none;
+  transition: color 0.3s ease-in-out;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.ud-patients__list {
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  gap: 8px;
+  padding: 24px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.ud-patients__empty {
+  font-size: 14px;
+  color: var(--second-text-color);
+  margin: 0;
+  padding: 12px;
+}
+
+.ud-patient-item {
+  border-left: 4px solid var(--green-color);
+  padding-left: 16px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.ud-patient-item__meta {
+  display: flex;
+  flex-direction: column;
+  line-height: 16px;
+}
+
+.ud-patient-item__id {
+  font-size: 12px;
+  color: var(--main-text-color);
+}
+
+.ud-patient-item__dept {
+  font-size: 11px;
+  color: var(--second-text-color);
+}
+
+.ud-patient-item__row {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+}
+
+.ud-patient-item__name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--main-text-color);
+  flex: 1;
+}
+
+.ud-patient-item__stats {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+  color: var(--main-text-color);
+  white-space: nowrap;
+  min-width: 110px;
+}
+
+.ud-patient-item__room {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #eaeff2;
+  border-radius: 4px;
+  padding: 8px;
+  min-width: 5px;
+}
+
+.ud-patient-item__room-label {
+  font-size: 10px;
+  color: var(--second-text-color);
+  line-height: 1.6;
+}
+
+.ud-patient-item__room strong {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--main-text-color);
+  line-height: 16px;
+}
