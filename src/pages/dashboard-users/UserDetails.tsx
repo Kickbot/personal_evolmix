@@ -4,6 +4,7 @@ import ROLES, { ROLE_NAMES } from 'const/roles';
 import type { IPatientListItem } from 'types/patients.types';
 import type { UserDetailsProps } from 'types/users.types';
 import { Button } from 'ui/button';
+import Loader from 'ui/loader';
 import {
   ArchiveIcon,
   CloseIcon,
@@ -32,21 +33,32 @@ function getAge(dob: string): number {
 export function UserDetails({ user, onClose, onArchive }: UserDetailsProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [patients, setPatients] = useState<IPatientListItem[]>([]);
+  const [patientsLoading, setPatientsLoading] = useState(false);
 
   const isDoctor = user.role === ROLES.DOCTOR;
 
   useEffect(() => {
     if (!isDoctor) return;
-    patientApi
-      .getSearchPatient({
-        doctor_id: user.id,
-        limit: 3,
-        archived_status: 'nonarchived',
-      })
-      .then((res: { patients: IPatientListItem[] }) => {
-        setPatients(res.patients ?? []);
-      })
-      .catch(() => {});
+    let cancelled = false;
+    void (async () => {
+      setPatientsLoading(true);
+      setPatients([]);
+      try {
+        const res = (await patientApi.getSearchPatient({
+          doctor_id: user.id,
+          limit: 3,
+          archived_status: 'nonarchived',
+        })) as { patients: IPatientListItem[] };
+        if (!cancelled) setPatients(res.patients ?? []);
+      } catch {
+        // ignore
+      } finally {
+        if (!cancelled) setPatientsLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, [user.id, isDoctor]);
 
   return (
@@ -117,41 +129,44 @@ export function UserDetails({ user, onClose, onArchive }: UserDetailsProps) {
                   Все пациенты
                 </a>
               </div>
-              <div className="ud-patients__list">
-                {patients.length === 0 ? (
-                  <p className="ud-patients__empty">Нет пациентов</p>
-                ) : (
-                  patients.map((p) => (
-                    <div key={p.id} className="ud-patient-item">
-                      <div className="ud-patient-item__meta">
-                        <span className="ud-patient-item__id">
-                          {p.identification_number}
-                        </span>
-                        <span className="ud-patient-item__dept">
-                          {p.department}
-                        </span>
-                        <span className="ud-patient-item__name">
-                          {p.first_name} {p.last_name}
-                        </span>
-                      </div>
-                      <div className="ud-patient-item__row">
-                        <div className="ud-patient-item__stats">
-                          <span>{GENDER_SHORT[p.gender] ?? p.gender}</span>
-                          <span>{p.weight != null && ` ${p.weight}кг`}</span>
-                          <span>{` ${getAge(p.date_of_birth)}лет`}</span>
-                        </div>
-                        {p.room_number != null && (
-                          <span className="ud-patient-item__room">
-                            <span className="ud-patient-item__room-label">
-                              Палата
-                            </span>
-                            <strong>{p.room_number}</strong>
+              <div className="ud-patients__list-host">
+                {patientsLoading && <Loader position="absolute" />}
+                <div className="ud-patients__list">
+                  {!patientsLoading && patients.length === 0 ? (
+                    <p className="ud-patients__empty">Нет пациентов</p>
+                  ) : null}
+                  {!patientsLoading &&
+                    patients.map((p) => (
+                      <div key={p.id} className="ud-patient-item">
+                        <div className="ud-patient-item__meta">
+                          <span className="ud-patient-item__id">
+                            {p.identification_number}
                           </span>
-                        )}
+                          <span className="ud-patient-item__dept">
+                            {p.department}
+                          </span>
+                          <span className="ud-patient-item__name">
+                            {p.first_name} {p.last_name}
+                          </span>
+                        </div>
+                        <div className="ud-patient-item__row">
+                          <div className="ud-patient-item__stats">
+                            <span>{GENDER_SHORT[p.gender] ?? p.gender}</span>
+                            <span>{p.weight != null && ` ${p.weight}кг`}</span>
+                            <span>{` ${getAge(p.date_of_birth)}лет`}</span>
+                          </div>
+                          {p.room_number != null && (
+                            <span className="ud-patient-item__room">
+                              <span className="ud-patient-item__room-label">
+                                Палата
+                              </span>
+                              <strong>{p.room_number}</strong>
+                            </span>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  ))
-                )}
+                    ))}
+                </div>
               </div>
             </div>
           </div>

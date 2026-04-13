@@ -220,6 +220,11 @@
   }
 }
 
+.ud-patients__list-host {
+  position: relative;
+  min-height: 160px;
+}
+
 .ud-patients__list {
   display: flex;
   flex-direction: column;

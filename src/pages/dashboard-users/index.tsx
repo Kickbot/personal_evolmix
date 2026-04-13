@@ -88,14 +88,16 @@ export default function Users() {
                 ))
               : null}
           </SearchInput>
-          <Button
-            className="primary has-icon"
-            iconBefore={<img src={addPlusIcon} alt="add" />}
-            data-bs-toggle="modal"
-            data-bs-target="#addUserModal"
-          >
-            Добавить участника
-          </Button>
+          {archivedStatus !== 'archived' && (
+            <Button
+              className="primary has-icon"
+              iconBefore={<img src={addPlusIcon} alt="add" />}
+              data-bs-toggle="modal"
+              data-bs-target="#addUserModal"
+            >
+              Добавить участника
+            </Button>
+          )}
           <Button
             className="bordered has-icon"
             iconAfter={<ArchiveIcon />}
