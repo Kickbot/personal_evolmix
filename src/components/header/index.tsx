@@ -10,6 +10,8 @@ import type { IUser } from 'types/auth.types';
 import defaultAvatar from 'assets/img/default_user.svg';
 import logoutIcon from 'assets/icons/logout.svg';
 import { NavLink, Link } from 'ui/link';
+import { NotificationModal } from './notificationModal';
+import { IconButton } from 'ui/button';
 
 export function Header() {
   const { currentUser, setCurrentUser } = useContext(Context) as {
@@ -51,9 +53,15 @@ export function Header() {
         </div>
         <div className="header-right">
           <div className="user-info">
-            <div className="user-info-notification">
+            <IconButton
+              id="notificationTrigger"
+              className="user-info-notification"
+              data-bs-toggle="modal"
+              data-bs-target="#notificationModal"
+              aria-label="Открыть уведомления"
+            >
               <span className="user-info-notification-badge">3</span>
-            </div>
+            </IconButton>
             <div className="user-info-avatar">
               <img
                 src={currentUser?.avatar_url || defaultAvatar}
@@ -93,6 +101,7 @@ export function Header() {
           </div>
         </div>
       </div>
+      <NotificationModal />
     </div>
   );
 }

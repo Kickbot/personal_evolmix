@@ -1,4 +1,5 @@
 import { useForm } from 'react-hook-form';
+import { useEffect, useRef } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { auth } from 'api';
 import { Input } from 'ui/input';
@@ -19,6 +20,9 @@ interface AddUserModalProps {
 }
 
 export function AddUserModal({ onSuccess }: AddUserModalProps) {
+  const modalRef = useRef<HTMLDivElement | null>(null);
+  const lastTriggerRef = useRef<HTMLElement | null>(null);
+
   const {
     register,
     handleSubmit,
@@ -52,13 +56,44 @@ export function AddUserModal({ onSuccess }: AddUserModalProps) {
     }
   };
 
+  
+  useEffect(() => {
+    const modalElement = modalRef.current;
+    if (!modalElement) return;
+    const handleShow = (event: Event) => {
+      const customEvent = event as Event & { relatedTarget?: EventTarget | null };
+      const trigger = customEvent.relatedTarget;
+      lastTriggerRef.current = trigger instanceof HTMLElement ? trigger : null;
+    };
+    const handleHide = () => {
+      const activeElement = document.activeElement as HTMLElement | null;
+      if (activeElement && modalElement.contains(activeElement)) {
+        activeElement.blur();
+      }
+    };
+    const handleHidden = () => {
+      lastTriggerRef.current?.focus();
+    };
+    modalElement.addEventListener('show.bs.modal', handleShow);
+    modalElement.addEventListener('hide.bs.modal', handleHide);
+    modalElement.addEventListener('hidden.bs.modal', handleHidden);
+    return () => {
+      modalElement.removeEventListener('show.bs.modal', handleShow);
+      modalElement.removeEventListener('hide.bs.modal', handleHide);
+      modalElement.removeEventListener('hidden.bs.modal', handleHidden);
+    };
+  }, []);
+
   return (
     <div
+      ref={modalRef}
       className="modal fade"
       id="addUserModal"
       tabIndex={-1}
       aria-labelledby="addUserModalLabel"
       aria-hidden="true"
+      role="dialog"
+      aria-modal="true"
     >
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content">
