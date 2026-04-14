@@ -89,6 +89,20 @@ export function useUsers() {
     }
   };
 
+  const handleUserUpdated = (updatedUser?: IUserListItem) => {
+    if (!updatedUser) return;
+    setUsers((current) =>
+      current.map((user) =>
+        user.id === updatedUser.id ? { ...user, ...updatedUser } : user,
+      ),
+    );
+    setSearchResults((current) =>
+      current.map((user) =>
+        user.id === updatedUser.id ? { ...user, ...updatedUser } : user,
+      ),
+    );
+  };
+
   useEffect(() => {
     if (debouncedSearchName) {
       const params: IUserSearchParams = {
@@ -176,5 +190,6 @@ export function useUsers() {
     handleRowClick,
     handleSearchResultClick,
     handleSort,
+    handleUserUpdated,
   };
 }

@@ -15,10 +15,14 @@ import {
 } from 'features/users/model/addUser.schema';
 import './addUserModal.css';
 import { AddSaveIcon } from 'ui/icons/AddSaveIcon';
-import type { IUserListItem, IUserPatchData } from 'types/users.types';
+import type {
+  IUserListItem,
+  IUserPatchData,
+  IUserPatchResponse,
+} from 'types/users.types';
 
 interface AddUserModalProps {
-  onSuccess?: () => void;
+  onSuccess?: (updatedUser?: IUserListItem) => void;
   editingUser?: IUserListItem | null;
 }
 
@@ -64,7 +68,11 @@ export function AddUserModal({ onSuccess, editingUser }: AddUserModalProps) {
           middle_name: values.middle_name,
           ...(values.password ? { password: values.password } : {}),
         };
-        await userApi.patchUser(editingUser.id, patchPayload);
+        const response = (await userApi.patchUser(
+          editingUser.id,
+          patchPayload,
+        )) as IUserPatchResponse;
+        onSuccess?.(response.user);
       } else {
         if (!values.password || values.password.trim().length < 8) {
           setError('password', {
@@ -74,9 +82,9 @@ export function AddUserModal({ onSuccess, editingUser }: AddUserModalProps) {
           return;
         }
         await auth.register(values as AddUserFormValues);
+        onSuccess?.();
       }
       reset(EMPTY_VALUES);
-      onSuccess?.();
       setCloseRequestId((current) => current + 1);
     } catch (error) {
       applyServerErrors(error as ApiFormError, setError);
