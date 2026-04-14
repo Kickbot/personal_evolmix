@@ -30,7 +30,7 @@ function getAge(dob: string): number {
   return age;
 }
 
-export function UserDetails({ user, onClose, onArchive }: UserDetailsProps) {
+export function UserDetails({ user, onClose, onArchive, onEdit }: UserDetailsProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [patients, setPatients] = useState<IPatientListItem[]>([]);
   const [patientsLoading, setPatientsLoading] = useState(false);
@@ -66,7 +66,7 @@ export function UserDetails({ user, onClose, onArchive }: UserDetailsProps) {
       <div className="row">
         <div className={isDoctor ? 'col-md-5' : 'col-12'}>
           <div className="ud-card">
-            <button className="ud-card__edit-btn" type="button" data-bs-toggle="modal" data-bs-target="#addUserModal">
+            <button className="ud-card__edit-btn" type="button" data-bs-toggle="modal" data-bs-target="#addUserModal" onClick={() => onEdit(user)}>
               <EditIcon />
             </button>
 

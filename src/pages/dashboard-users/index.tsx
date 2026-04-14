@@ -1,4 +1,6 @@
-﻿import ROLES, { ROLE_NAMES } from 'const/roles';
+﻿import { useState } from 'react';
+import { flushSync } from 'react-dom';
+import ROLES, { ROLE_NAMES } from 'const/roles';
 import { Button } from 'ui/button';
 import { ArchiveIcon } from 'ui/icons';
 import Loader from 'ui/loader';
@@ -11,6 +13,7 @@ import { AddUserModal } from './AddUserModal';
 import { userColumns } from './userColumns';
 import { UserDetails } from './UserDetails';
 import { useUsers } from './useUsers';
+import type { IUserListItem } from 'types/users.types';
 import './users.css';
 
 const TABS = [
@@ -21,6 +24,19 @@ const TABS = [
 ];
 
 export default function Users() {
+  const [editingUser, setEditingUser] = useState<IUserListItem | null>(null);
+  const handleOpenCreateModal = () => {
+    flushSync(() => {
+      setEditingUser(null);
+    });
+  };
+
+  const handleOpenEditModal = (user: IUserListItem) => {
+    flushSync(() => {
+      setEditingUser(user);
+    });
+  };
+
   const {
     isLoading,
     error,
@@ -94,6 +110,7 @@ export default function Users() {
               iconBefore={<img src={addPlusIcon} alt="add" />}
               data-bs-toggle="modal"
               data-bs-target="#addUserModal"
+              onClick={handleOpenCreateModal}
             >
               Добавить участника
             </Button>
@@ -132,6 +149,7 @@ export default function Users() {
                     user={u}
                     onClose={() => handleRowClick(u.id)}
                     onArchive={() => handleArchiveUser(u.id)}
+                    onEdit={handleOpenEditModal}
                   />
                 )}
                 sortField={sortField}
@@ -144,7 +162,7 @@ export default function Users() {
         ))}
       </div>
       <Pagination currentPage={1} totalPages={10} onPageChange={() => {}} />
-      <AddUserModal />
+      <AddUserModal editingUser={editingUser} />
     </>
   );
 }

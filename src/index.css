@@ -178,6 +178,7 @@ hr {
   position: relative;
   & .form-control {
     padding-right: 48px;
+    background: none;
   }
 }
 

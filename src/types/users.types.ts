@@ -26,6 +26,7 @@ export interface UserDetailsProps {
   user: IUserListItem;
   onClose: () => void;
   onArchive: () => void;
+  onEdit: (user: IUserListItem) => void;
 }
 
 export interface IUserPatchData {

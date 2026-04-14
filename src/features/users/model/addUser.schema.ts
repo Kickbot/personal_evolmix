@@ -21,4 +21,14 @@ export const addUserSchema = z.object({
   registration_date: z.string().min(1, 'Дата обязательна'),
 })
 
+export const editUserSchema = addUserSchema.extend({
+  password: z
+    .string()
+    .trim()
+    .refine((value) => value.length === 0 || value.length >= 8, {
+      message: 'Минимум 8 символов',
+    }),
+})
+
 export type AddUserFormValues = z.infer<typeof addUserSchema>
+export type EditUserFormValues = z.infer<typeof editUserSchema>

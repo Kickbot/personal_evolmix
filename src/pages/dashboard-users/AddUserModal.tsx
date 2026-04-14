@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { auth } from 'api';
+import { auth, user as userApi } from 'api';
 import { Input } from 'ui/input';
 import { PasswordInput } from 'ui/passwordInput';
 import { Select } from 'ui/select';
@@ -9,19 +9,36 @@ import { Button } from 'ui/button';
 import type { ApiFormError } from 'features/form/types/api-error';
 import { applyServerErrors } from 'features/form/lib/applyServerErrors';
 import {
-  addUserSchema,
+  editUserSchema,
   type AddUserFormValues,
+  type EditUserFormValues,
 } from 'features/users/model/addUser.schema';
 import './addUserModal.css';
 import { AddSaveIcon } from 'ui/icons/AddSaveIcon';
+import type { IUserListItem, IUserPatchData } from 'types/users.types';
 
 interface AddUserModalProps {
   onSuccess?: () => void;
+  editingUser?: IUserListItem | null;
 }
 
-export function AddUserModal({ onSuccess }: AddUserModalProps) {
+type UserFormValues = AddUserFormValues | EditUserFormValues;
+
+const EMPTY_VALUES: UserFormValues = {
+  first_name: '',
+  last_name: '',
+  middle_name: '',
+  role: '',
+  email_address: '',
+  password: '',
+  registration_date: '',
+};
+
+export function AddUserModal({ onSuccess, editingUser }: AddUserModalProps) {
   const modalRef = useRef<HTMLDivElement | null>(null);
   const lastTriggerRef = useRef<HTMLElement | null>(null);
+  const [closeRequestId, setCloseRequestId] = useState(0);
+  const isEditMode = Boolean(editingUser);
 
   const {
     register,
@@ -30,31 +47,58 @@ export function AddUserModal({ onSuccess }: AddUserModalProps) {
     clearErrors,
     reset,
     formState: { errors },
-  } = useForm<AddUserFormValues>({
-    resolver: zodResolver(addUserSchema),
+  } = useForm<UserFormValues>({
+    resolver: zodResolver(editUserSchema),
     mode: 'onBlur',
     reValidateMode: 'onBlur',
-    defaultValues: {
-      first_name: '',
-      last_name: '',
-      middle_name: '',
-      role: '',
-      email_address: '',
-      password: '',
-      registration_date: '',
-    },
+    defaultValues: EMPTY_VALUES,
   });
 
-  const onSubmit = async (values: AddUserFormValues) => {
+  const onSubmit = async (values: UserFormValues) => {
     clearErrors('root');
     try {
-      await auth.register(values);
-      reset();
+      if (editingUser) {
+        const patchPayload: IUserPatchData = {
+          first_name: values.first_name,
+          last_name: values.last_name,
+          middle_name: values.middle_name,
+          ...(values.password ? { password: values.password } : {}),
+        };
+        await userApi.patchUser(editingUser.id, patchPayload);
+      } else {
+        if (!values.password || values.password.trim().length < 8) {
+          setError('password', {
+            type: 'manual',
+            message: 'Минимум 8 символов',
+          });
+          return;
+        }
+        await auth.register(values as AddUserFormValues);
+      }
+      reset(EMPTY_VALUES);
       onSuccess?.();
+      setCloseRequestId((current) => current + 1);
     } catch (error) {
       applyServerErrors(error as ApiFormError, setError);
     }
   };
+
+  useEffect(() => {
+    if (editingUser) {
+      reset({
+        first_name: editingUser.first_name,
+        last_name: editingUser.last_name,
+        middle_name: editingUser.middle_name,
+        role: editingUser.role,
+        email_address: editingUser.email_address,
+        password: '',
+        registration_date: editingUser.registration_date?.slice(0, 10) ?? '',
+      });
+    } else {
+      reset(EMPTY_VALUES);
+    }
+    clearErrors();
+  }, [clearErrors, editingUser, reset]);
 
   
   useEffect(() => {
@@ -84,6 +128,13 @@ export function AddUserModal({ onSuccess }: AddUserModalProps) {
     };
   }, []);
 
+  useEffect(() => {
+    if (closeRequestId === 0) return;
+    modalRef.current
+      ?.querySelector<HTMLButtonElement>('[data-bs-dismiss="modal"]')
+      ?.click();
+  }, [closeRequestId]);
+
   return (
     <div
       ref={modalRef}
@@ -99,7 +150,7 @@ export function AddUserModal({ onSuccess }: AddUserModalProps) {
         <div className="modal-content">
           <div className="modal-header">
             <h5 className="modal-title" id="addUserModalLabel">
-              Пользователь
+              {isEditMode ? 'Редактировать пользователя' : 'Добавить пользователя'}
             </h5>
             <button
               type="button"
@@ -158,6 +209,7 @@ export function AddUserModal({ onSuccess }: AddUserModalProps) {
                     label="Должность"
                     required
                     error={errors.role?.message}
+                    disabled={isEditMode}
                     placeholder="– Выбрать из списка –"
                     options={[
                       { value: 'admin', label: 'Администратор' },
@@ -176,6 +228,7 @@ export function AddUserModal({ onSuccess }: AddUserModalProps) {
                     placeholder="E-mail"
                     required
                     error={errors.email_address?.message}
+                    disabled={isEditMode}
                   />
                   <PasswordInput
                     id="add-password"
@@ -183,7 +236,7 @@ export function AddUserModal({ onSuccess }: AddUserModalProps) {
                       onChange: () => clearErrors('password'),
                     })}
                     label="Пароль"
-                    required
+                    required={!isEditMode}
                     error={errors.password?.message}
                   />
                   <Input
@@ -195,6 +248,7 @@ export function AddUserModal({ onSuccess }: AddUserModalProps) {
                     type="date"
                     required
                     error={errors.registration_date?.message}
+                    disabled={isEditMode}
                   />
                 </div>
 
