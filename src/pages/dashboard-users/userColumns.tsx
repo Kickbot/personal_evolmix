@@ -11,10 +11,10 @@ export const userColumns: ColumnDef<IUserListItem>[] = [
     render: (u) => `${u.last_name} ${u.first_name} ${u.middle_name}`,
   },
   {
-    key: 'email',
-    header: 'Email',
+    key: 'department',
+    header: 'Отделение',
     width: '1.4fr',
-    render: (u) => u.email_address,
+    render: (u) => u.department ?? '—',
   },
   {
     key: 'date',

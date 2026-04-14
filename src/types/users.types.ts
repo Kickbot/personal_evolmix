@@ -6,6 +6,7 @@ export interface IUserListItem {
   email_address: string;
   role: string;
   status: string;
+  department: string | null;
   is_archived: boolean;
   last_login: string | null;
   registration_date: string;
@@ -36,9 +37,11 @@ export interface IUserPatchData {
   password?: string;
   role?: string;
   is_archived?: boolean;
+  department?: string;
 }
 
 export interface IUserPatchResponse {
   success: boolean;
+  total: number;
   user: IUserListItem;
 }
