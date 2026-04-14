@@ -72,13 +72,6 @@
   font-weight: 600;
 }
 
-.dt-cell--date {
-  width: 120px;
-  min-width: 120px;
-  max-width: 120px;
-  text-align: center;
-}
-
 .dt-empty {
   padding: 16px 24px;
   border-radius: 10px;

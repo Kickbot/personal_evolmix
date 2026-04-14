@@ -62,7 +62,7 @@ export function PatientDetails({ patient }: { patient: IPatientListItem }) {
               {formatNullableNumber(patient.room_number)}
             </p>
             <p>
-              <strong>Врач:</strong> {doctorFullName(patient.doctor)}
+              <strong>Доктор:</strong> {doctorFullName(patient.doctor)}
             </p>
             <p>
               <strong>Статус:</strong> {archiveLabel}

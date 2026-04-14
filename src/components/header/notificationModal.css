@@ -12,9 +12,6 @@
     border-radius: 20px;
     padding: 24px;
   }
-  & .modal-body {
-    padding: 24px 0 0;
-  }
   & .btn-close {
     position: absolute;
     font-size: 6px;
@@ -32,6 +29,134 @@
     &:hover {
       background-color: var(--main-color-hover);
     }
+  }
+  & .modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 24px 0 0;
+  }
+
+  & .approval-section {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  & .approval-section__title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--main-text-color);
+  }
+
+  & .approval-user-card {
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+    border-radius: 20px;
+    background: #FAFAFA;
+    padding: 24px;
+  }
+
+  & .approval-user-card__left {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+    line-height: 1.2;
+  }
+
+  & .approval-user-card__role-badge {
+    align-self: flex-start;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: #57c58f;
+    color: #fff;
+    font-size: 12px;
+    line-height: 1;
+  }
+
+  & .approval-user-card__title,
+  & .approval-user-card__name,
+  & .approval-user-card__meta {
+    font-weight: 400;
+    margin: 0;
+  }
+
+  & .approval-user-card__title {
+    font-size: 20px;
+  }
+
+  & .approval-user-card__name {
+    font-size: 18px;
+    color: var(--second-text-color);
+  }
+
+  & .approval-user-card__email {
+    color: var(--link-color);
+    text-decoration: underline;
+    width: fit-content;
+    line-height: 1.3;
+  }
+
+  & .approval-user-card__meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    font-size: 14px;
+    & > span {
+      color: var(--second-text-color);
+    }
+    & > strong {
+      color: var(--main-text-color);
+    }
+  }
+
+  & .approval-user-card__actions {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 8px;
+    min-width: 170px;
+  }
+
+  & .recipe-approval-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  & .recipe-approval-card {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 14px;
+    border-radius: 12px;
+    background: #f7f7f7;
+    padding: 12px 16px;
+  }
+
+  & .recipe-approval-card__badge {
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: rgba(0, 176, 240, 0.3);
+    color: var(--link-color);
+    font-size: 10px;
+    line-height: 13px;
+  }
+
+  & .recipe-approval-card__id {
+    font-size: 14px;
+    color: var(--main-text-color);
+  }
+
+  & .recipe-approval-card__status {
+    font-size: 14px;
+    color: var(--orange-color);
+    font-weight: 500;
+    background-color:#f7f7f7;
+    border: none;
   }
 }
 

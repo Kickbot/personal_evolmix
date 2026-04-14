@@ -47,7 +47,7 @@ export const patientColumns: ColumnDef<IPatientListItem>[] = [
     header: 'Дата',
     sortable: true,
     width: '120px',
-    className: 'dt-cell--date justify-content-center',
+    className: 'justify-content-center',
     render: (u) => formatDate(u.date_of_birth),
   },
 ];
