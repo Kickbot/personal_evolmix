@@ -165,3 +165,9 @@
     color: var(--second-text-color);
   }
 }
+
+.dropdown-menu {
+  & .secondary {
+    border-radius: 4px;
+  }
+}

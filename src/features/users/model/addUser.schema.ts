@@ -18,7 +18,8 @@ export const addUserSchema = z.object({
     .string()
     .min(1, 'Пароль обязателен')
     .min(8, 'Минимум 8 символов'),
-  registration_date: z.string().min(1, 'Дата обязательна'),
+  registration_date: z.string().optional(),
+  department: z.string().trim().optional(),
 })
 
 export const editUserSchema = addUserSchema.extend({

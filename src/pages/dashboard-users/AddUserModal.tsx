@@ -36,6 +36,7 @@ const EMPTY_VALUES: UserFormValues = {
   email_address: '',
   password: '',
   registration_date: '',
+  department: '',
 };
 
 export function AddUserModal({ onSuccess, editingUser }: AddUserModalProps) {
@@ -66,6 +67,7 @@ export function AddUserModal({ onSuccess, editingUser }: AddUserModalProps) {
           first_name: values.first_name,
           last_name: values.last_name,
           middle_name: values.middle_name,
+          department: values.department || undefined,
           ...(values.password ? { password: values.password } : {}),
         };
         const response = (await userApi.patchUser(
@@ -102,6 +104,7 @@ export function AddUserModal({ onSuccess, editingUser }: AddUserModalProps) {
         email_address: editingUser.email_address,
         password: '',
         registration_date: editingUser.registration_date?.slice(0, 10) ?? '',
+        department: editingUser.department ?? '',
       });
     } else {
       reset(EMPTY_VALUES);
@@ -109,12 +112,13 @@ export function AddUserModal({ onSuccess, editingUser }: AddUserModalProps) {
     clearErrors();
   }, [clearErrors, editingUser, reset]);
 
-  
   useEffect(() => {
     const modalElement = modalRef.current;
     if (!modalElement) return;
     const handleShow = (event: Event) => {
-      const customEvent = event as Event & { relatedTarget?: EventTarget | null };
+      const customEvent = event as Event & {
+        relatedTarget?: EventTarget | null;
+      };
       const trigger = customEvent.relatedTarget;
       lastTriggerRef.current = trigger instanceof HTMLElement ? trigger : null;
     };
@@ -159,7 +163,9 @@ export function AddUserModal({ onSuccess, editingUser }: AddUserModalProps) {
         <div className="modal-content">
           <div className="modal-header">
             <h5 className="modal-title" id="addUserModalLabel">
-              {isEditMode ? 'Редактировать пользователя' : 'Добавить пользователя'}
+              {isEditMode
+                ? 'Редактировать пользователя'
+                : 'Добавить пользователя'}
             </h5>
             <button
               type="button"
@@ -228,6 +234,15 @@ export function AddUserModal({ onSuccess, editingUser }: AddUserModalProps) {
                     ]}
                   />
                   <Input
+                    id="add-department"
+                    {...register('department', {
+                      onChange: () => clearErrors('middle_name'),
+                    })}
+                    label="Отделение"
+                    placeholder="Отделение"
+                    error={errors.department?.message}
+                  />
+                  <Input
                     id="add-email"
                     {...register('email_address', {
                       onChange: () => clearErrors('email_address'),
@@ -248,17 +263,15 @@ export function AddUserModal({ onSuccess, editingUser }: AddUserModalProps) {
                     required={!isEditMode}
                     error={errors.password?.message}
                   />
-                  <Input
-                    id="add-date"
-                    {...register('registration_date', {
-                      onChange: () => clearErrors('registration_date'),
-                    })}
-                    label="Дата"
-                    type="date"
-                    required
-                    error={errors.registration_date?.message}
-                    disabled={isEditMode}
-                  />
+                  {isEditMode && (
+                    <Input
+                      id="add-date"
+                      {...register('registration_date')}
+                      label="Дата"
+                      type="date"
+                      disabled
+                    />
+                  )}
                 </div>
 
                 <div className="add-user-form__photo">
@@ -276,12 +289,12 @@ export function AddUserModal({ onSuccess, editingUser }: AddUserModalProps) {
                         rx="3.5"
                         ry="3.33333"
                         stroke="#292C2E"
-                        strokeWidth ="1.5"
+                        strokeWidth="1.5"
                       />
                       <path
                         d="M17.5 14.5833C17.5 16.6544 17.5 18.3333 10.5 18.3333C3.5 18.3333 3.5 16.6544 3.5 14.5833C3.5 12.5123 6.63401 10.8333 10.5 10.8333C14.366 10.8333 17.5 12.5123 17.5 14.5833Z"
                         stroke="#292C2E"
-                        strokeWidth ="1.5"
+                        strokeWidth="1.5"
                       />
                     </svg>
                   </div>
@@ -297,7 +310,11 @@ export function AddUserModal({ onSuccess, editingUser }: AddUserModalProps) {
                 </div>
               )}
 
-              <Button className="w-100 has-icon" type="submit" iconBefore={<AddSaveIcon />}>
+              <Button
+                className="w-100 has-icon"
+                type="submit"
+                iconBefore={<AddSaveIcon />}
+              >
                 Сохранить
               </Button>
             </form>
