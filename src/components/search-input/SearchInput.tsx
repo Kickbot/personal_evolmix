@@ -76,7 +76,7 @@ export function SearchInput({
               {loadingMessage}
             </div>
           ) : children ? (
-            children
+            <div onClick={() => setIsFocused(false)}>{children}</div>
           ) : (
             <div className="search-input-dropdown__state">
               {emptyMessage}

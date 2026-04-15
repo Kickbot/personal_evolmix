@@ -16,7 +16,7 @@ export function StatusBadge({ status, className }: StatusBadgeProps) {
         className,
       )}
     >
-      {status === 'active' ? 'Активен' : 'Архивирован'}
+      {status === 'active' ? 'Активен' : 'Архив'}
     </span>
   );
 }

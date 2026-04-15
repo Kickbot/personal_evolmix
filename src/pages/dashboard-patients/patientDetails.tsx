@@ -16,7 +16,13 @@ function formatNullableNumber(value: number | null, suffix = ''): string {
   return `${value}${suffix}`;
 }
 
-export function PatientDetails({ patient }: { patient: IPatientListItem }) {
+interface PatientDetailsProps {
+  patient: IPatientListItem;
+  onClose: () => void;
+  onArchive: () => void;
+}
+
+export function PatientDetails({ patient, onClose, onArchive }: PatientDetailsProps) {
   const genderLabel = patient.gender === 'male' ? 'М' : 'Ж';
   const archiveLabel = patient.is_archived ? 'Архив' : 'Активен';
 
@@ -71,10 +77,10 @@ export function PatientDetails({ patient }: { patient: IPatientListItem }) {
         </div>
         <div className="col-12">
           <div className="dt-details-btn">
-            <Button className="bordered has-icon" iconAfter={<ArchiveIcon />}>
-              Переместить в архив
+            <Button className="bordered has-icon" iconAfter={<ArchiveIcon />} onClick={onArchive}>
+              {patient.is_archived ? 'Восстановить из архива' : 'Переместить в архив'}
             </Button>
-            <Button className="secondary has-icon" iconBefore={<CloseIcon />}>
+            <Button className="secondary has-icon" iconBefore={<CloseIcon />} onClick={onClose}>
               Закрыть
             </Button>
           </div>

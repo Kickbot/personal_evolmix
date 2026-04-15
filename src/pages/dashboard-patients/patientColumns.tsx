@@ -44,9 +44,9 @@ export const patientColumns: ColumnDef<IPatientListItem>[] = [
   },
   {
     key: 'date_of_birth',
-    header: 'Дата',
+    header: 'Дата рождения',
     sortable: true,
-    width: '120px',
+    width: '220px',
     className: 'justify-content-center',
     render: (u) => formatDate(u.date_of_birth),
   },

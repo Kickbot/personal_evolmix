@@ -18,7 +18,7 @@ export const patient = {
   getSearchPatient: bind(get, URLS.patient.getSearchPatient),
   getPatientById: bind(get, URLS.patient.getPatientById),
   createPatient: bind(post, URLS.patient.postCreatePatient),
-  patchPatient: bind(patch, URLS.patient.patchPatient),
+  patchPatient: (patientId, data) => patch(URLS.patient.patchPatient.replace('{patient_id}', patientId), data),
   deletePatient: bind(remove, URLS.patient.deletePatient),
 }
 
