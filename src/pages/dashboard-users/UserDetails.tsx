@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { patient as patientApi } from 'api';
 import ROLES, { ROLE_NAMES } from 'const/roles';
 import type { IPatientListItem } from 'types/patients.types';
@@ -30,7 +30,12 @@ function getAge(dob: string): number {
   return age;
 }
 
-export function UserDetails({ user, onClose, onArchive, onEdit }: UserDetailsProps) {
+export function UserDetails({
+  user,
+  onClose,
+  onArchive,
+  onEdit,
+}: UserDetailsProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [patients, setPatients] = useState<IPatientListItem[]>([]);
   const [patientsLoading, setPatientsLoading] = useState(false);
@@ -66,7 +71,13 @@ export function UserDetails({ user, onClose, onArchive, onEdit }: UserDetailsPro
       <div className="row">
         <div className={isDoctor ? 'col-md-5' : 'col-12'}>
           <div className="ud-card">
-            <button className="ud-card__edit-btn" type="button" data-bs-toggle="modal" data-bs-target="#addUserModal" onClick={() => onEdit(user)}>
+            <button
+              className="ud-card__edit-btn"
+              type="button"
+              data-bs-toggle="modal"
+              data-bs-target="#addUserModal"
+              onClick={() => onEdit(user)}
+            >
               <EditIcon />
             </button>
 
@@ -123,12 +134,15 @@ export function UserDetails({ user, onClose, onArchive, onEdit }: UserDetailsPro
         {isDoctor && (
           <div className="col-md-7">
             <div className="ud-patients">
-              <div className="ud-patients__header">
-                <h5 className="ud-patients__title">Пациенты</h5>
-                <a href="#" className="ud-patients__link">
-                  Все пациенты
-                </a>
-              </div>
+              {patients.length !== 0 ? (
+                <div className="ud-patients__header">
+                  <h5 className="ud-patients__title">Пациенты</h5>
+                  <a href="#" className="ud-patients__link">
+                    Все пациенты
+                  </a>
+                </div>
+              ) : null}
+
               <div className="ud-patients__list-host">
                 {patientsLoading && <Loader position="absolute" />}
                 <div className="ud-patients__list">

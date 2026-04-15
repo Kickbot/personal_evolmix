@@ -1,11 +1,15 @@
-import { CheckCircleIcon } from 'ui/icons/CheckCircleIcon';
 import './notificationModal.css';
 import { useEffect, useRef } from 'react';
-import { Button } from 'ui/button';
+import { Button, IconButton } from 'ui/button';
 import { CloseIcon } from 'ui/icons/CloseIcon';
 import { TimeIcon } from 'ui/icons/TimeIcon';
+import type { INotificationSection } from 'types/notifications.types';
 
-export function NotificationModal() {
+interface NotificationModalProps {
+  sections: INotificationSection[];
+}
+
+export function NotificationModal({ sections }: NotificationModalProps) {
   const modalRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -48,91 +52,56 @@ export function NotificationModal() {
         <div className="modal-content">
           <div className="modal-header">
             <h5 className="modal-title" id="notificationModalLabel">
-              Запрос на утверждение
+              Уведомления
             </h5>
-            <button
+            <IconButton
               type="button"
-              className="btn-close"
+              className="button-icon ms-auto"
               data-bs-dismiss="modal"
               aria-label="Close"
-            />
+            >
+              <CloseIcon />
+            </IconButton>
           </div>
 
           <div className="modal-body">
-            <section className="approval-section">
-              <article className="approval-user-card">
-                <div className="approval-user-card__left">
-                  {/* <span className="approval-user-card__role-badge">
-                    Глав. Врач
-                  </span> */}
-                  <h6 className="approval-user-card__title">Доктор</h6>
-                  <p className="approval-user-card__name">
-                    Иванов Иван Иванович
-                  </p>
-                  <a
-                    href="mailto:main.doctor@g.com"
-                    className="approval-user-card__email"
-                  >
-                    main.doctor@g.com
-                  </a>
-                  <div className="approval-user-card__meta">
-                    <span>Регистрация:</span> <strong>23.02.2026</strong>
+            {sections.length === 0 && (
+              <p className="text-center text-muted">Нет уведомлений</p>
+            )}
+
+            {sections.map((section) => (
+              <section className="approval-section" key={section.key}>
+                <h6 className="approval-section__title">{section.title}</h6>
+                {section.error && (
+                  <div className="alert alert-danger mb-0" role="alert">
+                    {section.error}
                   </div>
-                </div>
+                )}
+                {!section.isLoading &&
+                  section.items.map((item) => (
+                    <article className="approval-user-card" key={item.id}>
+                      {item.content}
+                      {item.actions && item.actions.length > 0 && (
+                        <div className="approval-user-card__actions">
+                          {item.actions.map((action) => (
+                            <Button
+                              key={action.label}
+                              type="button"
+                              className={`${action.variant} has-icon`}
+                              iconBefore={action.icon}
+                              onClick={action.onClick}
+                            >
+                              {action.label}
+                            </Button>
+                          ))}
+                        </div>
+                      )}
+                    </article>
+                  ))}
+              </section>
+            ))}
 
-                <div className="approval-user-card__actions">
-                  <Button
-                    type="button"
-                    className="primary has-icon"
-                    iconBefore={<CheckCircleIcon />}
-                  >
-                    Подтвердить
-                  </Button>
-                  <Button
-                    type="button"
-                    className="secondary has-icon justify-content-start"
-                    iconBefore={<CloseIcon />}
-                  >
-                    Отменить
-                  </Button>
-                </div>
-              </article>
-              <article className="approval-user-card">
-                <div className="approval-user-card__left">
-                  <h6 className="approval-user-card__title">Администратор</h6>
-                  <p className="approval-user-card__name">
-                    Иванов Иван Иванович
-                  </p>
-                  <a
-                    href="mailto:main.doctor@g.com"
-                    className="approval-user-card__email"
-                  >
-                    main.doctor@g.com
-                  </a>
-                  <div className="approval-user-card__meta">
-                    <span>Регистрация:</span> <strong>23.02.2026</strong>
-                  </div>
-                </div>
-
-                <div className="approval-user-card__actions">
-                  <Button
-                    type="button"
-                    className="primary has-icon"
-                    iconBefore={<CheckCircleIcon />}
-                  >
-                    Подтвердить
-                  </Button>
-                  <Button
-                    type="button"
-                    className="secondary has-icon justify-content-start"
-                    iconBefore={<CloseIcon />}
-                  >
-                    Отменить
-                  </Button>
-                </div>
-              </article>
-            </section>
-
+            {/* Секция рецептов — заглушка */}
             <section className="approval-section gap-1">
               <h6 className="approval-section__title">Новые рецепты:</h6>
 
@@ -145,9 +114,6 @@ export function NotificationModal() {
                     >
                       <span className="recipe-approval-card__badge">Новый</span>
                       <span className="recipe-approval-card__id">{id}</span>
-                      {/* <span className="recipe-approval-card__status">
-                        Ожидает
-                      </span> */}
                       <Button
                         type="button"
                         className="secondary has-icon recipe-approval-card__status"

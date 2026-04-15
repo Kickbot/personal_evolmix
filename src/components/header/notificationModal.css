@@ -12,23 +12,11 @@
     border-radius: 20px;
     padding: 24px;
   }
-  & .btn-close {
-    position: absolute;
-    font-size: 6px;
-    width: 20px;
-    height: 20px;
+  & .button-icon {
     border-radius: 50%;
-    border: 1px solid #292c2e;
-    color: #fff;
-    opacity: 1;
-    top: 8px;
-    right: 8px;
     padding: 0;
-    box-sizing: border-box;
     box-shadow: none;
-    &:hover {
-      background-color: var(--main-color-hover);
-    }
+    background-color: transparent;
   }
   & .modal-body {
     display: flex;
@@ -41,6 +29,12 @@
     display: flex;
     flex-direction: column;
     gap: 24px;
+    & > p {
+      font-size: 14px;
+      color: var(--second-text-color);
+      text-align: center;
+      margin: 0;
+    }
   }
 
   & .approval-section__title {

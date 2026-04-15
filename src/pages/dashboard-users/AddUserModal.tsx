@@ -82,6 +82,7 @@ export function AddUserModal({ onSuccess, editingUser }: AddUserModalProps) {
           return;
         }
         await auth.register(values as AddUserFormValues);
+        window.dispatchEvent(new CustomEvent('user-approval-updated'));
         onSuccess?.();
       }
       reset(EMPTY_VALUES);

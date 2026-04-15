@@ -12,12 +12,14 @@ import logoutIcon from 'assets/icons/logout.svg';
 import { NavLink, Link } from 'ui/link';
 import { NotificationModal } from './notificationModal';
 import { IconButton } from 'ui/button';
+import { useNotifications } from 'hooks/useNotifications';
 
 export function Header() {
   const { currentUser, setCurrentUser } = useContext(Context) as {
     currentUser: IUser | null;
     setCurrentUser: (user: IUser | null) => void;
   };
+  const { sections, totalCount } = useNotifications(currentUser?.role ?? '');
   const navigate = useNavigate();
 
   const role = currentUser?.role ?? '';
@@ -60,7 +62,11 @@ export function Header() {
               data-bs-target="#notificationModal"
               aria-label="Открыть уведомления"
             >
-              <span className="user-info-notification-badge">3</span>
+              {totalCount > 0 && (
+                <span className="user-info-notification-badge">
+                  {totalCount}
+                </span>
+              )}
             </IconButton>
             <div className="user-info-avatar">
               <img
@@ -101,7 +107,7 @@ export function Header() {
           </div>
         </div>
       </div>
-      <NotificationModal />
+      <NotificationModal sections={sections} />
     </div>
   );
 }
