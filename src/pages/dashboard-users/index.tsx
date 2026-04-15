@@ -149,7 +149,7 @@ export default function Users() {
                   <UserDetails
                     user={u}
                     onClose={() => handleRowClick(u.id)}
-                    onArchive={() => handleArchiveUser(u.id)}
+                    onArchive={() => handleArchiveUser(u.id, u.is_archived)}
                     onEdit={handleOpenEditModal}
                   />
                 )}

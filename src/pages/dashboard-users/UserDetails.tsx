@@ -188,15 +188,15 @@ export function UserDetails({
 
         <div className="col-12">
           <div className="dt-details-btn ">
-            {!user.is_archived && (
-              <Button
-                className="bordered has-icon"
-                iconAfter={<ArchiveIcon />}
-                onClick={onArchive}
-              >
-                Переместить в архив
-              </Button>
-            )}
+            <Button
+              className="bordered has-icon"
+              iconAfter={<ArchiveIcon />}
+              onClick={onArchive}
+            >
+              {user.is_archived
+                ? 'Восстановить из архива'
+                : 'Переместить в архив'}
+            </Button>
             <Button
               className="secondary has-icon ms-auto"
               iconBefore={<CloseIcon />}

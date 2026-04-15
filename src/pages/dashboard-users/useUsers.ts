@@ -69,9 +69,9 @@ export function useUsers() {
     }
   };
 
-  const handleArchiveUser = (userId: string) => {
+  const handleArchiveUser = (userId: string, isArchived: boolean) => {
     userApi
-      .patchUser(userId, { is_archived: true })
+      .patchUser(userId, { is_archived: !isArchived })
       .then((data) => {
         if ((data as { success: boolean }).success) {
           setUsers((current) => current.filter((u) => u.id !== userId));
