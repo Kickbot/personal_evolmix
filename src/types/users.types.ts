@@ -22,7 +22,7 @@ export interface IUserSearchParams {
   offset: number;
 }
 
-export interface UserDetailsProps {
+export interface IUserDetailsProps {
   user: IUserListItem;
   onClose: () => void;
   onArchive: () => void;
@@ -43,6 +43,5 @@ export interface IUserPatchData {
 
 export interface IUserPatchResponse {
   success: boolean;
-  total: number;
   user: IUserListItem;
 }

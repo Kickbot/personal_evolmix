@@ -151,9 +151,11 @@ a {
   border: 1px solid var(--bs-border-color);
   box-shadow: none;
   font-size: 14px;
+  transition: border-color 0.3s ease-in-out;
   &:hover,
   &:focus {
     box-shadow: none;
+    border-color: #292c2e;
   }
   &.is-invalid {
     border: 1px solid #fe322b !important;
@@ -162,6 +164,22 @@ a {
       box-shadow: none;
     }
   }
+  &:disabled:hover {
+    border-color: var(--bs-border-color);
+  }
+}
+
+.form-control::-webkit-input-placeholder {
+  color: #aaa;
+}
+.form-control::-moz-placeholder {
+  color: #aaa;
+}
+.form-control:-ms-input-placeholder {
+  color: #aaa;
+}
+.form-control::placeholder {
+  color: #aaa;
 }
 
 .dropdown-menu {

@@ -40,3 +40,23 @@ export interface IPatientSearchParams {
   limit?: number;
   offset?: number;
 }
+
+export interface IPatientPatchData {
+  first_name?: string;
+  middle_name?: string;
+  last_name?: string;
+  identification_number?: string;
+  date_of_birth?: string;
+  gender?: 'male' | 'female';
+  weight?: number | null;
+  height?: number | null;
+  department?: string;
+  room_number?: number | null;
+  is_archived?: boolean;
+  doctor_id?: string | null;
+}
+
+export interface IPatientPatchResponse {
+  success: boolean;
+  patient: IPatientListItem;
+}

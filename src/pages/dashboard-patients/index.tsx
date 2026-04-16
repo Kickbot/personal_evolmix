@@ -1,3 +1,7 @@
+import { useContext, useState } from 'react';
+import { flushSync } from 'react-dom';
+import Context from 'context';
+import ROLES from 'const/roles';
 import { DataTable } from 'components/data-table';
 import { SearchInput } from 'components/search-input';
 import { PageToolbar } from 'components/page-toolbar';
@@ -6,12 +10,16 @@ import { Button } from 'ui/button';
 import { AddPlusIcon } from 'ui/icons/AddPlusIcon';
 import { ArchiveIcon } from 'ui/icons/ArchiveIcon';
 import Loader from 'ui/loader';
+import type { IPatientListItem } from 'types/patients.types';
 import { patientColumns } from './patientColumns';
 import { PatientDetails } from './patientDetails';
 import { usePatients } from './usePatients';
 import './patients.css';
+import { AddPatientModal } from './AddPatientModal';
 
 export default function Patients() {
+  const { currentUser } = useContext(Context) as { currentUser: { role: string } };
+  const [editingPatient, setEditingPatient] = useState<IPatientListItem | null>(null);
   const {
     isLoading,
     error,
@@ -29,6 +37,7 @@ export default function Patients() {
     handleRowClick,
     handleSearchResultClick,
     handleSort,
+    handlePatientUpdated,
   } = usePatients();
 
   if (isLoading) return <Loader position="fixed" />;
@@ -59,11 +68,13 @@ export default function Patients() {
                 ))
               : null}
           </SearchInput>
-          {archivedStatus !== 'archived' && (
+          {archivedStatus !== 'archived' && currentUser?.role === ROLES.DOCTOR && (
             <Button
               className="primary has-icon"
               iconBefore={<AddPlusIcon />}
-              onClick={() => {}}
+              data-bs-toggle="modal"
+              data-bs-target="#addPatientModal"
+              onClick={() => flushSync(() => setEditingPatient(null))}
             >
               Добавить пациента
             </Button>
@@ -95,6 +106,7 @@ export default function Patients() {
             patient={p}
             onClose={() => handleRowClick(p.id)}
             onArchive={() => handleArchivePatient(p.id, p.is_archived)}
+            onEdit={(patient) => flushSync(() => setEditingPatient(patient))}
           />
         )}
         sortField={sortField}
@@ -103,6 +115,7 @@ export default function Patients() {
         emptyMessage="Нет пациентов"
       />
       <Pagination currentPage={1} totalPages={10} onPageChange={() => {}} />
+      <AddPatientModal editingPatient={editingPatient} onSuccess={handlePatientUpdated} />
     </>
   );
 }

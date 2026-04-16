@@ -63,6 +63,20 @@ export function usePatients() {
       });
   };
 
+  const handlePatientUpdated = (updatedPatient?: IPatientListItem) => {
+    if (!updatedPatient) return;
+    setPatients((current) =>
+      current.map((p) =>
+        p.id === updatedPatient.id ? { ...p, ...updatedPatient } : p,
+      ),
+    );
+    setSearchResults((current) =>
+      current.map((p) =>
+        p.id === updatedPatient.id ? { ...p, ...updatedPatient } : p,
+      ),
+    );
+  };
+
   const handleSort = (field: string) => {
     if (sortField !== field) {
       setSortField(field);
@@ -154,5 +168,6 @@ export function usePatients() {
     handleRowClick,
     handleSearchResultClick,
     handleSort,
+    handlePatientUpdated,
   };
 }
