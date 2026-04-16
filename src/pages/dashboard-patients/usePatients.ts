@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import { patient as patientApi } from 'api';
 import { useDebounce } from 'hooks/useDebounce';
+import { usePagination } from 'hooks/usePagination';
 import type { IPatientListItem, IPatientSearchParams } from 'types/patients.types';
 import type { SortDirection } from 'components/data-table';
 
-const DEFAULT_LIMIT = 100;
-const DEFAULT_OFFSET = 0;
-
 export function usePatients() {
+  const { currentPage, totalPages, offset, pageSize, handlePageChange: onPageChange, resetPage, setTotal }
+    = usePagination();
   const [patients, setPatients] = useState<IPatientListItem[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -21,12 +21,18 @@ export function usePatients() {
   const [sortDirection, setSortDirection] = useState<SortDirection>('none');
   const debouncedSearchName = useDebounce(searchName.trim(), 300);
 
+  const handlePageChange = (page: number) => {
+    onPageChange(page);
+    setExpandedPatientId(null);
+  };
+
   const handleArchiveToggle = () => {
     setIsLoading(true);
     if (searchName.trim()) {
       setIsSearchLoading(true);
     }
     setExpandedPatientId(null);
+    resetPage();
     setSortField(undefined);
     setSortDirection('none');
     setArchivedStatus((current) =>
@@ -36,6 +42,7 @@ export function usePatients() {
 
   const handleSearchNameChange = (value: string) => {
     setSearchName(value);
+    resetPage();
     if (value.trim()) {
       setIsSearchLoading(true);
     } else {
@@ -92,11 +99,12 @@ export function usePatients() {
         .getSearchPatient({
           name: debouncedSearchName,
           archived_status: archivedStatus,
-          limit: DEFAULT_LIMIT,
-          offset: DEFAULT_OFFSET,
+          limit: pageSize,
+          offset,
         })
-        .then((data: { patients: IPatientListItem[] }) => {
+        .then((data: { total: number; patients: IPatientListItem[] }) => {
           setError(null);
+          setTotal(data.total);
           setSearchResults(data.patients);
           setPatients(data.patients);
         })
@@ -113,11 +121,12 @@ export function usePatients() {
       patientApi
         .getAllPatient({
           archived_status: archivedStatus,
-          limit: DEFAULT_LIMIT,
-          offset: DEFAULT_OFFSET,
+          limit: pageSize,
+          offset,
         })
-        .then((data: { patients: IPatientListItem[] }) => {
+        .then((data: { total: number; patients: IPatientListItem[] }) => {
           setError(null);
+          setTotal(data.total);
           setPatients(data.patients);
         })
         .catch(() => {
@@ -126,7 +135,7 @@ export function usePatients() {
         })
         .finally(() => setIsLoading(false));
     }
-  }, [archivedStatus, debouncedSearchName]);
+  }, [archivedStatus, debouncedSearchName, offset]);
 
   const visibleSearchResults = debouncedSearchName ? searchResults : [];
 
@@ -169,5 +178,8 @@ export function usePatients() {
     handleSearchResultClick,
     handleSort,
     handlePatientUpdated,
+    currentPage,
+    totalPages,
+    handlePageChange,
   };
 }

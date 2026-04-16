@@ -22,6 +22,11 @@ export const patient = {
   deletePatient: bind(remove, URLS.patient.deletePatient),
 }
 
+export const recipe = {
+  getAllRecipe: bind(get, URLS.recipe.getAllRecipe),
+  postSearchRecipe: bind(post, URLS.recipe.postSearchRecipe),
+  patchRecipe: (recipeId, data) => patch(URLS.recipe.patchRecipe.replace('{recipe_id}', recipeId), data),
+}
 function bind(f, arg) {
   return (...args) => f(arg, ...args)
 }

@@ -38,6 +38,9 @@ export default function Patients() {
     handleSearchResultClick,
     handleSort,
     handlePatientUpdated,
+    currentPage,
+    totalPages,
+    handlePageChange,
   } = usePatients();
 
   if (isLoading) return <Loader position="fixed" />;
@@ -114,7 +117,7 @@ export default function Patients() {
         onSort={handleSort}
         emptyMessage="Нет пациентов"
       />
-      <Pagination currentPage={1} totalPages={10} onPageChange={() => {}} />
+      <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
       <AddPatientModal editingPatient={editingPatient} onSuccess={handlePatientUpdated} />
     </>
   );

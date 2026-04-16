@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { patient as patientApi } from 'api';
 import ROLES, { ROLE_NAMES } from 'const/roles';
 import type { IPatientListItem } from 'types/patients.types';
-import type { UserDetailsProps } from 'types/users.types';
+import type { IUserDetailsProps } from 'types/users.types';
 import { Button } from 'ui/button';
 import Loader from 'ui/loader';
 import {
@@ -35,7 +35,7 @@ export function UserDetails({
   onClose,
   onArchive,
   onEdit,
-}: UserDetailsProps) {
+}: IUserDetailsProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [patients, setPatients] = useState<IPatientListItem[]>([]);
   const [patientsLoading, setPatientsLoading] = useState(false);
@@ -123,7 +123,7 @@ export function UserDetails({
                   </button>
                 </div>
                 <div className="ud-card__reg">
-                  <span className="ud-card__reg-label">Регистрация:</span>
+                  <span className="ud-card__reg-label">Дата регистрации:</span>
                   <span>{formatDate(user.registration_date)}</span>
                 </div>
               </div>

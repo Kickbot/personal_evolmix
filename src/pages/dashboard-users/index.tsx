@@ -57,6 +57,9 @@ export default function Users() {
     handleSearchResultClick,
     handleSort,
     handleUserUpdated,
+    currentPage,
+    totalPages,
+    handlePageChange,
   } = useUsers();
 
   if (isLoading) return <Loader position="fixed" />;
@@ -162,7 +165,7 @@ export default function Users() {
           </div>
         ))}
       </div>
-      <Pagination currentPage={1} totalPages={10} onPageChange={() => {}} />
+      <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
       <AddUserModal editingUser={editingUser} onSuccess={handleUserUpdated} />
     </>
   );

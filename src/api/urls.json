@@ -29,7 +29,7 @@
   },
   "recipe": {
     "getAllRecipe": "recipe/",
-    "getSearchRecipe": "recipe/search",
+    "postSearchRecipe": "recipe/search",
     "patchRecipe": "recipe/{recipe_id}"
   },
   "substance": {

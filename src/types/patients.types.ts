@@ -1,5 +1,6 @@
 export interface IPatientResponse {
   success: boolean;
+  total: number;
   patients: IPatientListItem[];
 }
 
@@ -59,4 +60,10 @@ export interface IPatientPatchData {
 export interface IPatientPatchResponse {
   success: boolean;
   patient: IPatientListItem;
+}
+
+export interface IPatientSearchResponse {
+  success: boolean;
+  total: number;
+  patients: IPatientListItem[];
 }

@@ -1,3 +1,9 @@
+export interface IUserResponse {
+  success: boolean;
+  total: number;
+  users: IUserListItem[];
+}
+
 export interface IUserListItem {
   id: string;
   first_name: string;

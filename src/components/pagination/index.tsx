@@ -16,9 +16,9 @@ interface PaginationProps {
 function getPageRange(
   currentPage: number,
   totalPages: number,
-  siblingCount: number = 1,
+  siblingCount: number = 2,
 ): PageItem[] {
-  const totalSlots = siblingCount * 2 + 5;
+  const totalSlots = siblingCount + 4;
 
   if (totalPages <= totalSlots) {
     return Array.from({ length: totalPages }, (_, i) => i + 1);
@@ -32,7 +32,7 @@ function getPageRange(
 
   if (!showLeftDots && showRightDots) {
     const leftRange = Array.from(
-      { length: 3 + 2 * siblingCount },
+      { length: siblingCount + 2 },
       (_, i) => i + 1,
     );
     return [...leftRange, DOTS, totalPages];
@@ -40,8 +40,8 @@ function getPageRange(
 
   if (showLeftDots && !showRightDots) {
     const rightRange = Array.from(
-      { length: 3 + 2 * siblingCount },
-      (_, i) => totalPages - (3 + 2 * siblingCount) + i + 1,
+      { length: siblingCount + 2 },
+      (_, i) => totalPages - (siblingCount + 2) + i + 1,
     );
     return [1, DOTS, ...rightRange];
   }

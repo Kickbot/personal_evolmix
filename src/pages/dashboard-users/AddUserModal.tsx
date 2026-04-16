@@ -267,7 +267,7 @@ export function AddUserModal({ onSuccess, editingUser }: AddUserModalProps) {
                     <Input
                       id="add-date"
                       {...register('registration_date')}
-                      label="Дата"
+                      label="Дата регистрации"
                       type="date"
                       disabled
                     />

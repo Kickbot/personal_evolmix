@@ -2,13 +2,13 @@ import { useEffect, useState } from 'react';
 import { user as userApi } from 'api';
 import ROLES from 'const/roles';
 import { useDebounce } from 'hooks/useDebounce';
+import { usePagination } from 'hooks/usePagination';
 import type { IUserListItem, IUserSearchParams } from 'types/users.types';
 import type { SortDirection } from 'components/data-table';
 
-const DEFAULT_LIMIT = 100;
-const DEFAULT_OFFSET = 0;
-
 export function useUsers() {
+  const { currentPage, totalPages, offset, pageSize, handlePageChange: onPageChange, resetPage, setTotal }
+    = usePagination();
   const [users, setUsers] = useState<IUserListItem[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<string>(ROLES.ADMIN);
@@ -23,11 +23,17 @@ export function useUsers() {
   const [sortDirection, setSortDirection] = useState<SortDirection>('none');
   const debouncedSearchName = useDebounce(searchName.trim(), 300);
 
+  const handlePageChange = (page: number) => {
+    onPageChange(page);
+    setExpandedUserId(null);
+  };
+
   const handleTabChange = (tabKey: string) => {
     if (tabKey === activeTab) return;
 
     setIsLoading(true);
     setExpandedUserId(null);
+    resetPage();
     setSortField(undefined);
     setSortDirection('none');
     setActiveTab(tabKey);
@@ -39,6 +45,7 @@ export function useUsers() {
       setIsSearchLoading(true);
     }
     setExpandedUserId(null);
+    resetPage();
     setSortField(undefined);
     setSortDirection('none');
     setArchivedStatus((current) =>
@@ -48,6 +55,7 @@ export function useUsers() {
 
   const handleSearchNameChange = (value: string) => {
     setSearchName(value);
+    resetPage();
     if (value.trim()) {
       setIsSearchLoading(true);
     } else {
@@ -109,14 +117,15 @@ export function useUsers() {
         name: debouncedSearchName,
         status: 'active',
         archived_status: archivedStatus,
-        limit: DEFAULT_LIMIT,
-        offset: DEFAULT_OFFSET,
+        limit: pageSize,
+        offset,
       };
 
       userApi
         .search(params)
-        .then((data: { users: IUserListItem[] }) => {
+        .then((data: { total: number; users: IUserListItem[] }) => {
           setError(null);
+          setTotal(data.total);
           setSearchResults(data.users);
           setUsers(data.users.filter((u) => u.role === activeTab));
         })
@@ -134,14 +143,15 @@ export function useUsers() {
         role: activeTab,
         status: 'active',
         archived_status: archivedStatus,
-        limit: DEFAULT_LIMIT,
-        offset: DEFAULT_OFFSET,
+        limit: pageSize,
+        offset,
       };
 
       userApi
         .search(params)
-        .then((data: { users: IUserListItem[] }) => {
+        .then((data: { total: number; users: IUserListItem[] }) => {
           setError(null);
+          setTotal(data.total);
           setUsers(data.users);
         })
         .catch(() => {
@@ -150,7 +160,7 @@ export function useUsers() {
         })
         .finally(() => setIsLoading(false));
     }
-  }, [activeTab, archivedStatus, debouncedSearchName]);
+  }, [activeTab, archivedStatus, debouncedSearchName, offset]);
 
   const visibleSearchResults = debouncedSearchName ? searchResults : [];
 
@@ -191,5 +201,8 @@ export function useUsers() {
     handleSearchResultClick,
     handleSort,
     handleUserUpdated,
+    currentPage,
+    totalPages,
+    handlePageChange,
   };
 }
