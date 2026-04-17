@@ -6,5 +6,5 @@ export interface ColumnDef<T> {
   sortable?: boolean;
   width?: string;
   className?: string;
-  render: (item: T) => React.ReactNode;
+  render: (item: T, index: number) => React.ReactNode;
 }

@@ -28,6 +28,14 @@ export const recipe = {
   patchRecipe: (recipeId, data) => patch(URLS.recipe.patchRecipe.replace('{recipe_id}', recipeId), data),
 }
 
+export const substance = {
+  getAllSubstance: bind(get, URLS.substance.getAllSubstance),
+  getSearchSubstance: bind(get, URLS.substance.getSearchSubstance),
+  patchSubstance: (substanceId, data) => patch(URLS.substance.patchSubstance.replace('{substance_id}', substanceId), data),
+  createSubstance: bind(post, URLS.substance.postCreateSubstance),
+}
+
+
 function bind(f, arg) {
   return (...args) => f(arg, ...args)
 }

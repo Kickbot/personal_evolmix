@@ -33,9 +33,10 @@
     "patchRecipe": "recipe/{recipe_id}"
   },
   "substance": {
-    "getAllSubstance": "substance/",
-    "getSearchSubstance": "substance/search",
-    "patchSubstance": "substance/{substance_id}"
+    "getAllSubstance": "active_substance/",
+    "getSearchSubstance": "active_substance/search",
+    "patchSubstance": "active_substance/{substance_id}",
+    "postCreateSubstance": "active_substance/"
   },
   "warehouse": {
     "getAllWarehouse": "warehouse/",

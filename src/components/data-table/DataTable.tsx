@@ -44,7 +44,7 @@ export function DataTable<T>({
       />
       <div className="dt-body">
         {data.length > 0 ? (
-          data.map((item) => {
+          data.map((item, index) => {
             const id = keyExtractor(item);
             return (
               <DataTableRow
@@ -52,6 +52,7 @@ export function DataTable<T>({
                 item={item}
                 columns={columns}
                 isExpanded={expandedId === id}
+                index={index}
                 onToggle={() => onRowClick?.(id)}
                 renderExpanded={renderExpanded}
               />
