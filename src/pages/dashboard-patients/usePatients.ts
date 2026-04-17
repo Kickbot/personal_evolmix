@@ -72,16 +72,24 @@ export function usePatients() {
 
   const handlePatientUpdated = (updatedPatient?: IPatientListItem) => {
     if (!updatedPatient) return;
-    setPatients((current) =>
-      current.map((p) =>
-        p.id === updatedPatient.id ? { ...p, ...updatedPatient } : p,
-      ),
-    );
-    setSearchResults((current) =>
-      current.map((p) =>
-        p.id === updatedPatient.id ? { ...p, ...updatedPatient } : p,
-      ),
-    );
+    setPatients((current) => {
+      const exists = current.some((p) => p.id === updatedPatient.id);
+      if (exists) {
+        return current.map((p) =>
+          p.id === updatedPatient.id ? { ...p, ...updatedPatient } : p,
+        );
+      }
+      return [updatedPatient, ...current];
+    });
+    setSearchResults((current) => {
+      const exists = current.some((p) => p.id === updatedPatient.id);
+      if (exists) {
+        return current.map((p) =>
+          p.id === updatedPatient.id ? { ...p, ...updatedPatient } : p,
+        );
+      }
+      return [updatedPatient, ...current];
+    });
   };
 
   const handleSort = (field: string) => {
@@ -135,7 +143,7 @@ export function usePatients() {
         })
         .finally(() => setIsLoading(false));
     }
-  }, [archivedStatus, debouncedSearchName, offset]);
+  }, [archivedStatus, debouncedSearchName, offset]);// eslint-disable-line react-hooks/exhaustive-deps
 
   const visibleSearchResults = debouncedSearchName ? searchResults : [];
 

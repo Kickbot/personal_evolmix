@@ -60,16 +60,24 @@ export function useSubstance() {
 
   const handleSubstanceUpdated = (updatedSubstance?: ISubstanceListItem) => {
     if (!updatedSubstance) return;
-    setSubstances((current) =>
-      current.map((s) =>
-        s.id === updatedSubstance.id ? { ...s, ...updatedSubstance } : s,
-      ),
-    );
-    setSearchResults((current) =>
-      current.map((s) =>
-        s.id === updatedSubstance.id ? { ...s, ...updatedSubstance } : s,
-      ),
-    );
+    setSubstances((current) => {
+      const exists = current.some((s) => s.id === updatedSubstance.id);
+      if (exists) {
+        return current.map((s) =>
+          s.id === updatedSubstance.id ? { ...s, ...updatedSubstance } : s,
+        );
+      }
+      return [updatedSubstance, ...current];
+    });
+    setSearchResults((current) => {
+      const exists = current.some((s) => s.id === updatedSubstance.id);
+      if (exists) {
+        return current.map((s) =>
+          s.id === updatedSubstance.id ? { ...s, ...updatedSubstance } : s,
+        );
+      }
+      return [updatedSubstance, ...current];
+    });
   };
 
   const handleSort = (field: string) => {
@@ -123,7 +131,7 @@ export function useSubstance() {
         })
         .finally(() => setIsLoading(false));
     }
-  }, [archivedStatus, debouncedSearchName, offset, pageSize, setTotal]);
+  }, [archivedStatus, debouncedSearchName, offset]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const visibleSearchResults = debouncedSearchName ? searchResults : [];
 
@@ -148,8 +156,6 @@ export function useSubstance() {
             });
           } else if (sortField === 'is_lyophilizate') {
             result = Number(a.is_lyophilizate) - Number(b.is_lyophilizate);
-          } else if (sortField === 'is_archived') {
-            result = Number(a.is_archived) - Number(b.is_archived);
           }
           return sortDirection === 'asc' ? result : -result;
         });

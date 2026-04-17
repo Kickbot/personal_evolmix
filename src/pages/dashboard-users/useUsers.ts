@@ -99,16 +99,24 @@ export function useUsers() {
 
   const handleUserUpdated = (updatedUser?: IUserListItem) => {
     if (!updatedUser) return;
-    setUsers((current) =>
-      current.map((user) =>
-        user.id === updatedUser.id ? { ...user, ...updatedUser } : user,
-      ),
-    );
-    setSearchResults((current) =>
-      current.map((user) =>
-        user.id === updatedUser.id ? { ...user, ...updatedUser } : user,
-      ),
-    );
+    setUsers((current) => {
+      const exists = current.some((user) => user.id === updatedUser.id);
+      if (exists) {
+        return current.map((user) =>
+          user.id === updatedUser.id ? { ...user, ...updatedUser } : user,
+        );
+      }
+      return [updatedUser, ...current];
+    });
+    setSearchResults((current) => {
+      const exists = current.some((user) => user.id === updatedUser.id);
+      if (exists) {
+        return current.map((user) =>
+          user.id === updatedUser.id ? { ...user, ...updatedUser } : user,
+        );
+      }
+      return [updatedUser, ...current];
+    });
   };
 
   useEffect(() => {
@@ -160,7 +168,7 @@ export function useUsers() {
         })
         .finally(() => setIsLoading(false));
     }
-  }, [activeTab, archivedStatus, debouncedSearchName, offset]);
+  }, [activeTab, archivedStatus, debouncedSearchName, offset]);// eslint-disable-line react-hooks/exhaustive-deps
 
   const visibleSearchResults = debouncedSearchName ? searchResults : [];
 
