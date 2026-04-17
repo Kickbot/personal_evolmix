@@ -52,6 +52,7 @@
   align-items: center;
   min-width: 0;
   font-size: 14px;
+  font-weight: 500;
   color: var(--main-text-color);
   height: 100%;
   padding: 0 24px;
@@ -66,10 +67,6 @@
 
 .dt-header .dt-cell:first-child {
   border-left: none;
-}
-
-.dt-row .dt-cell:first-child {
-  font-weight: 600;
 }
 
 .dt-empty {

@@ -29,6 +29,7 @@ export default function Substance() {
     sortField,
     sortDirection,
     handleArchiveToggle,
+    handleArchiveSubstance,
     handleSort,
     handleSubstanceUpdated,
     currentPage,
@@ -122,7 +123,15 @@ export default function Substance() {
       />
       <AddSubstanceModal 
         editingSubstance={editingSubstance} 
-        onSuccess={handleSubstanceUpdated} 
+        onSuccess={handleSubstanceUpdated}
+        onArchive={() => {
+          if (editingSubstance) {
+            handleArchiveSubstance(editingSubstance.id, editingSubstance.is_archived);
+            setTimeout(() => {
+              modalTriggerRef.current?.click();
+            }, 100);
+          }
+        }}
       />
     </>
   );

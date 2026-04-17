@@ -6,27 +6,23 @@ import { Select } from 'ui/select';
 import { Button } from 'ui/button';
 import './addSubstanceModal.css';
 import { AddSaveIcon } from 'ui/icons/AddSaveIcon';
+import { ArchiveIcon } from 'ui/icons/ArchiveIcon';
 import type { ISubstanceListItem } from 'types/substances.types';
+import { CloseIcon } from 'ui/icons';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { addSubstanceSchema, type AddSubstanceFormValues } from 'features/substances/model/addSubstance.schema';
 
 interface AddSubstanceModalProps {
   onSuccess?: (updatedSubstance?: ISubstanceListItem) => void;
   editingSubstance?: ISubstanceListItem | null;
+  onArchive?: () => void;
 }
-
-type AddSubstanceFormValues = {
-  name: string;
-  manufacturer: string;
-  country: string;
-  is_lyophilizate: boolean;
-  concentration: string;
-  density: string;
-};
 
 const EMPTY_VALUES: AddSubstanceFormValues = {
   name: '',
   manufacturer: '',
   country: '',
-  is_lyophilizate: false,
+  is_lyophilizate: 'false',
   concentration: '',
   density: '',
 };
@@ -34,6 +30,7 @@ const EMPTY_VALUES: AddSubstanceFormValues = {
 export function AddSubstanceModal({
   onSuccess,
   editingSubstance,
+  onArchive,
 }: AddSubstanceModalProps) {
   const modalRef = useRef<HTMLDivElement | null>(null);
   const lastTriggerRef = useRef<HTMLElement | null>(null);
@@ -46,8 +43,9 @@ export function AddSubstanceModal({
     clearErrors,
     reset,
     formState: { errors },
-  } = useForm<AddSubstanceFormValues>({
+  } = useForm({
     defaultValues: EMPTY_VALUES,
+    resolver: zodResolver(addSubstanceSchema),
   });
 
   const onSubmit = async (values: AddSubstanceFormValues) => {
@@ -57,9 +55,13 @@ export function AddSubstanceModal({
           name: values.name,
           manufacturer: values.manufacturer,
           country: values.country,
-          is_lyophilizate: values.is_lyophilizate,
-          concentration: values.concentration ? Number(values.concentration.replace(',', '.')) : 0,
-          density: values.density ? Number(values.density.replace(',', '.')) : null,
+          is_lyophilizate: values.is_lyophilizate === 'true',
+          concentration: values.concentration
+            ? Number(values.concentration.replace(',', '.'))
+            : 0,
+          density: values.density
+            ? Number(values.density.replace(',', '.'))
+            : 0,
           is_archived: editingSubstance.is_archived,
         };
         const response = (await substanceApi.patchSubstance(
@@ -72,11 +74,18 @@ export function AddSubstanceModal({
           name: values.name,
           manufacturer: values.manufacturer,
           country: values.country,
-          concentration: values.concentration ? Number(values.concentration.replace(',', '.')) : 0,
-          density: values.density ? Number(values.density.replace(',', '.')) : null,
-          is_lyophilizate: values.is_lyophilizate,
+          concentration: values.concentration
+            ? Number(values.concentration.replace(',', '.'))
+            : 0,
+          density: values.density
+            ? Number(values.density.replace(',', '.'))
+            : 0,
+          is_lyophilizate: values.is_lyophilizate === 'true',
         };
-        const response = (await substanceApi.createSubstance(payload)) as { success: boolean; substance: ISubstanceListItem };
+        const response = (await substanceApi.createSubstance(payload)) as {
+          success: boolean;
+          substance: ISubstanceListItem;
+        };
         onSuccess?.(response.substance);
       }
       reset(EMPTY_VALUES);
@@ -92,7 +101,7 @@ export function AddSubstanceModal({
         name: editingSubstance.name,
         manufacturer: editingSubstance.manufacturer,
         country: editingSubstance.country,
-        is_lyophilizate: editingSubstance.is_lyophilizate,
+        is_lyophilizate: editingSubstance.is_lyophilizate ? 'true' : 'false',
         concentration: editingSubstance.concentration?.toString() ?? '',
         density: editingSubstance.density?.toString() ?? '',
       });
@@ -178,11 +187,22 @@ export function AddSubstanceModal({
                     {...register('name', {
                       onChange: () => clearErrors('name'),
                     })}
-                    label="Название"
-                    placeholder="Название вещества"
+                    label="Действующее вещество"
+                    placeholder="Действующее вещество"
                     required
                     autoComplete="off"
                     error={errors.name?.message}
+                  />
+                  <Input
+                    id="add-substance-concentration"
+                    {...register('concentration', {
+                      onChange: () => clearErrors('concentration'),
+                    })}
+                    label="Концентрация: мг/1мл"
+                    placeholder="Концентрация"
+                    required
+                    autoComplete="off"
+                    error={errors.concentration?.message}
                   />
                   <Input
                     id="add-substance-manufacturer"
@@ -206,27 +226,17 @@ export function AddSubstanceModal({
                     autoComplete="off"
                     error={errors.country?.message}
                   />
-                  <Input
-                    id="add-substance-concentration"
-                    {...register('concentration', {
-                      onChange: () => clearErrors('concentration'),
-                    })}
-                    label="Концентрация (мг)"
-                    placeholder="Концентрация"
-                    required
-                    autoComplete="off"
-                    error={errors.concentration?.message}
-                  />
-                  <Input
-                    id="add-substance-density"
-                    {...register('density', {
-                      onChange: () => clearErrors('density'),
-                    })}
-                    label="Плотность"
-                    placeholder="Плотность"
-                    autoComplete="off"
-                    error={errors.density?.message}
-                  />
+                  <div className="form-check form-switch">
+                    <input
+                      className="form-check-input"
+                      type="checkbox"
+                      role="switch"
+                      id="switchCheckChecked"
+                    />
+                    <label className="form-check-label" htmlFor="switchCheckChecked">
+                      Checked switch checkbox input
+                    </label>
+                  </div>
                   <Select
                     id="add-substance-lyophilizate"
                     {...register('is_lyophilizate', {
@@ -234,6 +244,7 @@ export function AddSubstanceModal({
                     })}
                     label="Лиофилизат"
                     placeholder="Выберите"
+                    labelClassName="text-uppercase"
                     error={errors.is_lyophilizate?.message}
                     options={[
                       { value: 'true', label: 'Да' },
@@ -242,15 +253,40 @@ export function AddSubstanceModal({
                   />
                 </div>
               </div>
-
-              <Button
-                className="w-100 has-icon"
-                type="submit"
-                iconBefore={<AddSaveIcon />}
-              >
-                {isEditMode ? 'Обновить данные' : 'Сохранить'}
-              </Button>
+              <div className="form-actions">
+                <Button
+                  className={`primary has-icon ${!isEditMode ? 'w-100' : ''}`}
+                  type="submit"
+                  iconBefore={<AddSaveIcon />}
+                >
+                  {isEditMode ? 'Обновить данные' : 'Сохранить'}
+                </Button>
+                {isEditMode && onArchive && (
+                  <Button
+                    className="secondary has-icon"
+                    type="button"
+                    iconBefore={<CloseIcon />}
+                    data-bs-dismiss="modal"
+                  >
+                    Закрыть
+                  </Button>
+                )}
+              </div>
             </form>
+            {isEditMode && onArchive && (
+              <div className="add-to-archive">
+              <Button
+                className="w-100 bordered has-icon"
+                type="button"
+                iconAfter={<ArchiveIcon />}
+                onClick={onArchive}
+              >
+                {editingSubstance?.is_archived
+                  ? 'Восстановить из архива'
+                  : 'Переместить в архив'}
+              </Button>
+              </div>
+            )}
           </div>
         </div>
       </div>

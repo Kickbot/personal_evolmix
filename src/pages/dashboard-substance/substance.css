@@ -32,3 +32,20 @@
   color: var(--main-text-color);
   line-height: 1.2;
 }
+
+.add-to-archive {
+  padding: 24px;
+  background-color: #eaeff2;
+  border-radius: 10px;
+  margin-top: 24px;
+}
+
+.form-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  & .button {
+    min-width: 220px;
+  }
+}
+
