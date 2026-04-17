@@ -4,7 +4,7 @@ export const addSubstanceSchema = z.object({
   name: z.string().trim().min(1, 'Действующее вещество обязательно'),
   manufacturer: z.string().trim().min(1, 'Производитель обязателен'),
   country: z.string().trim().min(1, 'Страна обязательна'),
-  is_lyophilizate: z.string().trim().min(1, 'Выберите значение'),
+  is_lyophilizate: z.boolean(),
   concentration: z
     .string()
     .trim()

@@ -1,0 +1,69 @@
+.form-switch {
+  display: flex;
+  flex-direction: column;
+  padding-left: 0;
+  box-sizing: border-box;
+}
+
+.form-switch .form-label {
+  text-transform: uppercase;
+  color: var(--second-text-color);
+}
+
+.switch-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.switch-input {
+  display: none;
+}
+
+.switch-label {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 60px;
+  height: 32px;
+  background-color: #F1F1F1;
+  border: 1px solid #F1F1F1;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.switch-slider {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 24px;
+  height: 24px;
+  background-color: #767d81;
+  border-radius: 50%;
+  transition: transform 0.3s;
+  box-sizing: border-box;
+}
+
+.switch-input:checked + .switch-label {
+  border: 1px solid var(--main-color);
+  background-color: #ffffff;
+  color: #ffffff;
+}
+
+.switch-input:checked + .switch-label .switch-slider {
+  background-color: var(--main-color);
+  transform: translateX(28px);
+  color: var(--main-color);
+}
+
+.switch-text {
+  margin-left: 65px;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--second-text-color);
+  transition: color 0.3s;
+}
+
+.switch-input:checked + .switch-label .switch-text {
+  color: var(--main-text-color);
+}

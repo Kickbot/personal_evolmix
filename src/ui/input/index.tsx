@@ -62,7 +62,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           className={cn('form-control', invalid && 'is-invalid', inputClassName, className)}
         />
 
-        {error ? <div className="invalid-feedback d-block mb-2">{error}</div> : null}
+        {error ? <div className="invalid-feedback d-block">{error}</div> : null}
         {!error && hint ? <div className="form-text">{hint}</div> : null}
       </div>
     )

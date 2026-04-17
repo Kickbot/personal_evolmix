@@ -1,9 +1,10 @@
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { useEffect, useRef, useState } from 'react';
 import { substance as substanceApi } from 'api';
 import { Input } from 'ui/input';
-import { Select } from 'ui/select';
 import { Button } from 'ui/button';
+import { Switch } from 'ui/switch';
+import 'ui/switch/switch.css';
 import './addSubstanceModal.css';
 import { AddSaveIcon } from 'ui/icons/AddSaveIcon';
 import { ArchiveIcon } from 'ui/icons/ArchiveIcon';
@@ -22,7 +23,7 @@ const EMPTY_VALUES: AddSubstanceFormValues = {
   name: '',
   manufacturer: '',
   country: '',
-  is_lyophilizate: 'false',
+  is_lyophilizate: false,
   concentration: '',
   density: '',
 };
@@ -42,6 +43,7 @@ export function AddSubstanceModal({
     handleSubmit,
     clearErrors,
     reset,
+    control,
     formState: { errors },
   } = useForm({
     defaultValues: EMPTY_VALUES,
@@ -55,7 +57,7 @@ export function AddSubstanceModal({
           name: values.name,
           manufacturer: values.manufacturer,
           country: values.country,
-          is_lyophilizate: values.is_lyophilizate === 'true',
+          is_lyophilizate: values.is_lyophilizate,
           concentration: values.concentration
             ? Number(values.concentration.replace(',', '.'))
             : 0,
@@ -80,7 +82,7 @@ export function AddSubstanceModal({
           density: values.density
             ? Number(values.density.replace(',', '.'))
             : 0,
-          is_lyophilizate: values.is_lyophilizate === 'true',
+          is_lyophilizate: values.is_lyophilizate,
         };
         const response = (await substanceApi.createSubstance(payload)) as {
           success: boolean;
@@ -101,7 +103,7 @@ export function AddSubstanceModal({
         name: editingSubstance.name,
         manufacturer: editingSubstance.manufacturer,
         country: editingSubstance.country,
-        is_lyophilizate: editingSubstance.is_lyophilizate ? 'true' : 'false',
+        is_lyophilizate: editingSubstance.is_lyophilizate,
         concentration: editingSubstance.concentration?.toString() ?? '',
         density: editingSubstance.density?.toString() ?? '',
       });
@@ -226,30 +228,18 @@ export function AddSubstanceModal({
                     autoComplete="off"
                     error={errors.country?.message}
                   />
-                  <div className="form-check form-switch">
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      role="switch"
-                      id="switchCheckChecked"
-                    />
-                    <label className="form-check-label" htmlFor="switchCheckChecked">
-                      Checked switch checkbox input
-                    </label>
-                  </div>
-                  <Select
-                    id="add-substance-lyophilizate"
-                    {...register('is_lyophilizate', {
-                      onChange: () => clearErrors('is_lyophilizate'),
-                    })}
-                    label="Лиофилизат"
-                    placeholder="Выберите"
-                    labelClassName="text-uppercase"
-                    error={errors.is_lyophilizate?.message}
-                    options={[
-                      { value: 'true', label: 'Да' },
-                      { value: 'false', label: 'Нет' },
-                    ]}
+                  <Controller
+                    name="is_lyophilizate"
+                    control={control}
+                    render={({ field }) => (
+                      <Switch
+                        id="add-substance-lyophilizate"
+                        label="Лиофилизат"
+                        labelClassName="text-uppercase"
+                        checked={field.value}
+                        onChange={field.onChange}
+                      />
+                    )}
                   />
                 </div>
               </div>
