@@ -1,10 +1,13 @@
-import { useContext } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import Context from 'context';
 import ROLES from 'const/roles';
 import type { IPatientListItem } from 'types/patients.types';
+import type { IRecipeListItem } from 'types/recipes.types';
 import { Button } from 'ui/button';
 import { ArchiveIcon, CloseIcon, EditIcon } from 'ui/icons';
 import { StatusBadge } from 'ui/statusBadge';
+import { recipe } from 'api';
+import Loader from 'ui/loader';
 
 const GENDER_SHORT: Record<string, string> = {
   male: 'М',
@@ -40,9 +43,35 @@ export function PatientDetails({
   onArchive,
   onEdit,
 }: PatientDetailsProps) {
-  const { currentUser } = useContext(Context) as { currentUser: { role: string } };
-  const canEdit = currentUser?.role === ROLES.DOCTOR || currentUser?.role === ROLES.ADMIN;
+  const { currentUser } = useContext(Context) as {
+    currentUser: { role: string };
+  };
+  const canEdit =
+    currentUser?.role === ROLES.DOCTOR || currentUser?.role === ROLES.ADMIN;
   const genderLabel = GENDER_SHORT[patient.gender] ?? patient.gender;
+  const [recipes, setRecipes] = useState<IRecipeListItem[]>([]);
+  const [isLoadingRecipes, setIsLoadingRecipes] = useState(false);
+
+  useEffect(() => {
+    const fetchPatientRecipes = async () => {
+      setIsLoadingRecipes(true);
+      try {
+        const response = await recipe.postSearchRecipe({
+          patient_id: patient.id,
+          limit: 10,
+          offset: 0,
+        });
+        setRecipes(response.recipes || []);
+        console.log('Recipes:', response.recipes);
+      } catch (error) {
+        console.error('Failed to fetch recipes:', error);
+      } finally {
+        setIsLoadingRecipes(false);
+      }
+    };
+
+    fetchPatientRecipes();
+  }, [patient.id]);
 
   return (
     <div className="dt-details p-4">
@@ -132,26 +161,36 @@ export function PatientDetails({
 
             <div className="pd-prescriptions__list-host">
               <div className="pd-prescriptions__list">
-                {[1, 2, 3].map((i) => (
-                  <div key={i} className="pd-prescription-item">
-                    <div className="pd-prescription-item__meta">
-                      <span className="pd-prescription-item__id">
-                        2fe9b68c-98c
-                      </span>
-                      <span className="pd-prescription-item__drug">
-                        ТЕЦЕНТРИК®(Tetsentrik)Atezolizumab
-                      </span>
-                      <span className="pd-prescription-item__dose">
-                        Концентрация: &nbsp; 60мг
-                      </span>
-                    </div>
-                    <div className="pd-prescription-item__row">
-                      <div className="pd-prescription-item__date">
-                        Дата: 21.03.2026
+                {isLoadingRecipes ? (
+                  <Loader position="absolute" />
+                ) : recipes.length === 0 ? (
+                  <div className="text-center py-4">Нет назначений</div>
+                ) : (
+                  recipes.map((recipe) => (
+                    <div key={recipe.id} className="pd-prescription-item">
+                      <div className="pd-prescription-item__meta">
+                        <span className="pd-prescription-item__id">
+                          {recipe.recipe_number}
+                        </span>
+                        <span className="pd-prescription-item__drug">
+                          {recipe.active_substance.name}
+                        </span>
+                        <span className="pd-prescription-item__dose">
+                          Концентрация: &nbsp; {recipe.active_substance.concentration}
+                          мг
+                        </span>
+                      </div>
+                      <div className="pd-prescription-item__row">
+                        <div className="pd-prescription-item__date">
+                          Дата: &nbsp;
+                          {new Date(recipe.created_at).toLocaleDateString(
+                            'ru-RU',
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))
+                )}
               </div>
             </div>
           </div>

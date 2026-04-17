@@ -27,6 +27,7 @@ export const recipe = {
   postSearchRecipe: bind(post, URLS.recipe.postSearchRecipe),
   patchRecipe: (recipeId, data) => patch(URLS.recipe.patchRecipe.replace('{recipe_id}', recipeId), data),
 }
+
 function bind(f, arg) {
   return (...args) => f(arg, ...args)
 }
