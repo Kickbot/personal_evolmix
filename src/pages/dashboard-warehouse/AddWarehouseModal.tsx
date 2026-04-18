@@ -24,8 +24,8 @@ interface AddWarehouseModalProps {
 
 const EMPTY_VALUES: AddWarehouseFormValues = {
   active_substance_id: '',
-  volume: undefined,
-  wh_quantity: undefined,
+  volume: '',
+  wh_quantity: '',
 };
 
 export function AddWarehouseModal({
@@ -221,9 +221,10 @@ export function AddWarehouseModal({
                     {...register('volume', {
                       onChange: () => clearErrors('volume'),
                     })}
-                    label="Тара (мг/мл)"
-                    placeholder="Тара"
+                    label="Объем (мг/мл)"
+                    placeholder="Объем"
                     autoComplete="off"
+                    required
                     error={errors.volume?.message}
                   />
                   <Input
@@ -234,6 +235,7 @@ export function AddWarehouseModal({
                     label="Количество"
                     placeholder="Количество"
                     autoComplete="off"
+                    required
                     error={errors.wh_quantity?.message}
                   />
                 </div>

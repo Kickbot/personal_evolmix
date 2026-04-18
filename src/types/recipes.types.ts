@@ -7,6 +7,11 @@ export interface IRecipesResponse {
   recipes: IRecipeListItem[];
 }
 
+export interface IRecipeSingleResponse {
+  success: boolean;
+  recipe: IRecipeListItem;
+}
+
 /** Ответ POST `/recipe/search` совпадает с общим списком рецептов */
 export type IRecipeSearchResponse = IRecipesResponse;
 
@@ -32,6 +37,32 @@ export interface IRecipeSearchBody {
   is_archived?: boolean;
 }
 
+export interface IRecipeCreateBody {
+  solvent_dosage: number;
+  active_substance_dosage: number;
+  is_solvent_prefilled: boolean;
+  recipie_type: string;
+  patient_id: string;
+  doctor_id: string;
+  solvent_id: string;
+  active_substance_id: string;
+  task_id: string;
+}
+
+export interface IRecipePatchBody {
+  recipie_type?: string;
+  solvent_dosage?: number;
+  active_substance_dosage?: number;
+  patient_id?: string;
+  doctor_id?: string;
+  solvent_id?: string;
+  active_substance_id?: string;
+  task_id?: string;
+  is_solvent_prefilled?: boolean;
+  doctor_confirm_status?: string;
+  is_archived?: boolean;
+}
+
 export interface IRecipeListItem {
   id: string;
   recipe_number: string;
@@ -49,7 +80,7 @@ export interface IRecipeListItem {
   solvent: IRecipeSolvent;
   active_substance: IRecipeActiveSubstance;
   created_at: string;
-  updated_at: string;
+  updated_at: string | null;
   status: string;
   doctor_confirm_status: string;
 }
@@ -60,7 +91,7 @@ export interface IRecipeSolvent {
   manufacturer: string;
   country: string;
   code: string;
-  wh_quantity: number;
+  wh_quantity: number | null;
   is_prefilled: boolean;
   prefilled_volume: number;
   is_archived: boolean;
@@ -74,6 +105,6 @@ export interface IRecipeActiveSubstance {
   code: string;
   is_lyophilizate: boolean;
   concentration: number;
-  density: number;
+  density: number | null;
   is_archived: boolean;
 }

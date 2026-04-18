@@ -71,7 +71,7 @@ export default function Patients() {
                 ))
               : null}
           </SearchInput>
-          {archivedStatus !== 'archived' && currentUser?.role === ROLES.DOCTOR && (
+          {archivedStatus !== 'archived' && (currentUser?.role === ROLES.DOCTOR || currentUser?.role === ROLES.HEAD_DOCTOR) && (
             <Button
               className="primary has-icon"
               iconBefore={<AddPlusIcon />}

@@ -29,8 +29,11 @@
   },
   "recipe": {
     "getAllRecipe": "recipe/",
+    "getRecipeById": "recipe/{recipe_id}",
     "postSearchRecipe": "recipe/search",
-    "patchRecipe": "recipe/{recipe_id}"
+    "patchRecipe": "recipe/{recipe_id}",
+    "postCreateRecipe": "recipe/",
+    "deleteRecipe": "recipe/{recipe_id}"
   },
   "substance": {
     "getAllSubstance": "active_substance/",

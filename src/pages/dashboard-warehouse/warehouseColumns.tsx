@@ -35,7 +35,7 @@ export const warehouseColumns: ColumnDef<IWarehouseListItem>[] = [
   },
   {
     key: 'volume',
-    header: 'Тара (мг/мл)',
+    header: 'Объем (мг/мл)',
     sortable: true,
     width: '200px',
     className: 'justify-content-center',

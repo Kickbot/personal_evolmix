@@ -63,14 +63,14 @@ function App() {
                 <Route path="users" element={<Users />} />
               </Route>
 
-              <Route element={<ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.DOCTOR, ROLES.PHARMACIST]} />}>
+              <Route element={<ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.HEAD_DOCTOR, ROLES.DOCTOR, ROLES.PHARMACIST]} />}>
                 <Route path="patients" element={<Patients />} />
                 <Route path="recipes" element={<Recipes />} />
                 <Route path="substance" element={<Substance />} />
                 <Route path="warehouse" element={<Warehouse />} />
               </Route>
 
-              <Route element={<ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.DOCTOR, ROLES.PHARMACIST, ROLES.OPERATOR]} />}>
+              <Route element={<ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.HEAD_DOCTOR, ROLES.DOCTOR, ROLES.PHARMACIST, ROLES.OPERATOR]} />}>
                 <Route path="tasks" element={<Tasks />} />
               </Route>
             </Route>

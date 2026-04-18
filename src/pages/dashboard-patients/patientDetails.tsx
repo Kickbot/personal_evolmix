@@ -47,7 +47,9 @@ export function PatientDetails({
     currentUser: { role: string };
   };
   const canEdit =
-    currentUser?.role === ROLES.DOCTOR || currentUser?.role === ROLES.ADMIN;
+    currentUser?.role === ROLES.DOCTOR ||
+    currentUser?.role === ROLES.HEAD_DOCTOR ||
+    currentUser?.role === ROLES.ADMIN;
   const genderLabel = GENDER_SHORT[patient.gender] ?? patient.gender;
   const [recipes, setRecipes] = useState<IRecipeListItem[]>([]);
   const [isLoadingRecipes, setIsLoadingRecipes] = useState(false);

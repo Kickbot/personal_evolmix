@@ -5,10 +5,9 @@ export const addWarehouseSchema = z.object({
   volume: z
     .string()
     .trim()
-    .optional()
-    .nullable()
+    .min(1, 'Поле обязательно')
     .refine(
-      (v) => !v || !Number.isNaN(Number(v.replace(',', '.'))),
+      (v) => !Number.isNaN(Number(v.replace(',', '.'))),
       {
         message: 'Некорректное число',
       },
@@ -16,10 +15,9 @@ export const addWarehouseSchema = z.object({
   wh_quantity: z
     .string()
     .trim()
-    .optional()
-    .nullable()
+    .min(1, 'Поле обязательно')
     .refine(
-      (v) => !v || !Number.isNaN(Number(v.replace(',', '.'))),
+      (v) => !Number.isNaN(Number(v.replace(',', '.'))),
       {
         message: 'Некорректное число',
       },

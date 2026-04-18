@@ -58,10 +58,8 @@ export function useWarehouse() {
   const handleArchiveWarehouse = (warehouseId: string, isArchived: boolean) => {
     warehouseApi
       .patchWarehouse(warehouseId, { is_archived: !isArchived })
-      .then((data) => {
-        if ((data as { success: boolean }).success) {
-          setWarehouse((current) => current.filter((w) => w.id !== warehouseId));
-        }
+      .then(() => {
+        setWarehouse((current) => current.filter((w) => w.id !== warehouseId));
       });
   };
 
