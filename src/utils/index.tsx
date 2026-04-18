@@ -39,6 +39,13 @@ export const isIOS = () => {
   return 'unknown';
 };
 
+export function upsertById<T extends { id: string }>(list: T[], item: T): T[] {
+  const exists = list.some((x) => x.id === item.id);
+  return exists
+    ? list.map((x) => (x.id === item.id ? { ...x, ...item } : x))
+    : [item, ...list];
+}
+
 export const parseText = (text: string, limit: number) => {
   if (text.length > limit) {
     for (let i = limit; i > 0; i--){

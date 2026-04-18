@@ -1,23 +1,25 @@
 import { useEffect, useState } from 'react';
 import { warehouse as warehouseApi } from 'api';
 import { useDebounce } from 'hooks/useDebounce';
+import { useListControls } from 'hooks/useListControls';
 import { usePagination } from 'hooks/usePagination';
+import { upsertById } from 'utils';
 import type { IWarehouseListItem, IWarehouseSearchParams } from 'types/warehouse.types';
-import type { SortDirection } from 'components/data-table';
 
 export function useWarehouse() {
   const { currentPage, totalPages, offset, pageSize, handlePageChange: onPageChange, resetPage, setTotal }
     = usePagination();
+  const {
+    sortField, sortDirection, handleSort, resetSort,
+    searchName, setSearchName,
+    isSearchLoading, setIsSearchLoading,
+  } = useListControls();
   const [warehouse, setWarehouse] = useState<IWarehouseListItem[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [archivedStatus, setArchivedStatus] =
     useState<IWarehouseSearchParams['archived_status']>('nonarchived');
-  const [searchName, setSearchName] = useState('');
   const [searchResults, setSearchResults] = useState<IWarehouseListItem[]>([]);
-  const [isSearchLoading, setIsSearchLoading] = useState(false);
-  const [sortField, setSortField] = useState<string | undefined>();
-  const [sortDirection, setSortDirection] = useState<SortDirection>('none');
   const debouncedSearchName = useDebounce(searchName.trim(), 300);
 
   const handlePageChange = (page: number) => {
@@ -30,8 +32,7 @@ export function useWarehouse() {
       setIsSearchLoading(true);
     }
     resetPage();
-    setSortField(undefined);
-    setSortDirection('none');
+    resetSort();
     setArchivedStatus((current) =>
       current === 'nonarchived' ? 'archived' : 'nonarchived',
     );
@@ -48,6 +49,12 @@ export function useWarehouse() {
     }
   };
 
+  const handleWarehouseUpdated = (updatedWarehouse?: IWarehouseListItem) => {
+    if (!updatedWarehouse) return;
+    setWarehouse((current) => upsertById(current, updatedWarehouse));
+    setSearchResults((current) => upsertById(current, updatedWarehouse));
+  };
+
   const handleArchiveWarehouse = (warehouseId: string, isArchived: boolean) => {
     warehouseApi
       .patchWarehouse(warehouseId, { is_archived: !isArchived })
@@ -56,37 +63,6 @@ export function useWarehouse() {
           setWarehouse((current) => current.filter((w) => w.id !== warehouseId));
         }
       });
-  };
-
-  const handleWarehouseUpdated = (updatedWarehouse?: IWarehouseListItem) => {
-    if (!updatedWarehouse) return;
-    setWarehouse((current) => {
-      const exists = current.some((w) => w.id === updatedWarehouse.id);
-      if (exists) {
-        return current.map((w) =>
-          w.id === updatedWarehouse.id ? { ...w, ...updatedWarehouse } : w,
-        );
-      }
-      return [updatedWarehouse, ...current];
-    });
-    setSearchResults((current) => {
-      const exists = current.some((w) => w.id === updatedWarehouse.id);
-      if (exists) {
-        return current.map((w) =>
-          w.id === updatedWarehouse.id ? { ...w, ...updatedWarehouse } : w,
-        );
-      }
-      return [updatedWarehouse, ...current];
-    });
-  };
-
-  const handleSort = (field: string) => {
-    if (sortField !== field) {
-      setSortField(field);
-      setSortDirection('asc');
-    } else {
-      setSortDirection((current) => (current === 'asc' ? 'desc' : 'asc'));
-    }
   };
 
   useEffect(() => {

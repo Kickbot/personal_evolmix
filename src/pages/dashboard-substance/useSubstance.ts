@@ -1,23 +1,25 @@
 import { useEffect, useState } from 'react';
 import { substance as substanceApi } from 'api';
 import { useDebounce } from 'hooks/useDebounce';
+import { useListControls } from 'hooks/useListControls';
 import { usePagination } from 'hooks/usePagination';
+import { upsertById } from 'utils';
 import type { ISubstanceListItem, ISubstanceSearchParams } from 'types/substances.types';
-import type { SortDirection } from 'components/data-table';
 
 export function useSubstance() {
   const { currentPage, totalPages, offset, pageSize, handlePageChange: onPageChange, resetPage, setTotal }
     = usePagination();
+  const {
+    sortField, sortDirection, handleSort, resetSort,
+    searchName, setSearchName,
+    isSearchLoading, setIsSearchLoading,
+  } = useListControls();
   const [substances, setSubstances] = useState<ISubstanceListItem[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [archivedStatus, setArchivedStatus] =
     useState<ISubstanceSearchParams['archived_status']>('nonarchived');
-  const [searchName, setSearchName] = useState('');
   const [searchResults, setSearchResults] = useState<ISubstanceListItem[]>([]);
-  const [isSearchLoading, setIsSearchLoading] = useState(false);
-  const [sortField, setSortField] = useState<string | undefined>();
-  const [sortDirection, setSortDirection] = useState<SortDirection>('none');
   const debouncedSearchName = useDebounce(searchName.trim(), 300);
 
   const handlePageChange = (page: number) => {
@@ -30,8 +32,7 @@ export function useSubstance() {
       setIsSearchLoading(true);
     }
     resetPage();
-    setSortField(undefined);
-    setSortDirection('none');
+    resetSort();
     setArchivedStatus((current) =>
       current === 'nonarchived' ? 'archived' : 'nonarchived',
     );
@@ -60,33 +61,8 @@ export function useSubstance() {
 
   const handleSubstanceUpdated = (updatedSubstance?: ISubstanceListItem) => {
     if (!updatedSubstance) return;
-    setSubstances((current) => {
-      const exists = current.some((s) => s.id === updatedSubstance.id);
-      if (exists) {
-        return current.map((s) =>
-          s.id === updatedSubstance.id ? { ...s, ...updatedSubstance } : s,
-        );
-      }
-      return [updatedSubstance, ...current];
-    });
-    setSearchResults((current) => {
-      const exists = current.some((s) => s.id === updatedSubstance.id);
-      if (exists) {
-        return current.map((s) =>
-          s.id === updatedSubstance.id ? { ...s, ...updatedSubstance } : s,
-        );
-      }
-      return [updatedSubstance, ...current];
-    });
-  };
-
-  const handleSort = (field: string) => {
-    if (sortField !== field) {
-      setSortField(field);
-      setSortDirection('asc');
-    } else {
-      setSortDirection((current) => (current === 'asc' ? 'desc' : 'asc'));
-    }
+    setSubstances((current) => upsertById(current, updatedSubstance));
+    setSearchResults((current) => upsertById(current, updatedSubstance));
   };
 
   useEffect(() => {

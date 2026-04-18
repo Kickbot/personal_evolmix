@@ -2,25 +2,27 @@ import { useEffect, useState } from 'react';
 import { user as userApi } from 'api';
 import ROLES from 'const/roles';
 import { useDebounce } from 'hooks/useDebounce';
+import { useListControls } from 'hooks/useListControls';
 import { usePagination } from 'hooks/usePagination';
+import { upsertById } from 'utils';
 import type { IUserListItem, IUserSearchParams } from 'types/users.types';
-import type { SortDirection } from 'components/data-table';
 
 export function useUsers() {
   const { currentPage, totalPages, offset, pageSize, handlePageChange: onPageChange, resetPage, setTotal }
     = usePagination();
+  const {
+    sortField, sortDirection, handleSort, resetSort,
+    searchName, setSearchName,
+    isSearchLoading, setIsSearchLoading,
+  } = useListControls();
   const [users, setUsers] = useState<IUserListItem[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<string>(ROLES.ADMIN);
   const [archivedStatus, setArchivedStatus] =
     useState<IUserSearchParams['archived_status']>('nonarchived');
-  const [searchName, setSearchName] = useState('');
   const [searchResults, setSearchResults] = useState<IUserListItem[]>([]);
-  const [isSearchLoading, setIsSearchLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [expandedUserId, setExpandedUserId] = useState<string | null>(null);
-  const [sortField, setSortField] = useState<string | undefined>();
-  const [sortDirection, setSortDirection] = useState<SortDirection>('none');
   const debouncedSearchName = useDebounce(searchName.trim(), 300);
 
   const handlePageChange = (page: number) => {
@@ -34,8 +36,7 @@ export function useUsers() {
     setIsLoading(true);
     setExpandedUserId(null);
     resetPage();
-    setSortField(undefined);
-    setSortDirection('none');
+    resetSort();
     setActiveTab(tabKey);
   };
 
@@ -46,8 +47,7 @@ export function useUsers() {
     }
     setExpandedUserId(null);
     resetPage();
-    setSortField(undefined);
-    setSortDirection('none');
+    resetSort();
     setArchivedStatus((current) =>
       current === 'nonarchived' ? 'archived' : 'nonarchived',
     );
@@ -88,35 +88,10 @@ export function useUsers() {
       });
   };
 
-  const handleSort = (field: string) => {
-    if (sortField !== field) {
-      setSortField(field);
-      setSortDirection('asc');
-    } else {
-      setSortDirection((current) => (current === 'asc' ? 'desc' : 'asc'));
-    }
-  };
-
   const handleUserUpdated = (updatedUser?: IUserListItem) => {
     if (!updatedUser) return;
-    setUsers((current) => {
-      const exists = current.some((user) => user.id === updatedUser.id);
-      if (exists) {
-        return current.map((user) =>
-          user.id === updatedUser.id ? { ...user, ...updatedUser } : user,
-        );
-      }
-      return [updatedUser, ...current];
-    });
-    setSearchResults((current) => {
-      const exists = current.some((user) => user.id === updatedUser.id);
-      if (exists) {
-        return current.map((user) =>
-          user.id === updatedUser.id ? { ...user, ...updatedUser } : user,
-        );
-      }
-      return [updatedUser, ...current];
-    });
+    setUsers((current) => upsertById(current, updatedUser));
+    setSearchResults((current) => upsertById(current, updatedUser));
   };
 
   useEffect(() => {

@@ -1,24 +1,26 @@
 import { useEffect, useState } from 'react';
 import { patient as patientApi } from 'api';
 import { useDebounce } from 'hooks/useDebounce';
+import { useListControls } from 'hooks/useListControls';
 import { usePagination } from 'hooks/usePagination';
+import { upsertById } from 'utils';
 import type { IPatientListItem, IPatientSearchParams } from 'types/patients.types';
-import type { SortDirection } from 'components/data-table';
 
 export function usePatients() {
   const { currentPage, totalPages, offset, pageSize, handlePageChange: onPageChange, resetPage, setTotal }
     = usePagination();
+  const {
+    sortField, sortDirection, handleSort, resetSort,
+    searchName, setSearchName,
+    isSearchLoading, setIsSearchLoading,
+  } = useListControls();
   const [patients, setPatients] = useState<IPatientListItem[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [archivedStatus, setArchivedStatus] =
     useState<IPatientSearchParams['archived_status']>('nonarchived');
-  const [searchName, setSearchName] = useState('');
   const [searchResults, setSearchResults] = useState<IPatientListItem[]>([]);
-  const [isSearchLoading, setIsSearchLoading] = useState(false);
   const [expandedPatientId, setExpandedPatientId] = useState<string | null>(null);
-  const [sortField, setSortField] = useState<string | undefined>();
-  const [sortDirection, setSortDirection] = useState<SortDirection>('none');
   const debouncedSearchName = useDebounce(searchName.trim(), 300);
 
   const handlePageChange = (page: number) => {
@@ -33,8 +35,7 @@ export function usePatients() {
     }
     setExpandedPatientId(null);
     resetPage();
-    setSortField(undefined);
-    setSortDirection('none');
+    resetSort();
     setArchivedStatus((current) =>
       current === 'nonarchived' ? 'archived' : 'nonarchived',
     );
@@ -72,33 +73,8 @@ export function usePatients() {
 
   const handlePatientUpdated = (updatedPatient?: IPatientListItem) => {
     if (!updatedPatient) return;
-    setPatients((current) => {
-      const exists = current.some((p) => p.id === updatedPatient.id);
-      if (exists) {
-        return current.map((p) =>
-          p.id === updatedPatient.id ? { ...p, ...updatedPatient } : p,
-        );
-      }
-      return [updatedPatient, ...current];
-    });
-    setSearchResults((current) => {
-      const exists = current.some((p) => p.id === updatedPatient.id);
-      if (exists) {
-        return current.map((p) =>
-          p.id === updatedPatient.id ? { ...p, ...updatedPatient } : p,
-        );
-      }
-      return [updatedPatient, ...current];
-    });
-  };
-
-  const handleSort = (field: string) => {
-    if (sortField !== field) {
-      setSortField(field);
-      setSortDirection('asc');
-    } else {
-      setSortDirection((current) => (current === 'asc' ? 'desc' : 'asc'));
-    }
+    setPatients((current) => upsertById(current, updatedPatient));
+    setSearchResults((current) => upsertById(current, updatedPatient));
   };
 
   useEffect(() => {
