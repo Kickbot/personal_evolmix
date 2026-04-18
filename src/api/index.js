@@ -35,6 +35,13 @@ export const substance = {
   createSubstance: bind(post, URLS.substance.postCreateSubstance),
 }
 
+export const warehouse = {
+  getAllWarehouse: bind(get, URLS.warehouse.getAllWarehouse),
+  getSearchWarehouse: bind(get, URLS.warehouse.getSearchWarehouse),
+  getWarehouseById: bind(get, URLS.warehouse.getWarehouseById),
+  patchWarehouse: (warehouseId, data) => patch(URLS.warehouse.patchWarehouse.replace('{pack_id}', warehouseId), data),
+  createWarehouse: bind(post, URLS.warehouse.postCreateWarehouse),
+}
 
 function bind(f, arg) {
   return (...args) => f(arg, ...args)

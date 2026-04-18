@@ -1,4 +1,4 @@
-.substance-header {
+.warehouse-header {
   & .search-input-anchor {
     max-width: none;
     min-width: 0;
@@ -8,7 +8,7 @@
   }
 }
 
-.substance-search-dropdown__item {
+.warehouse-search-dropdown__item {
   width: 100%;
   display: flex;
   align-items: flex-start;
@@ -27,9 +27,8 @@
   }
 }
 
-.substance-search-dropdown__name {
+.warehouse-search-dropdown__name {
   font-size: 14px;
   color: var(--main-text-color);
   line-height: 1.2;
 }
-

@@ -39,7 +39,10 @@
     "postCreateSubstance": "active_substance/"
   },
   "warehouse": {
-    "getAllWarehouse": "warehouse/",
-    "getSearchWarehouse": "warehouse/search"
+    "getAllWarehouse": "active_substance/packs",
+    "getSearchWarehouse": "active_substance/packs/search",
+    "getWarehouseById": "active_substance/packs/{pack_id}",
+    "patchWarehouse": "active_substance/packs/{pack_id}",
+    "postCreateWarehouse": "active_substance/packs"
   }
 }

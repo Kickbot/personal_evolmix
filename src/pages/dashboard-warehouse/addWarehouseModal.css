@@ -1,16 +1,16 @@
-.add-substance-form {
+.add-warehouse-form {
   display: flex;
   flex-direction: column;
   gap: 24px;
 }
 
-.add-substance-form__fields {
+.add-warehouse-form__fields {
   display: flex;
   align-items: flex-start;
   gap: 24px;
 }
 
-.add-substance-form__left {
+.add-warehouse-form__left {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -33,7 +33,7 @@
   }
 }
 
-#addSubstanceModal {
+#addWarehouseModal {
   & .modal-header {
     position: relative;
     padding: 0 0 24px 0;
@@ -71,7 +71,7 @@
 }
 
 @media (min-width: 576px) {
-  #addSubstanceModal .modal-dialog {
+  #addWarehouseModal .modal-dialog {
     max-width: 540px;
   }
 }
