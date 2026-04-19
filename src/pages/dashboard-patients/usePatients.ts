@@ -83,7 +83,7 @@ export function usePatients() {
         .getSearchPatient({
           name: debouncedSearchName,
           archived_status: archivedStatus,
-          limit: 1000,
+          limit: pageSize,
           offset,
         })
         .then((data: { total: number; patients: IPatientListItem[] }) => {

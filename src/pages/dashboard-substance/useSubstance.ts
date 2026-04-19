@@ -71,7 +71,7 @@ export function useSubstance() {
         .getSearchSubstance({
           name: debouncedSearchName,
           archived_status: archivedStatus,
-          limit: 1000,
+          limit: pageSize,
           offset,
         })
         .then((data: { total: number; substances: ISubstanceListItem[] }) => {

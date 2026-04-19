@@ -18,9 +18,9 @@ export const userColumns: ColumnDef<IUserListItem>[] = [
   },
   {
     key: 'date',
-    header: 'Дата',
+    header: 'Дата регистрации',
     sortable: true,
-    width: '120px',
+    width: '180px',
     className: 'dt-cell--date',
     render: (u) => formatDate(u.registration_date),
   },

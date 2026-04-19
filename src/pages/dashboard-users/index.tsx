@@ -18,6 +18,7 @@ import './users.css';
 
 const TABS = [
   { key: ROLES.ADMIN, id: 'admins-pane' },
+  { key: ROLES.HEAD_DOCTOR, id: 'head-doctor-pane' },
   { key: ROLES.DOCTOR, id: 'doctors-pane' },
   { key: ROLES.PHARMACIST, id: 'pharmacists-pane' },
   { key: ROLES.OPERATOR, id: 'operators-pane' },

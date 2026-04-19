@@ -228,6 +228,7 @@ export function AddUserModal({ onSuccess, editingUser }: AddUserModalProps) {
                     placeholder="– Выбрать из списка –"
                     options={[
                       { value: 'admin', label: 'Администратор' },
+                      { value: 'head_doctor', label: 'Глав. врач' },
                       { value: 'doctor', label: 'Доктор' },
                       { value: 'pharmacist', label: 'Фармацевт' },
                       { value: 'tech', label: 'Оператор' },

@@ -8,7 +8,7 @@ export interface NavItem {
 }
 
 export const navigation: NavItem[] = [
-  { label: 'Персонал', to: routes.users, roles: [ROLES.ADMIN] },
+  { label: 'Персонал', to: routes.users, roles: [ROLES.ADMIN, ROLES.HEAD_DOCTOR] },
   { label: 'Задания', to: routes.tasks, roles: [ROLES.ADMIN, ROLES.HEAD_DOCTOR, ROLES.DOCTOR, ROLES.PHARMACIST] },
   { label: 'Рецепты', to: routes.recipes, roles: [ROLES.ADMIN, ROLES.HEAD_DOCTOR, ROLES.DOCTOR, ROLES.PHARMACIST] },
   { label: 'Пациенты', to: routes.patients, roles: [ROLES.ADMIN, ROLES.HEAD_DOCTOR, ROLES.DOCTOR, ROLES.PHARMACIST] },

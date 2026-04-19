@@ -69,7 +69,7 @@ export function useWarehouse() {
         .getSearchWarehouse({
           name: debouncedSearchName,
           archived_status: archivedStatus,
-          limit: 1000,
+          limit: pageSize,
           offset,
         })
         .then((data: { total: number; substance_packs: IWarehouseListItem[] }) => {

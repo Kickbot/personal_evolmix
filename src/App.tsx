@@ -59,7 +59,7 @@ function App() {
             <Route path={routes.dashboard} element={<DashboardLayout />}>
               <Route index element={<Dashboard />} />
 
-              <Route element={<ProtectedRoute allowedRoles={[ROLES.ADMIN]} />}>
+              <Route element={<ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.HEAD_DOCTOR]} />}>
                 <Route path="users" element={<Users />} />
               </Route>
 
