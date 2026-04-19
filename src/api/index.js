@@ -24,11 +24,11 @@ export const patient = {
 
 export const recipe = {
   getAllRecipe: bind(get, URLS.recipe.getAllRecipe),
-  getRecipeById: bind(get, URLS.recipe.getRecipeById),
+  getRecipeById: (recipeId) => get(URLS.recipe.getRecipeById.replace('{recipe_id}', recipeId)),
   postSearchRecipe: bind(post, URLS.recipe.postSearchRecipe),
   patchRecipe: (recipeId, data) => patch(URLS.recipe.patchRecipe.replace('{recipe_id}', recipeId), data),
   createRecipe: bind(post, URLS.recipe.postCreateRecipe),
-  deleteRecipe: bind(remove, URLS.recipe.deleteRecipe),
+  deleteRecipe: (recipeId) => remove(URLS.recipe.deleteRecipe.replace('{recipe_id}', recipeId)),
 }
 
 export const substance = {

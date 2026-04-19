@@ -16,6 +16,19 @@ export type IRecipeSearchResponse = IRecipesResponse;
 
 export type IRecipeArchivedStatusParam = 'all' | 'archived' | 'nonarchived';
 
+/** Жизненный цикл изготовления рецепта */
+export type IRecipeStatus =
+  | 'created'
+  | 'processing'
+  | 'completed_success'
+  | 'completed_failed';
+
+/** Статус подтверждения главврачом */
+export type IRecipeDoctorConfirmStatus =
+  | 'new'
+  | 'confirmed_by_doctor'
+  | 'rejected_by_doctor';
+
 export interface IRecipeSearchQueryParams {
   limit: number;
   offset: number;
@@ -30,8 +43,8 @@ export interface IRecipeSearchBody {
   patient_name?: string;
   doctor_id?: string;
   task_id?: string;
-  status?: string;
-  doctor_confirm_status?: string;
+  status?: IRecipeStatus;
+  doctor_confirm_status?: IRecipeDoctorConfirmStatus;
   is_archived?: boolean;
 }
 
@@ -57,7 +70,7 @@ export interface IRecipePatchBody {
   active_substance_id?: string;
   task_id?: string;
   is_solvent_prefilled?: boolean;
-  doctor_confirm_status?: string;
+  doctor_confirm_status?: IRecipeDoctorConfirmStatus;
   is_archived?: boolean;
 }
 
@@ -79,8 +92,8 @@ export interface IRecipeListItem {
   active_substance: IRecipeActiveSubstance;
   created_at: string;
   updated_at: string | null;
-  status: string;
-  doctor_confirm_status: string;
+  status: IRecipeStatus;
+  doctor_confirm_status: IRecipeDoctorConfirmStatus;
 }
 
 export interface IRecipeSolvent {
