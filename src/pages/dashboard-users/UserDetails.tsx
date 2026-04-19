@@ -10,8 +10,8 @@ import {
   CloseIcon,
   DefaultUserIcon,
   EditIcon,
-  HidePasswordIcon,
-  VisiblePasswordIcon,
+  // HidePasswordIcon,
+  // VisiblePasswordIcon,
 } from 'ui/icons';
 import { formatDate } from 'utils/date';
 import { StatusBadge } from 'ui/statusBadge';
@@ -36,7 +36,7 @@ export function UserDetails({
   onArchive,
   onEdit,
 }: IUserDetailsProps) {
-  const [showPassword, setShowPassword] = useState(false);
+  // const [showPassword, setShowPassword] = useState(false);
   const [patients, setPatients] = useState<IPatientListItem[]>([]);
   const [patientsLoading, setPatientsLoading] = useState(false);
 
@@ -108,7 +108,7 @@ export function UserDetails({
                 >
                   {user.email_address}
                 </a>
-                <div className="ud-card__password-row">
+                {/* <div className="ud-card__password-row">
                   <span className="ud-card__password-text">•••••••••</span>
                   <button
                     className="ud-card__password-toggle"
@@ -121,7 +121,7 @@ export function UserDetails({
                       <VisiblePasswordIcon />
                     )}
                   </button>
-                </div>
+                </div> */}
                 <div className="ud-card__reg">
                   <span className="ud-card__reg-label">Дата регистрации:</span>
                   <span>{formatDate(user.registration_date)}</span>

@@ -70,3 +70,32 @@
   color: #6b7280;
   font-size: 14px;
 }
+
+.search-dropdown__item {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 12px;
+  border: 0;
+  border-radius: 4px;
+  background: #fafafa;
+  text-align: left;
+  transition: all 0.3s;
+}
+.search-dropdown__item:not(:last-child) {
+  margin-bottom: 4px;
+}
+.search-dropdown__item:hover {
+  background-color: #f0f0f0;
+}
+.search-dropdown__label {
+  font-size: 14px;
+  color: var(--second-text-color);
+}
+.search-dropdown__name {
+  font-size: 14px;
+  color: var(--main-text-color);
+  line-height: 1.2;
+}

@@ -6,6 +6,7 @@ interface SearchInputProps {
   value: string;
   onChange: (value: string) => void;
   isLoading?: boolean;
+  hasResults?: boolean;
   placeholder?: string;
   loadingMessage?: string;
   emptyMessage?: string;
@@ -16,6 +17,7 @@ export function SearchInput({
   value,
   onChange,
   isLoading,
+  hasResults,
   placeholder = 'Поиск',
   loadingMessage = 'Идет поиск...',
   emptyMessage = 'Нет результатов',
@@ -75,7 +77,7 @@ export function SearchInput({
             <div className="search-input-dropdown__state">
               {loadingMessage}
             </div>
-          ) : children ? (
+          ) : children && hasResults !== false ? (
             <div onClick={() => setIsFocused(false)}>{children}</div>
           ) : (
             <div className="search-input-dropdown__state">

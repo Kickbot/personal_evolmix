@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { DataTable } from 'components/data-table';
-import { SearchInput } from 'components/search-input';
+import { SearchInput, SearchDropdown } from 'components/search-input';
 import { PageToolbar } from 'components/page-toolbar';
 import { Pagination } from 'components/pagination';
 import { Button } from 'ui/button';
@@ -57,21 +57,18 @@ export default function Substance() {
             value={searchName}
             onChange={handleSearchNameChange}
             isLoading={isSearchLoading}
+            hasResults={visibleSearchResults.length > 0}
             placeholder="Поиск"
           >
-            {visibleSearchResults.length > 0
-              ? visibleSearchResults.map((substance) => (
-                  <button
-                    key={substance.id}
-                    type="button"
-                    className="substance-search-dropdown__item"
-                  >
-                    <span className="substance-search-dropdown__name">
-                      <strong>{substance.name}</strong>
-                    </span>
-                  </button>
-                ))
-              : null}
+            <SearchDropdown
+              items={visibleSearchResults}
+              getKey={(s) => s.id}
+              renderItem={(s) => (
+                <span className="search-dropdown__name">
+                  <strong>{s.name}</strong>
+                </span>
+              )}
+            />
           </SearchInput>
           <Button
             className="primary has-icon"

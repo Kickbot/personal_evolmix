@@ -3,7 +3,7 @@ import { flushSync } from 'react-dom';
 import Context from 'context';
 import ROLES from 'const/roles';
 import { DataTable } from 'components/data-table';
-import { SearchInput } from 'components/search-input';
+import { SearchInput, SearchDropdown } from 'components/search-input';
 import { PageToolbar } from 'components/page-toolbar';
 import { Pagination } from 'components/pagination';
 import { Button } from 'ui/button';
@@ -53,23 +53,19 @@ export default function Patients() {
             value={searchName}
             onChange={handleSearchNameChange}
             isLoading={isSearchLoading}
+            hasResults={visibleSearchResults.length > 0}
             placeholder="Поиск"
           >
-            {visibleSearchResults.length > 0
-              ? visibleSearchResults.map((patient) => (
-                  <button
-                    key={patient.id}
-                    type="button"
-                    className="patients-search-dropdown__item"
-                    onClick={() => handleSearchResultClick(patient)}
-                  >
-                    <span className="patients-search-dropdown__name">
-                      <strong>{patient.last_name}</strong> {patient.first_name}{' '}
-                      {patient.middle_name}
-                    </span>
-                  </button>
-                ))
-              : null}
+            <SearchDropdown
+              items={visibleSearchResults}
+              getKey={(p) => p.id}
+              onSelect={handleSearchResultClick}
+              renderItem={(p) => (
+                <span className="search-dropdown__name">
+                  <strong>{p.last_name}</strong> {p.first_name} {p.middle_name}
+                </span>
+              )}
+            />
           </SearchInput>
           {archivedStatus !== 'archived' && (currentUser?.role === ROLES.DOCTOR || currentUser?.role === ROLES.HEAD_DOCTOR) && (
             <Button

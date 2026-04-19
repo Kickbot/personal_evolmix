@@ -100,7 +100,7 @@ export function useUsers() {
         name: debouncedSearchName,
         status: 'active',
         archived_status: archivedStatus,
-        limit: pageSize,
+        limit: 1000,
         offset,
       };
 

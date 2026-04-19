@@ -12,12 +12,10 @@ export interface IRecipeSingleResponse {
   recipe: IRecipeListItem;
 }
 
-/** Ответ POST `/recipe/search` совпадает с общим списком рецептов */
 export type IRecipeSearchResponse = IRecipesResponse;
 
 export type IRecipeArchivedStatusParam = 'all' | 'archived' | 'nonarchived';
 
-/** Query: `limit`, `offset`, `archived_status` */
 export interface IRecipeSearchQueryParams {
   limit: number;
   offset: number;

@@ -8,31 +8,6 @@
   }
 }
 
-.patients-search-dropdown__item {
-  width: 100%;
-  display: flex;
-  align-items: flex-start;
-  gap: 2px;
-  padding: 12px;
-  border: 0;
-  border-radius: 4px;
-  background: #fafafa;
-  text-align: left;
-  transition: all 0.3s;
-  &:not(:last-child) {
-    margin-bottom: 4px;
-  }
-  &:hover {
-    background-color: #f0f0f0;
-  }
-}
-
-.patients-search-dropdown__name {
-  font-size: 14px;
-  color: var(--main-text-color);
-  line-height: 1.2;
-}
-
 /* ── Patient Details Card ────────────────────────── */
 
 .pd-card {

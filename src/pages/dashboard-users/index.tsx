@@ -6,7 +6,7 @@ import { ArchiveIcon } from 'ui/icons';
 import Loader from 'ui/loader';
 import addPlusIcon from 'assets/icons/addPlusIcon.svg';
 import { DataTable } from 'components/data-table';
-import { SearchInput } from 'components/search-input';
+import { SearchInput, SearchDropdown } from 'components/search-input';
 import { PageToolbar } from 'components/page-toolbar';
 import { Pagination } from 'components/pagination';
 import { AddUserModal } from './AddUserModal';
@@ -88,25 +88,23 @@ export default function Users() {
             value={searchName}
             onChange={handleSearchNameChange}
             isLoading={isSearchLoading}
+            hasResults={visibleSearchResults.length > 0}
           >
-            {visibleSearchResults.length > 0
-              ? visibleSearchResults.map((user) => (
-                  <button
-                    key={user.id}
-                    type="button"
-                    className="users-search-dropdown__item"
-                    onClick={() => handleSearchResultClick(user)}
-                  >
-                    <span className="users-search-dropdown__role">
-                      {ROLE_NAMES[user.role] ?? user.role}
-                    </span>
-                    <span className="users-search-dropdown__name">
-                      <strong>{user.last_name}</strong> {user.first_name}{' '}
-                      {user.middle_name}
-                    </span>
-                  </button>
-                ))
-              : null}
+            <SearchDropdown
+              items={visibleSearchResults}
+              getKey={(u) => u.id}
+              onSelect={handleSearchResultClick}
+              renderItem={(u) => (
+                <>
+                  <span className="search-dropdown__label">
+                    {ROLE_NAMES[u.role] ?? u.role}
+                  </span>
+                  <span className="search-dropdown__name">
+                    <strong>{u.last_name}</strong> {u.first_name} {u.middle_name}
+                  </span>
+                </>
+              )}
+            />
           </SearchInput>
           {archivedStatus !== 'archived' && (
             <Button

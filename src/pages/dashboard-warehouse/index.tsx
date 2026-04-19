@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { DataTable } from 'components/data-table';
-import { SearchInput } from 'components/search-input';
+import { SearchInput, SearchDropdown } from 'components/search-input';
 import { PageToolbar } from 'components/page-toolbar';
 import { Pagination } from 'components/pagination';
 import { Button } from 'ui/button';
@@ -57,21 +57,18 @@ export default function Warehouse() {
             value={searchName}
             onChange={handleSearchNameChange}
             isLoading={isSearchLoading}
+            hasResults={visibleSearchResults.length > 0}
             placeholder="Поиск"
           >
-            {visibleSearchResults.length > 0
-              ? visibleSearchResults.map((warehouse) => (
-                  <button
-                    key={warehouse.id}
-                    type="button"
-                    className="warehouse-search-dropdown__item"
-                  >
-                    <span className="warehouse-search-dropdown__name">
-                      <strong>{warehouse.active_substance.name}</strong>
-                    </span>
-                  </button>
-                ))
-              : null}
+            <SearchDropdown
+              items={visibleSearchResults}
+              getKey={(w) => w.id}
+              renderItem={(w) => (
+                <span className="search-dropdown__name">
+                  <strong>{w.active_substance.name}</strong>
+                </span>
+              )}
+            />
           </SearchInput>
           <Button
             className="primary has-icon"
