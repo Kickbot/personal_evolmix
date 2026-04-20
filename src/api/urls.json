@@ -24,8 +24,14 @@
   },
   "task": {
     "getAllTask": "task/",
+    "getTaskById": "task/{task_id}",
     "getSearchTask": "task/search",
-    "patchTask": "task/{task_id}"
+    "postCreateTask": "task/",
+    "patchTask": "task/{task_id}",
+    "deleteTask": "task/{task_id}",
+    "postAddRecipeToTask": "task/{task_id}/recipes/add",
+    "postAddActiveSubstancePackToTask": "task/{task_id}/active-substance-packs/add",
+    "postAddMessageToTask": "task/{task_id}/messages/add"
   },
   "recipe": {
     "getAllRecipe": "recipe/",

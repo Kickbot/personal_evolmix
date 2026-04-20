@@ -25,7 +25,12 @@ export const patient = {
 export const recipe = {
   getAllRecipe: bind(get, URLS.recipe.getAllRecipe),
   getRecipeById: (recipeId) => get(URLS.recipe.getRecipeById.replace('{recipe_id}', recipeId)),
-  postSearchRecipe: bind(post, URLS.recipe.postSearchRecipe),
+  postSearchRecipe: (body, query) => {
+    const qs = query && Object.keys(query).length
+      ? '?' + new URLSearchParams(query).toString()
+      : ''
+    return post(URLS.recipe.postSearchRecipe + qs, body)
+  },
   patchRecipe: (recipeId, data) => patch(URLS.recipe.patchRecipe.replace('{recipe_id}', recipeId), data),
   createRecipe: bind(post, URLS.recipe.postCreateRecipe),
   deleteRecipe: (recipeId) => remove(URLS.recipe.deleteRecipe.replace('{recipe_id}', recipeId)),
@@ -44,6 +49,18 @@ export const warehouse = {
   getWarehouseById: bind(get, URLS.warehouse.getWarehouseById),
   patchWarehouse: (warehouseId, data) => patch(URLS.warehouse.patchWarehouse.replace('{pack_id}', warehouseId), data),
   createWarehouse: bind(post, URLS.warehouse.postCreateWarehouse),
+}
+
+export const task = {
+  getAllTask: bind(get, URLS.task.getAllTask),
+  getTaskById: (taskId) => get(URLS.task.getTaskById.replace('{task_id}', taskId)),
+  getSearchTask: bind(get, URLS.task.getSearchTask),
+  postCreateTask: bind(post, URLS.task.postCreateTask),
+  patchTask: (taskId, data) => patch(URLS.task.patchTask.replace('{task_id}', taskId), data),
+  deleteTask: (taskId) => remove(URLS.task.deleteTask.replace('{task_id}', taskId)),
+  addRecipeToTask: (taskId, data) => post(URLS.task.postAddRecipeToTask.replace('{task_id}', taskId), data),
+  addActiveSubstancePackToTask: (taskId, data) => post(URLS.task.postAddActiveSubstancePackToTask.replace('{task_id}', taskId), data),
+  addMessageToTask: (taskId, data) => post(URLS.task.postAddMessageToTask.replace('{task_id}', taskId), data),
 }
 
 function bind(f, arg) {

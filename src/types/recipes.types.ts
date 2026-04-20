@@ -46,6 +46,7 @@ export interface IRecipeSearchBody {
   status?: IRecipeStatus;
   doctor_confirm_status?: IRecipeDoctorConfirmStatus;
   is_archived?: boolean;
+  created_at?: string;
 }
 
 export interface IRecipeCreateBody {

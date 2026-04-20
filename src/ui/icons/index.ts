@@ -7,3 +7,5 @@ export * from './EditIcon';
 export * from './HidePasswordIcon';
 export * from './VisiblePasswordIcon';
 export * from './DefaultUserIcon';
+export * from './CheckCircleIcon';
+export * from './TimeIcon';
