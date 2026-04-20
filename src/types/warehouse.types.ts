@@ -29,6 +29,8 @@ export interface IWarehouseListItem {
 export interface IWarehouseSearchParams {
   name?: string | null;
   archived_status?: 'all' | 'archived' | 'nonarchived';
+  order_by?: 'name' | 'concentration' | 'quantity' | 'volume';
+  sort_direction?: 'asc' | 'desc';
   limit?: number;
   offset?: number;
 }

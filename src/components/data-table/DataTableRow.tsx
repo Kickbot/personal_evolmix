@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react';
+import type { TransitionEvent } from 'react';
 import type { ColumnDef } from './types';
 
 interface DataTableRowProps<T> {
@@ -17,6 +19,17 @@ export function DataTableRow<T>({
   renderExpanded,
   index,
 }: DataTableRowProps<T>) {
+  const [shouldRender, setShouldRender] = useState(isExpanded);
+
+  useEffect(() => {
+    if (isExpanded) setShouldRender(true);
+  }, [isExpanded]);
+
+  const handleTransitionEnd = (e: TransitionEvent<HTMLDivElement>) => {
+    if (e.target !== e.currentTarget || e.propertyName !== 'max-height') return;
+    if (!isExpanded) setShouldRender(false);
+  };
+
   return (
     <div className={`dt-item${isExpanded ? ' is-open' : ''}`}>
       <button
@@ -32,8 +45,8 @@ export function DataTableRow<T>({
         ))}
       </button>
       {renderExpanded && (
-        <div className="dt-details-wrap">
-          {isExpanded ? renderExpanded(item) : null}
+        <div className="dt-details-wrap" onTransitionEnd={handleTransitionEnd}>
+          {shouldRender ? renderExpanded(item) : null}
         </div>
       )}
     </div>

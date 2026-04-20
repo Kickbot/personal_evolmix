@@ -6,11 +6,19 @@ import { usePagination } from 'hooks/usePagination';
 import { upsertById } from 'utils';
 import type { ISubstanceListItem, ISubstanceSearchParams } from 'types/substances.types';
 
+const SORT_MAP = {
+  name: 'name',
+  concentration: 'concentration',
+  manufacturer: 'manufacturer',
+  country: 'country',
+  is_lyophilizate: 'lyophilizate',
+} as const;
+
 export function useSubstance() {
   const { currentPage, totalPages, offset, pageSize, handlePageChange: onPageChange, resetPage, setTotal }
     = usePagination();
   const {
-    sortField, sortDirection, handleSort, resetSort,
+    sortField, sortDirection, handleSort: onSort, resetSort,
     searchName, setSearchName,
     isSearchLoading, setIsSearchLoading,
   } = useListControls();
@@ -24,6 +32,11 @@ export function useSubstance() {
 
   const handlePageChange = (page: number) => {
     onPageChange(page);
+  };
+
+  const handleSort = (field: string) => {
+    onSort(field);
+    resetPage();
   };
 
   const handleArchiveToggle = () => {
@@ -66,11 +79,19 @@ export function useSubstance() {
   };
 
   useEffect(() => {
+    const beField = sortField ? (SORT_MAP as Record<string, string>)[sortField] : undefined;
+    const sortParams: Pick<ISubstanceSearchParams, 'order_by' | 'sort_direction'> = {};
+    if (beField && sortDirection !== 'none') {
+      sortParams.order_by = beField as ISubstanceSearchParams['order_by'];
+      sortParams.sort_direction = sortDirection;
+    }
+
     if (debouncedSearchName) {
       substanceApi
         .getSearchSubstance({
           name: debouncedSearchName,
           archived_status: archivedStatus,
+          ...sortParams,
           limit: pageSize,
           offset,
         })
@@ -93,6 +114,7 @@ export function useSubstance() {
       substanceApi
         .getAllSubstance({
           archived_status: archivedStatus,
+          ...sortParams,
           limit: pageSize,
           offset,
         })
@@ -107,34 +129,9 @@ export function useSubstance() {
         })
         .finally(() => setIsLoading(false));
     }
-  }, [archivedStatus, debouncedSearchName, offset]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [archivedStatus, debouncedSearchName, offset, sortField, sortDirection]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const visibleSearchResults = debouncedSearchName ? searchResults : [];
-
-  const displayedSubstances =
-    !sortField || sortDirection === 'none'
-      ? substances
-      : [...substances].sort((a, b) => {
-          let result = 0;
-          if (sortField === 'name') {
-            result = a.name.localeCompare(b.name, 'ru', {
-              sensitivity: 'base',
-            });
-          } else if (sortField === 'concentration') {
-            result = a.concentration - b.concentration;
-          } else if (sortField === 'manufacturer') {
-            result = a.manufacturer.localeCompare(b.manufacturer, 'ru', {
-              sensitivity: 'base',
-            });
-          } else if (sortField === 'country') {
-            result = a.country.localeCompare(b.country, 'ru', {
-              sensitivity: 'base',
-            });
-          } else if (sortField === 'is_lyophilizate') {
-            result = Number(a.is_lyophilizate) - Number(b.is_lyophilizate);
-          }
-          return sortDirection === 'asc' ? result : -result;
-        });
 
   return {
     isLoading,
@@ -144,7 +141,7 @@ export function useSubstance() {
     handleSearchNameChange,
     isSearchLoading,
     visibleSearchResults,
-    displayedSubstances,
+    displayedSubstances: substances,
     sortField,
     sortDirection,
     handleArchiveToggle,

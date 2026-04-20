@@ -6,6 +6,7 @@ import { usePagination } from 'hooks/usePagination';
 import type {
   IRecipeListItem,
   IRecipeSearchBody,
+  IRecipeSearchQueryParams,
   IRecipeStatus,
   IRecipeDoctorConfirmStatus,
   IRecipesResponse,
@@ -13,11 +14,19 @@ import type {
 
 type ArchivedStatus = 'archived' | 'nonarchived';
 
+const SORT_MAP = {
+  status: 'status',
+  patient_name: 'full_name',
+  gender: 'gender',
+  created_at: 'date',
+  doctor_confirm_status: 'doctor_confirm_status',
+} as const;
+
 export function useRecipes() {
   const { currentPage, totalPages, offset, pageSize, handlePageChange: onPageChange, resetPage, setTotal }
     = usePagination();
   const {
-    sortField, sortDirection, handleSort, resetSort,
+    sortField, sortDirection, handleSort: onSort, resetSort,
     searchName, setSearchName,
     isSearchLoading, setIsSearchLoading,
   } = useListControls();
@@ -35,6 +44,12 @@ export function useRecipes() {
 
   const handlePageChange = (page: number) => {
     onPageChange(page);
+    setExpandedRecipeId(null);
+  };
+
+  const handleSort = (field: string) => {
+    onSort(field);
+    resetPage();
     setExpandedRecipeId(null);
   };
 
@@ -103,7 +118,14 @@ export function useRecipes() {
     if (statusFilter) body.status = statusFilter;
     if (dateFilter) body.created_at = dateFilter;
 
-    (recipeApi.postSearchRecipe(body, { limit: pageSize, offset }) as Promise<IRecipesResponse>)
+    const beField = sortField ? (SORT_MAP as Record<string, string>)[sortField] : undefined;
+    const query: IRecipeSearchQueryParams = { limit: pageSize, offset };
+    if (beField && sortDirection !== 'none') {
+      query.order_by = beField as IRecipeSearchQueryParams['order_by'];
+      query.sort_direction = sortDirection;
+    }
+
+    (recipeApi.postSearchRecipe(body, query) as Promise<IRecipesResponse>)
       .then((data) => {
         setError(null);
         setTotal(data.total);
@@ -126,32 +148,11 @@ export function useRecipes() {
     dateFilter,
     debouncedSearchName,
     offset,
+    sortField,
+    sortDirection,
   ]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const visibleSearchResults = debouncedSearchName ? searchResults : [];
-
-  const displayedRecipes =
-    !sortField || sortDirection === 'none'
-      ? recipes
-      : [...recipes].sort((a, b) => {
-          let result = 0;
-          if (sortField === 'patient_name') {
-            result = a.patient.last_name.localeCompare(b.patient.last_name, 'ru', {
-              sensitivity: 'base',
-            });
-          } else if (sortField === 'created_at') {
-            result =
-              new Date(a.created_at).getTime() -
-              new Date(b.created_at).getTime();
-          } else if (sortField === 'status') {
-            result = a.status.localeCompare(b.status);
-          } else if (sortField === 'doctor_confirm_status') {
-            result = a.doctor_confirm_status.localeCompare(b.doctor_confirm_status);
-          } else if (sortField === 'gender') {
-            result = a.patient.gender.localeCompare(b.patient.gender);
-          }
-          return sortDirection === 'asc' ? result : -result;
-        });
 
   return {
     isLoading,
@@ -161,7 +162,7 @@ export function useRecipes() {
     handleSearchNameChange,
     isSearchLoading,
     visibleSearchResults,
-    displayedRecipes,
+    displayedRecipes: recipes,
     expandedRecipeId,
     sortField,
     sortDirection,

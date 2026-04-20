@@ -38,6 +38,8 @@ export interface IPatientSearchParams {
   height?: number | null;
   doctor_id?: string | null;
   archived_status?: 'all' | 'archived' | 'nonarchived';
+  order_by?: 'status' | 'full_name' | 'gender' | 'date_of_birth' | 'date';
+  sort_direction?: 'asc' | 'desc';
   limit?: number;
   offset?: number;
 }

@@ -33,6 +33,8 @@ export interface IRecipeSearchQueryParams {
   limit: number;
   offset: number;
   archived_status?: IRecipeArchivedStatusParam;
+  order_by?: 'status' | 'full_name' | 'gender' | 'date' | 'doctor_confirm_status';
+  sort_direction?: 'asc' | 'desc';
 }
 
 /** Тело поиска: все поля необязательны */

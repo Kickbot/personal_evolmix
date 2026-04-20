@@ -7,11 +7,14 @@ import { usePagination } from 'hooks/usePagination';
 import { upsertById } from 'utils';
 import type { IUserListItem, IUserSearchParams } from 'types/users.types';
 
+const SORT_MAP_ALL = { name: 'full_name', date: 'date' } as const;
+const SORT_MAP_SEARCH = { name: 'full_name' } as const;
+
 export function useUsers() {
   const { currentPage, totalPages, offset, pageSize, handlePageChange: onPageChange, resetPage, setTotal }
     = usePagination();
   const {
-    sortField, sortDirection, handleSort, resetSort,
+    sortField, sortDirection, handleSort: onSort, resetSort,
     searchName, setSearchName,
     isSearchLoading, setIsSearchLoading,
   } = useListControls();
@@ -28,6 +31,11 @@ export function useUsers() {
   const handlePageChange = (page: number) => {
     onPageChange(page);
     setExpandedUserId(null);
+  };
+
+  const handleSort = (field: string) => {
+    onSort(field);
+    resetPage();
   };
 
   const handleTabChange = (tabKey: string) => {
@@ -95,11 +103,20 @@ export function useUsers() {
   };
 
   useEffect(() => {
+    const sortMap = debouncedSearchName ? SORT_MAP_SEARCH : SORT_MAP_ALL;
+    const beField = sortField ? (sortMap as Record<string, string>)[sortField] : undefined;
+    const sortParams: Pick<IUserSearchParams, 'order_by' | 'sort_direction'> = {};
+    if (beField && sortDirection !== 'none') {
+      sortParams.order_by = beField as IUserSearchParams['order_by'];
+      sortParams.sort_direction = sortDirection;
+    }
+
     if (debouncedSearchName) {
       const params: IUserSearchParams = {
         name: debouncedSearchName,
         status: 'active',
         archived_status: archivedStatus,
+        ...sortParams,
         limit: pageSize,
         offset,
       };
@@ -126,6 +143,7 @@ export function useUsers() {
         role: activeTab,
         status: 'active',
         archived_status: archivedStatus,
+        ...sortParams,
         limit: pageSize,
         offset,
       };
@@ -143,26 +161,9 @@ export function useUsers() {
         })
         .finally(() => setIsLoading(false));
     }
-  }, [activeTab, archivedStatus, debouncedSearchName, offset]);// eslint-disable-line react-hooks/exhaustive-deps
+  }, [activeTab, archivedStatus, debouncedSearchName, offset, sortField, sortDirection]);// eslint-disable-line react-hooks/exhaustive-deps
 
   const visibleSearchResults = debouncedSearchName ? searchResults : [];
-
-  const displayedUsers =
-    !sortField || sortDirection === 'none'
-      ? users
-      : [...users].sort((a, b) => {
-          let result = 0;
-          if (sortField === 'name') {
-            result = a.last_name.localeCompare(b.last_name, 'ru', {
-              sensitivity: 'base',
-            });
-          } else if (sortField === 'date') {
-            result =
-              new Date(a.registration_date).getTime() -
-              new Date(b.registration_date).getTime();
-          }
-          return sortDirection === 'asc' ? result : -result;
-        });
 
   return {
     isLoading,
@@ -173,7 +174,7 @@ export function useUsers() {
     handleSearchNameChange,
     isSearchLoading,
     visibleSearchResults,
-    displayedUsers,
+    displayedUsers: users,
     expandedUserId,
     sortField,
     sortDirection,

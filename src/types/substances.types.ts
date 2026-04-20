@@ -20,6 +20,8 @@ export interface ISubstanceSearchParams {
   name?: string | null;
   barcode?: string | null;
   archived_status?: 'all' | 'archived' | 'nonarchived';
+  order_by?: 'name' | 'concentration' | 'manufacturer' | 'country' | 'lyophilizate';
+  sort_direction?: 'asc' | 'desc';
   limit?: number;
   offset?: number;
 }

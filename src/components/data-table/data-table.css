@@ -81,16 +81,15 @@
   overflow: hidden;
   opacity: 0;
   margin-top: 0;
+  border: 2px solid #eaeff2;
+  border-top: none;
   transition:
-    max-height 0.3s ease-in-out,
-    opacity 0.3s ease-in-out,
-    margin-top 0.3s ease-in-out;
+    all 0.3s ease-in-out,
 }
 
 .dt-item.is-open {
   & .dt-details-wrap {
     background-color: #fff;
-    border: 2px solid #eaeff2;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
     max-height: 600px;
@@ -116,6 +115,7 @@
   align-items: center;
   justify-content: space-between;
   margin-top: 24px;
+  gap: 24px;
 }
 
 .dt-item.is-open .dt-details {

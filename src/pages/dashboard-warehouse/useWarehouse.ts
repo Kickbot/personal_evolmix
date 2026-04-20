@@ -6,11 +6,18 @@ import { usePagination } from 'hooks/usePagination';
 import { upsertById } from 'utils';
 import type { IWarehouseListItem, IWarehouseSearchParams } from 'types/warehouse.types';
 
+const SORT_MAP = {
+  name: 'name',
+  concentration: 'concentration',
+  wh_quantity: 'quantity',
+  volume: 'volume',
+} as const;
+
 export function useWarehouse() {
   const { currentPage, totalPages, offset, pageSize, handlePageChange: onPageChange, resetPage, setTotal }
     = usePagination();
   const {
-    sortField, sortDirection, handleSort, resetSort,
+    sortField, sortDirection, handleSort: onSort, resetSort,
     searchName, setSearchName,
     isSearchLoading, setIsSearchLoading,
   } = useListControls();
@@ -24,6 +31,11 @@ export function useWarehouse() {
 
   const handlePageChange = (page: number) => {
     onPageChange(page);
+  };
+
+  const handleSort = (field: string) => {
+    onSort(field);
+    resetPage();
   };
 
   const handleArchiveToggle = () => {
@@ -64,11 +76,19 @@ export function useWarehouse() {
   };
 
   useEffect(() => {
+    const beField = sortField ? (SORT_MAP as Record<string, string>)[sortField] : undefined;
+    const sortParams: Pick<IWarehouseSearchParams, 'order_by' | 'sort_direction'> = {};
+    if (beField && sortDirection !== 'none') {
+      sortParams.order_by = beField as IWarehouseSearchParams['order_by'];
+      sortParams.sort_direction = sortDirection;
+    }
+
     if (debouncedSearchName) {
       warehouseApi
         .getSearchWarehouse({
           name: debouncedSearchName,
           archived_status: archivedStatus,
+          ...sortParams,
           limit: pageSize,
           offset,
         })
@@ -91,6 +111,7 @@ export function useWarehouse() {
       warehouseApi
         .getAllWarehouse({
           archived_status: archivedStatus,
+          ...sortParams,
           limit: pageSize,
           offset,
         })
@@ -105,28 +126,9 @@ export function useWarehouse() {
         })
         .finally(() => setIsLoading(false));
     }
-  }, [archivedStatus, debouncedSearchName, offset]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [archivedStatus, debouncedSearchName, offset, sortField, sortDirection]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const visibleSearchResults = debouncedSearchName ? searchResults : [];
-
-  const displayedWarehouse =
-    !sortField || sortDirection === 'none'
-      ? warehouse
-      : [...warehouse].sort((a, b) => {
-          let result = 0;
-          if (sortField === 'name') {
-            result = a.active_substance.name.localeCompare(b.active_substance.name, 'ru', {
-              sensitivity: 'base',
-            });
-          } else if (sortField === 'concentration') {
-            result = a.active_substance.concentration - b.active_substance.concentration;
-          } else if (sortField === 'wh_quantity') {
-            result = (a.wh_quantity ?? 0) - (b.wh_quantity ?? 0);
-          } else if (sortField === 'volume') {
-            result = (a.volume ?? 0) - (b.volume ?? 0);
-          }
-          return sortDirection === 'asc' ? result : -result;
-        });
 
   return {
     isLoading,
@@ -136,7 +138,7 @@ export function useWarehouse() {
     handleSearchNameChange,
     isSearchLoading,
     visibleSearchResults,
-    displayedWarehouse,
+    displayedWarehouse: warehouse,
     sortField,
     sortDirection,
     handleArchiveToggle,

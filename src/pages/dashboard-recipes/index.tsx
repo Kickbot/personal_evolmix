@@ -71,6 +71,7 @@ export default function Recipes() {
   } = useRecipes();
 
   const canCreate =
+    currentUser?.role === ROLES.ADMIN ||
     currentUser?.role === ROLES.DOCTOR ||
     currentUser?.role === ROLES.HEAD_DOCTOR;
 

@@ -24,6 +24,8 @@ export interface IUserSearchParams {
   role?: string;
   status?: 'active' | 'inactive' | 'blocked';
   archived_status?: 'all' | 'archived' | 'nonarchived';
+  order_by?: 'date' | 'full_name';
+  sort_direction?: 'asc' | 'desc';
   limit: number;
   offset: number;
 }

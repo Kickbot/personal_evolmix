@@ -6,11 +6,18 @@ import { usePagination } from 'hooks/usePagination';
 import { upsertById } from 'utils';
 import type { IPatientListItem, IPatientSearchParams } from 'types/patients.types';
 
+const SORT_MAP = {
+  is_archived: 'status',
+  last_name: 'full_name',
+  gender: 'gender',
+  date_of_birth: 'date_of_birth',
+} as const;
+
 export function usePatients() {
   const { currentPage, totalPages, offset, pageSize, handlePageChange: onPageChange, resetPage, setTotal }
     = usePagination();
   const {
-    sortField, sortDirection, handleSort, resetSort,
+    sortField, sortDirection, handleSort: onSort, resetSort,
     searchName, setSearchName,
     isSearchLoading, setIsSearchLoading,
   } = useListControls();
@@ -25,6 +32,12 @@ export function usePatients() {
 
   const handlePageChange = (page: number) => {
     onPageChange(page);
+    setExpandedPatientId(null);
+  };
+
+  const handleSort = (field: string) => {
+    onSort(field);
+    resetPage();
     setExpandedPatientId(null);
   };
 
@@ -78,11 +91,19 @@ export function usePatients() {
   };
 
   useEffect(() => {
+    const beField = sortField ? (SORT_MAP as Record<string, string>)[sortField] : undefined;
+    const sortParams: Pick<IPatientSearchParams, 'order_by' | 'sort_direction'> = {};
+    if (beField && sortDirection !== 'none') {
+      sortParams.order_by = beField as IPatientSearchParams['order_by'];
+      sortParams.sort_direction = sortDirection;
+    }
+
     if (debouncedSearchName) {
       patientApi
         .getSearchPatient({
           name: debouncedSearchName,
           archived_status: archivedStatus,
+          ...sortParams,
           limit: pageSize,
           offset,
         })
@@ -105,6 +126,7 @@ export function usePatients() {
       patientApi
         .getAllPatient({
           archived_status: archivedStatus,
+          ...sortParams,
           limit: pageSize,
           offset,
         })
@@ -119,30 +141,9 @@ export function usePatients() {
         })
         .finally(() => setIsLoading(false));
     }
-  }, [archivedStatus, debouncedSearchName, offset]);// eslint-disable-line react-hooks/exhaustive-deps
+  }, [archivedStatus, debouncedSearchName, offset, sortField, sortDirection]);// eslint-disable-line react-hooks/exhaustive-deps
 
   const visibleSearchResults = debouncedSearchName ? searchResults : [];
-
-  const displayedPatients =
-    !sortField || sortDirection === 'none'
-      ? patients
-      : [...patients].sort((a, b) => {
-          let result = 0;
-          if (sortField === 'last_name') {
-            result = a.last_name.localeCompare(b.last_name, 'ru', {
-              sensitivity: 'base',
-            });
-          } else if (sortField === 'date_of_birth') {
-            result =
-              new Date(a.date_of_birth).getTime() -
-              new Date(b.date_of_birth).getTime();
-          } else if (sortField === 'gender') {
-            result = a.gender.localeCompare(b.gender);
-          } else if (sortField === 'is_archived') {
-            result = Number(a.is_archived) - Number(b.is_archived);
-          }
-          return sortDirection === 'asc' ? result : -result;
-        });
 
   return {
     isLoading,
@@ -152,7 +153,7 @@ export function usePatients() {
     handleSearchNameChange,
     isSearchLoading,
     visibleSearchResults,
-    displayedPatients,
+    displayedPatients: patients,
     expandedPatientId,
     sortField,
     sortDirection,
