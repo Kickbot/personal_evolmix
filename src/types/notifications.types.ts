@@ -7,6 +7,8 @@ import type { ReactNode } from 'react';
   totalCount: number;
   isLoading: boolean;
   error: string | null;
+  className?: string;
+  itemsClassName?: string;
 }
 
 export interface INotificationItem {
@@ -14,6 +16,8 @@ export interface INotificationItem {
   type: string;
   content: ReactNode;
   actions?: INotificationAction[];
+  href?: string;
+  className?: string;
 }
 
 export interface INotificationAction {

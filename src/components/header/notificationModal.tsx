@@ -1,9 +1,10 @@
 import './notificationModal.css';
 import { useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { Button, IconButton } from 'ui/button';
 import { CloseIcon } from 'ui/icons/CloseIcon';
-import { TimeIcon } from 'ui/icons/TimeIcon';
 import type { INotificationSection } from 'types/notifications.types';
+import { cn } from 'utils';
 
 interface NotificationModalProps {
   sections: INotificationSection[];
@@ -69,17 +70,25 @@ export function NotificationModal({ sections }: NotificationModalProps) {
               <p className="text-center text-muted">Нет уведомлений</p>
             )}
 
-            {sections.map((section) => (
-              <section className="approval-section" key={section.key}>
-                <h6 className="approval-section__title">{section.title}</h6>
-                {section.error && (
-                  <div className="alert alert-danger mb-0" role="alert">
-                    {section.error}
-                  </div>
-                )}
-                {!section.isLoading &&
-                  section.items.map((item) => (
-                    <article className="approval-user-card" key={item.id}>
+            {sections.map((section) => {
+              const renderedItems =
+                !section.isLoading &&
+                section.items.map((item) => {
+                  const itemClassName = item.className ?? 'approval-user-card';
+                  if (item.href) {
+                    return (
+                      <Link
+                        key={item.id}
+                        to={item.href}
+                        className={itemClassName}
+                        data-bs-dismiss="modal"
+                      >
+                        {item.content}
+                      </Link>
+                    );
+                  }
+                  return (
+                    <article key={item.id} className={itemClassName}>
                       {item.content}
                       {item.actions && item.actions.length > 0 && (
                         <div className="approval-user-card__actions">
@@ -97,35 +106,30 @@ export function NotificationModal({ sections }: NotificationModalProps) {
                         </div>
                       )}
                     </article>
-                  ))}
-              </section>
-            ))}
+                  );
+                });
 
-            {/* Секция рецептов — заглушка */}
-            <section className="approval-section gap-1">
-              <h6 className="approval-section__title">Новые рецепты:</h6>
-
-              <div className="recipe-approval-list">
-                {['36275e22-d4c', '36275e22-d4c', '36275e22-d4c'].map(
-                  (id, idx) => (
-                    <article
-                      key={`${id}-${idx}`}
-                      className="recipe-approval-card"
-                    >
-                      <span className="recipe-approval-card__badge">Новый</span>
-                      <span className="recipe-approval-card__id">{id}</span>
-                      <Button
-                        type="button"
-                        className="secondary has-icon recipe-approval-card__status"
-                        iconBefore={<TimeIcon />}
-                      >
-                        Ожидает
-                      </Button>
-                    </article>
-                  ),
-                )}
-              </div>
-            </section>
+              return (
+                <section
+                  className={cn('approval-section', section.className)}
+                  key={section.key}
+                >
+                  <h6 className="approval-section__title">{section.title}</h6>
+                  {section.error && (
+                    <div className="alert alert-danger mb-0" role="alert">
+                      {section.error}
+                    </div>
+                  )}
+                  {section.itemsClassName ? (
+                    <div className={section.itemsClassName}>
+                      {renderedItems}
+                    </div>
+                  ) : (
+                    renderedItems
+                  )}
+                </section>
+              );
+            })}
           </div>
         </div>
       </div>

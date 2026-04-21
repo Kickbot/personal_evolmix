@@ -24,7 +24,7 @@
 .rd-card__grid {
   display: grid;
   grid-template-columns: 1.4fr 1fr;
-  gap: 24px;
+  gap: 48px;
   background-color: #fff;
   border-radius: 10px;
   padding: 24px;
@@ -33,7 +33,7 @@
 .rd-fields {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
   margin: 0;
 }
 
@@ -45,8 +45,8 @@
 
   & dt {
     font-size: 14px;
-    color: var(--second-text-color);
-    font-weight: 400;
+    color: var(--main-text-color);
+    font-weight: 500;
   }
 
   & dd {
@@ -68,20 +68,21 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
+  justify-content: space-between;
 }
 
 /* ── Signature plate ─────────────────────────────── */
 
 .rd-signature {
   display: grid;
-  grid-template-columns: 72px 1fr;
+  grid-template-columns: 1fr auto auto 1fr;
   grid-template-areas:
-    'icon  label'
-    'role  role'
-    'name  name'
-    'date  date';
+    '. icon label .'
+    'role role role role'
+    'name name name name'
+    'date date date date';
   align-items: center;
-  row-gap: 4px;
+  row-gap: 8px;
   column-gap: 12px;
   border-radius: 10px;
   padding: 20px;
@@ -100,6 +101,7 @@
   & .rd-signature__label {
     grid-area: label;
     justify-self: start;
+    justify-self: center;
     font-size: 28px;
     font-weight: 600;
   }

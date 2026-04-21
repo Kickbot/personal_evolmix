@@ -55,6 +55,7 @@ export const recipeColumns: ColumnDef<IRecipeListItem>[] = [
     header: 'Глав. Врач',
     sortable: true,
     width: '180px',
+    className: 'justify-content-center',
     render: (r) => <ConfirmStatusBadge status={r.doctor_confirm_status} />,
   },
 ];

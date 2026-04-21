@@ -35,7 +35,7 @@ const STATUS_OPTIONS: { value: IRecipeStatus | ''; label: string }[] = [
   { value: 'created', label: 'Новый' },
   { value: 'processing', label: 'В работе' },
   { value: 'completed_success', label: 'Готово' },
-  { value: 'completed_failed', label: 'Ошибка' },
+  // { value: 'completed_failed', label: 'Ошибка' },
 ];
 
 export default function Recipes() {
@@ -106,6 +106,16 @@ export default function Recipes() {
             </SearchInput>
 
             <Select
+              id="recipes-status-filter"
+              value={statusFilter}
+              onChange={(e) =>
+                handleStatusFilterChange(e.target.value as IRecipeStatus | '')
+              }
+              options={STATUS_OPTIONS}
+              wrapperClassName="recipes-filter"
+            />
+
+            <Select
               id="recipes-confirm-filter"
               value={confirmFilter}
               onChange={(e) =>
@@ -114,16 +124,6 @@ export default function Recipes() {
                 )
               }
               options={CONFIRM_OPTIONS}
-              wrapperClassName="recipes-filter"
-            />
-
-            <Select
-              id="recipes-status-filter"
-              value={statusFilter}
-              onChange={(e) =>
-                handleStatusFilterChange(e.target.value as IRecipeStatus | '')
-              }
-              options={STATUS_OPTIONS}
               wrapperClassName="recipes-filter"
             />
 

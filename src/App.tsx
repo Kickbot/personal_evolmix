@@ -15,6 +15,7 @@ const Dashboard = lazy(() => import('./pages/dashboard'));
 const Users = lazy(() => import('./pages/dashboard-users'));
 const Patients = lazy(() => import('./pages/dashboard-patients'));
 const Recipes = lazy(() => import('./pages/dashboard-recipes'));
+const RecipeConfirm = lazy(() => import('./pages/recipe-confirm'));
 const Substance = lazy(() => import('./pages/dashboard-substance'));
 const Tasks = lazy(() => import('./pages/dashboard-tasks'));
 const Warehouse = lazy(() => import('./pages/dashboard-warehouse'));
@@ -68,6 +69,10 @@ function App() {
                 <Route path="recipes" element={<Recipes />} />
                 <Route path="substance" element={<Substance />} />
                 <Route path="warehouse" element={<Warehouse />} />
+              </Route>
+
+              <Route element={<ProtectedRoute allowedRoles={[ROLES.HEAD_DOCTOR]} />}>
+                <Route path="recipes/confirm/:id" element={<RecipeConfirm />} />
               </Route>
 
               <Route element={<ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.HEAD_DOCTOR, ROLES.DOCTOR, ROLES.PHARMACIST, ROLES.OPERATOR]} />}>

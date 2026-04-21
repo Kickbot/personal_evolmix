@@ -6,6 +6,7 @@ const routes = {
   users: '/dashboard/users',
   patients: '/dashboard/patients',
   recipes: '/dashboard/recipes',
+  recipeConfirm: '/dashboard/recipes/confirm',
   substance: '/dashboard/substance',
   tasks: '/dashboard/tasks',
   warehouse: '/dashboard/warehouse',

@@ -21,7 +21,7 @@ export const userColumns: ColumnDef<IUserListItem>[] = [
     header: 'Дата регистрации',
     sortable: true,
     width: '180px',
-    className: 'dt-cell--date',
+    className: 'dt-cell--date justify-content-center',
     render: (u) => formatDate(u.registration_date),
   },
 ];
