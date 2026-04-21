@@ -72,7 +72,7 @@ function App() {
               </Route>
 
               <Route element={<ProtectedRoute allowedRoles={[ROLES.HEAD_DOCTOR]} />}>
-                <Route path="recipes/confirm/:id" element={<RecipeConfirm />} />
+                <Route path="recipes/confirm/:id?" element={<RecipeConfirm />} />
               </Route>
 
               <Route element={<ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.HEAD_DOCTOR, ROLES.DOCTOR, ROLES.PHARMACIST, ROLES.OPERATOR]} />}>

@@ -90,7 +90,7 @@ h5,
 h6 {
   margin-top: 0;
   margin-bottom: 12px;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1;
   color: var(--bs-heading-color);
 }
