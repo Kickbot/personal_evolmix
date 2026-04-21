@@ -4,7 +4,7 @@ import type { IRecipeListItem, IRecipesResponse } from 'types/recipes.types';
 import type { INotificationSection } from 'types/notifications.types';
 import { RecipeApprovalCard } from 'components/header/RecipeApprovalCard';
 
-const DEFAULT_LIMIT = 100;
+const DEFAULT_LIMIT = 10;
 const DEFAULT_OFFSET = 0;
 const APPROVALS_UPDATED_EVENT = 'recipe-approval-updated';
 

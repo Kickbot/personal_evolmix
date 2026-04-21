@@ -6,7 +6,7 @@ import { UserApprovalCard } from 'components/header/UserApprovalCard';
 import { CheckCircleIcon } from 'ui/icons/CheckCircleIcon';
 import { CloseIcon } from 'ui/icons/CloseIcon';
 
-const DEFAULT_LIMIT = 100;
+const DEFAULT_LIMIT = 10
 const DEFAULT_OFFSET = 0;
 const APPROVALS_UPDATED_EVENT = 'user-approval-updated';
 

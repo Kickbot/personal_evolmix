@@ -1,6 +1,6 @@
 import './notificationModal.css';
 import { useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Button, IconButton } from 'ui/button';
 import { CloseIcon } from 'ui/icons/CloseIcon';
 import type { INotificationSection } from 'types/notifications.types';
@@ -12,6 +12,7 @@ interface NotificationModalProps {
 
 export function NotificationModal({ sections }: NotificationModalProps) {
   const modalRef = useRef<HTMLDivElement | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const modalElement = modalRef.current;
@@ -77,14 +78,15 @@ export function NotificationModal({ sections }: NotificationModalProps) {
                   const itemClassName = item.className ?? 'approval-user-card';
                   if (item.href) {
                     return (
-                      <Link
+                      <div
                         key={item.id}
-                        to={item.href}
                         className={itemClassName}
+                        onClick={() => navigate(item.href!)}
                         data-bs-dismiss="modal"
+                        style={{ cursor: 'pointer' }}
                       >
                         {item.content}
-                      </Link>
+                      </div>
                     );
                   }
                   return (
