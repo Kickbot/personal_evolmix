@@ -1,0 +1,87 @@
+.approval-signature {
+  display: grid;
+  grid-template-columns: 1fr auto auto 1fr;
+  grid-template-areas:
+    '. icon label .'
+    'role role role role'
+    'name name name name'
+    'date date date date';
+  align-items: center;
+  row-gap: 16px;
+  column-gap: 4px;
+  border-radius: 10px;
+  padding: 24px;
+  text-align: center;
+
+  & .approval-signature__icon {
+    grid-area: icon;
+    justify-self: center;
+
+    & svg {
+      width: 64px;
+      height: 64px;
+    }
+  }
+
+  & .approval-signature__label {
+    grid-area: label;
+    justify-self: start;
+    justify-self: center;
+    font-size: 24px;
+    font-weight: 500;
+  }
+
+  & .approval-signature__role {
+    grid-area: role;
+    justify-self: center;
+    background-color: var(--green-color);
+    color: #fff;
+    border-radius: 999px;
+    padding: 6px 16px;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1;
+  }
+
+  & .approval-signature__name {
+    grid-area: name;
+    justify-self: center;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--main-text-color);
+  }
+
+  & .approval-signature__date {
+    grid-area: date;
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    color: var(--second-text-color);
+    & .approval-signature-signed-at {
+      color: var(--main-text-color);
+    }
+  }
+
+  &--confirmed_by_doctor {
+    background-color: rgba(58, 176, 107, .15);
+    & .approval-signature__icon,
+    & .approval-signature__label {
+      color: var(--green-color);
+    }
+  }
+
+  &--new {
+    background-color: #F2EDEA;
+    & .approval-signature__label {
+      color: var(--orange-color);
+    }
+  }
+
+  &--rejected_by_doctor {
+    background-color: rgba(220, 53, 69, .12);
+    & .approval-signature__icon,
+    & .approval-signature__label {
+      color: #DC3545;
+    }
+  }
+}

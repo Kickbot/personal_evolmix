@@ -1,26 +1,18 @@
 import { useContext } from 'react';
 import Context from 'context';
 import { Button } from 'ui/button';
-import { ArchiveIcon, CloseIcon, CheckCircleIcon, TimeIcon } from 'ui/icons';
+import { ArchiveIcon, CloseIcon } from 'ui/icons';
+import { ApprovalSignature } from 'ui/approvalSignature';
 import { formatDate } from 'utils/date';
 import { fullName, shortName } from 'utils/name';
 import type { IUser } from 'types/auth.types';
-import type {
-  IRecipeListItem,
-  IRecipeDoctorConfirmStatus,
-} from 'types/recipes.types';
+import type { IRecipeListItem } from 'types/recipes.types';
 
 interface RecipeDetailsProps {
   recipe: IRecipeListItem;
   onClose: () => void;
   onArchive: () => void;
 }
-
-const CONFIRM_LABELS: Record<IRecipeDoctorConfirmStatus, string> = {
-  new: 'Ожидает',
-  confirmed_by_doctor: 'Заверено',
-  rejected_by_doctor: 'Отклонено',
-};
 
 function formatNullable(value: number | null | undefined, suffix = '') {
   if (value == null || Number.isNaN(value)) return '—';
@@ -30,7 +22,6 @@ function formatNullable(value: number | null | undefined, suffix = '') {
 export function RecipeDetails({ recipe, onClose, onArchive }: RecipeDetailsProps) {
   const { currentUser } = useContext(Context) as { currentUser: IUser | null };
   const { patient, doctor, active_substance, solvent } = recipe;
-  const status = recipe.doctor_confirm_status;
 
   return (
     <div className="dt-details p-4">
@@ -124,22 +115,12 @@ export function RecipeDetails({ recipe, onClose, onArchive }: RecipeDetailsProps
                   </div>
                 </dl>
 
-                <div className={`rd-signature rd-signature--${status}`}>
-                  <div className="rd-signature__icon">
-                    {status === 'confirmed_by_doctor' && <CheckCircleIcon />}
-                    {status === 'new' && <TimeIcon />}
-                    {status === 'rejected_by_doctor' && <CloseIcon />}
-                  </div>
-                  <div className="rd-signature__label">
-                    {CONFIRM_LABELS[status]}
-                  </div>
-                  <div className="rd-signature__role">Глав. Врач</div>
-                  <div className="rd-signature__name">{fullName(currentUser) || '—'}</div>
-                  <div className="rd-signature__date">
-                    <span>Подписано:</span>
-                    <span>{formatDate(recipe.updated_at)}</span>
-                  </div>
-                </div>
+                <ApprovalSignature
+                  status={recipe.doctor_confirm_status}
+                  role="Глав. Врач"
+                  name={fullName(currentUser)}
+                  signedAt={recipe.updated_at}
+                />
               </div>
             </div>
           </div>
