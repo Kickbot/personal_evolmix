@@ -1,6 +1,7 @@
 import type { IUserListItem } from 'types/users.types';
 import type { ColumnDef } from 'components/data-table';
 import { formatDate } from 'utils/date';
+import { fullName } from 'utils/name';
 
 export const userColumns: ColumnDef<IUserListItem>[] = [
   {
@@ -8,7 +9,7 @@ export const userColumns: ColumnDef<IUserListItem>[] = [
     header: 'ФИО',
     sortable: true,
     width: '1.2fr',
-    render: (u) => `${u.last_name} ${u.first_name} ${u.middle_name}`,
+    render: (u) => fullName(u),
   },
   {
     key: 'department',

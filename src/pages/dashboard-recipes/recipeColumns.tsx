@@ -1,16 +1,9 @@
 import type { ColumnDef } from 'components/data-table';
 import type { IRecipeListItem } from 'types/recipes.types';
-import type { IPatientListItem } from 'types/patients.types';
 import { StatusBadge } from 'ui/statusBadge';
 import { ConfirmStatusBadge } from 'ui/confirmStatusBadge';
 import { formatDate } from 'utils/date';
-
-function patientShortName(p: IPatientListItem): string {
-  const fi = p.first_name?.trim().charAt(0);
-  const mi = p.middle_name?.trim().charAt(0);
-  const initials = [fi, mi].filter(Boolean).map((c) => `${c}.`).join('');
-  return `${p.last_name} ${initials}`.trim();
-}
+import { shortName } from 'utils/name';
 
 export const recipeColumns: ColumnDef<IRecipeListItem>[] = [
   {
@@ -26,7 +19,7 @@ export const recipeColumns: ColumnDef<IRecipeListItem>[] = [
     header: 'Пациент',
     sortable: true,
     width: '1fr',
-    render: (r) => patientShortName(r.patient),
+    render: (r) => shortName(r.patient),
   },
   {
     key: 'gender',

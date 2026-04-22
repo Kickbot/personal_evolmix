@@ -35,3 +35,11 @@ export const formatDateTime = (value: string | null) => {
     minute: '2-digit',
   });
 };
+
+export const formatNowDate = () => {
+  return new Date().toLocaleDateString('ru-RU', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  });
+};

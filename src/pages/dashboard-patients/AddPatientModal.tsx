@@ -14,6 +14,7 @@ import {
 import './addPatientModal.css';
 import { AddSaveIcon } from 'ui/icons/AddSaveIcon';
 import type { IPatientListItem } from 'types/patients.types';
+import { shortName } from 'utils/name';
 
 interface AddPatientModalProps {
   onSuccess?: (updatedPatient?: IPatientListItem) => void;
@@ -100,18 +101,7 @@ export function AddPatientModal({
         first_name: editingPatient.first_name,
         last_name: editingPatient.last_name,
         middle_name: editingPatient.middle_name,
-        doctor: editingPatient.doctor
-          ? (() => {
-              const d = editingPatient.doctor!;
-              const fi = d.first_name?.trim().charAt(0);
-              const mi = d.middle_name?.trim().charAt(0);
-              const initials = [fi, mi]
-                .filter(Boolean)
-                .map((c) => `${c}.`)
-                .join('');
-              return `${d.last_name} ${initials}`.trim();
-            })()
-          : '',
+        doctor: editingPatient.doctor ? shortName(editingPatient.doctor) : '',
         department: editingPatient.department ?? '',
         identification_number: editingPatient.identification_number ?? '',
         room_number: editingPatient.room_number?.toString() ?? '',

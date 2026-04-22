@@ -3,6 +3,7 @@ import Context from 'context';
 import { Button } from 'ui/button';
 import { ArchiveIcon, CloseIcon, CheckCircleIcon, TimeIcon } from 'ui/icons';
 import { formatDate } from 'utils/date';
+import { fullName, shortName } from 'utils/name';
 import type { IUser } from 'types/auth.types';
 import type {
   IRecipeListItem,
@@ -20,19 +21,6 @@ const CONFIRM_LABELS: Record<IRecipeDoctorConfirmStatus, string> = {
   confirmed_by_doctor: 'Заверено',
   rejected_by_doctor: 'Отклонено',
 };
-
-function fullName(u?: { first_name: string; middle_name: string; last_name: string } | null) {
-  if (!u) return '—';
-  return `${u.last_name} ${u.first_name} ${u.middle_name}`.trim();
-}
-
-function doctorShortName(d?: { first_name: string; middle_name: string; last_name: string } | null) {
-  if (!d) return '—';
-  const fi = d.first_name?.trim().charAt(0);
-  const mi = d.middle_name?.trim().charAt(0);
-  const initials = [fi, mi].filter(Boolean).map((c) => `${c}.`).join('');
-  return `${d.last_name} ${initials}`.trim();
-}
 
 function formatNullable(value: number | null | undefined, suffix = '') {
   if (value == null || Number.isNaN(value)) return '—';
@@ -67,7 +55,7 @@ export function RecipeDetails({ recipe, onClose, onArchive }: RecipeDetailsProps
                 </div>
                 <div className="rd-field">
                   <dt>Врач</dt>
-                  <dd>{doctorShortName(doctor)}</dd>
+                  <dd>{shortName(doctor) || '—'}</dd>
                 </div>
                 <div className="rd-field">
                   <dt>Отделение</dt>
@@ -116,7 +104,7 @@ export function RecipeDetails({ recipe, onClose, onArchive }: RecipeDetailsProps
                 <dl className="rd-fields">
                   <div className="rd-field">
                     <dt>Пациент</dt>
-                    <dd>{doctorShortName(patient)}</dd>
+                    <dd>{shortName(patient) || '—'}</dd>
                   </div>
                   <div className="rd-field">
                     <dt>Пол</dt>
@@ -146,7 +134,7 @@ export function RecipeDetails({ recipe, onClose, onArchive }: RecipeDetailsProps
                     {CONFIRM_LABELS[status]}
                   </div>
                   <div className="rd-signature__role">Глав. Врач</div>
-                  <div className="rd-signature__name">{fullName(currentUser)}</div>
+                  <div className="rd-signature__name">{fullName(currentUser) || '—'}</div>
                   <div className="rd-signature__date">
                     <span>Подписано:</span>
                     <span>{formatDate(recipe.updated_at)}</span>
@@ -162,7 +150,7 @@ export function RecipeDetails({ recipe, onClose, onArchive }: RecipeDetailsProps
             <div className="rd-comment__title">Комментарий Глав. врача</div>
             <div className="rd-comment__placeholder">
               <div className="rd-comment__header">
-                <span>{fullName(currentUser)}</span>
+                <span>{fullName(currentUser) || '—'}</span>
                 <span>{formatDate(recipe.updated_at)}</span>
               </div>
               <div className="rd-comment__body">

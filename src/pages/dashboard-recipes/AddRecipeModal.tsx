@@ -17,7 +17,8 @@ import { AddSaveIcon } from 'ui/icons/AddSaveIcon';
 import { CheckCircleIcon } from 'ui/icons/CheckCircleIcon';
 import { SearchInput, SearchDropdown } from 'components/search-input';
 import { useDebounce } from 'hooks/useDebounce';
-import { formatDate } from 'utils/date';
+import { formatDate, formatNowDate } from 'utils/date';
+import { fullName, shortName } from 'utils/name';
 import type { ApiFormError } from 'features/form/types/api-error';
 import { applyServerErrors } from 'features/form/lib/applyServerErrors';
 import {
@@ -56,30 +57,8 @@ const EMPTY_VALUES: AddRecipeFormValues = {
   solvent_dosage: '',
 };
 
-const fullName = (p: { last_name: string; first_name: string; middle_name?: string | null }) =>
-  [p.last_name, p.first_name, p.middle_name].filter(Boolean).join(' ').trim();
-
-const formatNow = () => {
-  const d = new Date();
-  const pad = (n: number) => String(n).padStart(2, '0');
-  return (
-    `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}` +
-    ` ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`
-  );
-};
-
 const genderLabel = (g: 'male' | 'female' | null | undefined) =>
   g === 'male' ? 'М' : g === 'female' ? 'Ж' : '';
-
-const shortName = (
-  p?: { first_name: string; middle_name: string | null; last_name: string } | null,
-) => {
-  if (!p) return '';
-  const fi = p.first_name?.trim().charAt(0);
-  const mi = p.middle_name?.trim().charAt(0);
-  const initials = [fi, mi].filter(Boolean).map((c) => `${c}.`).join('');
-  return `${p.last_name} ${initials}`.trim();
-};
 
 export function AddRecipeModal({ onSuccess }: AddRecipeModalProps) {
   const { currentUser } = useContext(Context) as { currentUser: IUser | null };
@@ -91,7 +70,7 @@ export function AddRecipeModal({ onSuccess }: AddRecipeModalProps) {
   const [solvents, setSolvents] = useState<ISolventListItem[]>([]);
 
   const [selectedPatient, setSelectedPatient] = useState<IPatientListItem | null>(null);
-  const [createdAt, setCreatedAt] = useState<string>(formatNow());
+  const [createdAt, setCreatedAt] = useState<string>(formatNowDate());
 
   const [history, setHistory] = useState<IRecipeListItem[]>([]);
   const [selectedHistoryId, setSelectedHistoryId] = useState<string | null>(null);
@@ -257,7 +236,7 @@ export function AddRecipeModal({ onSuccess }: AddRecipeModalProps) {
       };
       const trigger = customEvent.relatedTarget;
       lastTriggerRef.current = trigger instanceof HTMLElement ? trigger : null;
-      setCreatedAt(formatNow());
+      setCreatedAt(formatNowDate());
 
       if (currentUser?.id) {
         (recipeApi.postSearchRecipe(
@@ -346,10 +325,11 @@ export function AddRecipeModal({ onSuccess }: AddRecipeModalProps) {
                     name="doctor_query"
                     render={({ field }) => (
                       <div className="add-recipe-form__picker">
-                        <label className="form-label required" htmlFor="search-input">
+                        <label className="form-label required" htmlFor="doctor-search">
                           Врач
                         </label>
                         <SearchInput
+                          id="doctor-search"
                           value={field.value ?? ''}
                           onChange={(v) => {
                             field.onChange(v);
@@ -385,10 +365,11 @@ export function AddRecipeModal({ onSuccess }: AddRecipeModalProps) {
                     name="patient_query"
                     render={({ field }) => (
                       <div className="add-recipe-form__picker">
-                        <label className="form-label required" htmlFor="search-input">
+                        <label className="form-label required" htmlFor="patient-search">
                           Пациент
                         </label>
                         <SearchInput
+                          id="patient-search"
                           value={field.value ?? ''}
                           onChange={(v) => {
                             field.onChange(v);
@@ -527,12 +508,12 @@ export function AddRecipeModal({ onSuccess }: AddRecipeModalProps) {
                   />
 
                   <div className="add-recipe-form__row-2">
+                    <span className="required">Количество Д/В в дозе: мг/мл</span>
                     <Input
                       id="add-recipe-substance-dosage"
                       {...register('active_substance_dosage', {
                         onChange: () => clearErrors('active_substance_dosage'),
                       })}
-                      label="Количество Д/В в дозе: мг/мл"
                       placeholder="0"
                       type="number"
                       step="any"
@@ -543,7 +524,6 @@ export function AddRecipeModal({ onSuccess }: AddRecipeModalProps) {
                     />
                     <Input
                       id="add-recipe-substance-dosage-ml"
-                      label={' '}
                       value="1"
                       readOnly
                       disabled

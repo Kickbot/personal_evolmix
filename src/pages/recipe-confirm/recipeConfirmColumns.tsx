@@ -26,7 +26,7 @@ export const recipeConfirmColumns: ColumnDef<IRecipeListItem>[] = [
     key: 'patient',
     header: 'Пациент',
     width: '1fr',
-    render: (r) => shortName(r.patient),
+    render: (r) => shortName(r.patient) || '—',
   },
   {
     key: 'created_at',
@@ -39,7 +39,7 @@ export const recipeConfirmColumns: ColumnDef<IRecipeListItem>[] = [
     key: 'doctor',
     header: 'Врач',
     width: '1fr',
-    render: (r) => shortName(r.doctor),
+    render: (r) => shortName(r.doctor) || '—',
   },
   {
     key: 'doctor_confirm_status',

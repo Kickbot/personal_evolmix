@@ -2,13 +2,7 @@ import type { ColumnDef } from 'components/data-table';
 import type { IPatientListItem } from 'types/patients.types';
 import { StatusBadge } from 'ui/statusBadge';
 import { formatDate } from 'utils/date';
-
-function patientShortName(u: IPatientListItem): string {
-  const fi = u.first_name?.trim().charAt(0);
-  const mi = u.middle_name?.trim().charAt(0);
-  const initials = [fi, mi].filter(Boolean).map((c) => `${c}.`).join('');
-  return `${u.last_name} ${initials}`.trim();
-}
+import { shortName } from 'utils/name';
 
 export const patientColumns: ColumnDef<IPatientListItem>[] = [
   {
@@ -26,7 +20,7 @@ export const patientColumns: ColumnDef<IPatientListItem>[] = [
     header: 'Пациент',
     sortable: true,
     width: '1fr',
-    render: (u) => patientShortName(u),
+    render: (u) => shortName(u),
   },
   {
     key: 'gender',

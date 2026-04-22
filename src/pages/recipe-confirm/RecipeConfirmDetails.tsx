@@ -3,38 +3,11 @@ import Context from 'context';
 import { Button } from 'ui/button';
 import { CheckCircleIcon, CloseIcon, TimeIcon } from 'ui/icons';
 import { formatDate } from 'utils/date';
+import { fullName, shortName } from 'utils/name';
 import type { IUser } from 'types/auth.types';
 import type { IRecipeListItem } from 'types/recipes.types';
 import { ConfirmRecipeDialog } from './ConfirmRecipeDialog';
 import './recipeConfirm.css';
-
-function fullName(
-  u?: {
-    first_name: string;
-    middle_name: string;
-    last_name: string;
-  } | null,
-) {
-  if (!u) return '—';
-  return `${u.last_name} ${u.first_name} ${u.middle_name}`.trim();
-}
-
-function shortName(
-  d?: {
-    first_name: string;
-    middle_name: string;
-    last_name: string;
-  } | null,
-) {
-  if (!d) return '—';
-  const fi = d.first_name?.trim().charAt(0);
-  const mi = d.middle_name?.trim().charAt(0);
-  const initials = [fi, mi]
-    .filter(Boolean)
-    .map((c) => `${c}.`)
-    .join('');
-  return `${d.last_name} ${initials}`.trim();
-}
 
 function formatNullable(value: number | null | undefined, suffix = '') {
   if (value == null || Number.isNaN(value)) return '—';
@@ -86,7 +59,7 @@ export function RecipeConfirmDetails({
               </div>
               <div className="rd-field">
                 <dt>Врач</dt>
-                <dd>{shortName(doctor)}</dd>
+                <dd>{shortName(doctor) || '—'}</dd>
               </div>
               <div className="rd-field">
                 <dt>Отделение</dt>
@@ -137,7 +110,7 @@ export function RecipeConfirmDetails({
               <dl className="rd-fields">
                 <div className="rd-field">
                   <dt>Пациент</dt>
-                  <dd>{shortName(patient)}</dd>
+                  <dd>{shortName(patient) || '—'}</dd>
                 </div>
                 <div className="rd-field">
                   <dt>Пол</dt>
@@ -209,7 +182,7 @@ export function RecipeConfirmDetails({
       </div>
 
       <ConfirmRecipeDialog
-        userFullName={fullName(currentUser)}
+        userFullName={fullName(currentUser) || '—'}
         recipeNumber={recipe.recipe_number}
         onConfirm={handleToggleConfirm}
       />

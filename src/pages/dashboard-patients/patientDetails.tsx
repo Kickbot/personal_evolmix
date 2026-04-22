@@ -8,22 +8,12 @@ import { ArchiveIcon, CloseIcon, EditIcon } from 'ui/icons';
 import { StatusBadge } from 'ui/statusBadge';
 import { recipe } from 'api';
 import Loader from 'ui/loader';
+import { shortName } from 'utils/name';
 
 const GENDER_SHORT: Record<string, string> = {
   male: 'М',
   female: 'Ж',
 };
-
-function doctorShortName(doctor: IPatientListItem['doctor']): string {
-  if (!doctor) return '—';
-  const fi = doctor.first_name?.trim().charAt(0);
-  const mi = doctor.middle_name?.trim().charAt(0);
-  const initials = [fi, mi]
-    .filter(Boolean)
-    .map((c) => `${c}.`)
-    .join('');
-  return `${doctor.last_name} ${initials}`.trim();
-}
 
 function formatNullable(value: number | null, suffix = ''): string {
   if (value == null || Number.isNaN(value)) return '—';
@@ -62,9 +52,8 @@ export function PatientDetails({
           patient_id: patient.id,
           limit: 10,
           offset: 0,
-        });
+        }) as { recipes: IRecipeListItem[] };
         setRecipes(response.recipes || []);
-        console.log('Recipes:', response.recipes);
       } catch (error) {
         console.error('Failed to fetch recipes:', error);
       } finally {
@@ -121,7 +110,7 @@ export function PatientDetails({
                 <div className="pd-card__field">
                   <span className="pd-card__label">Лечащий врач</span>
                   <span className="pd-card__value">
-                    {doctorShortName(patient.doctor)}
+                    {shortName(patient.doctor) || '—'}
                   </span>
                 </div>
                 <div className="pd-card__field">

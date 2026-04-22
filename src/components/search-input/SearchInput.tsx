@@ -3,6 +3,7 @@ import { Input } from 'ui/input';
 import './search-input.css';
 
 interface SearchInputProps {
+  id?: string;
   value: string;
   onChange: (value: string) => void;
   isLoading?: boolean;
@@ -14,6 +15,7 @@ interface SearchInputProps {
 }
 
 export function SearchInput({
+  id,
   value,
   onChange,
   isLoading,
@@ -44,7 +46,7 @@ export function SearchInput({
       <div className="search-input-box">
         <Input
           className="search-input-field"
-          id={`search-input`}
+          id={id}
           type="text"
           value={value}
           wrapperClassName="search-input-wrapper"
