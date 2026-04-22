@@ -51,6 +51,11 @@ export const warehouse = {
   createWarehouse: bind(post, URLS.warehouse.postCreateWarehouse),
 }
 
+export const solvent = {
+  getAllSolvent: bind(get, URLS.solvent.getAllSolvent),
+  getSearchSolvent: bind(get, URLS.solvent.getSearchSolvent),
+}
+
 export const task = {
   getAllTask: bind(get, URLS.task.getAllTask),
   getTaskById: (taskId) => get(URLS.task.getTaskById.replace('{task_id}', taskId)),

@@ -54,13 +54,16 @@ export interface IRecipeSearchBody {
 export interface IRecipeCreateBody {
   solvent_dosage: number;
   active_substance_dosage: number;
-  is_solvent_prefilled: boolean;
-  recipie_type: string;
   patient_id: string;
   doctor_id: string;
   solvent_id: string;
   active_substance_id: string;
-  task_id: string;
+  task_id?: string;
+}
+
+export interface IRecipeCreateResponse {
+  success: boolean;
+  recipe: IRecipeListItem;
 }
 
 export interface IRecipePatchBody {

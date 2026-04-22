@@ -53,5 +53,9 @@
     "getWarehouseById": "active_substance/packs/{pack_id}",
     "patchWarehouse": "active_substance/packs/{pack_id}",
     "postCreateWarehouse": "active_substance/packs"
+  },
+  "solvent": {
+    "getAllSolvent": "solvent/",
+    "getSearchSolvent": "solvent/search"
   }
 }

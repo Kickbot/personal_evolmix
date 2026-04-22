@@ -157,10 +157,10 @@ export function RecipeConfirmDetails({
                 </div>
               </dl>
 
-              {/* <div className="rc-waiting">
+              <div className="rc-waiting">
                 <TimeIcon />
                 <span>{isPending ? 'Ожидает' : 'Заверено'}</span>
-              </div> */}
+              </div>
             </div>
           </div>
 

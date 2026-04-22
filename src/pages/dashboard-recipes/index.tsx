@@ -17,6 +17,7 @@ import type {
 } from 'types/recipes.types';
 import { recipeColumns } from './recipeColumns';
 import { RecipeDetails } from './RecipeDetails';
+import { AddRecipeModal } from './AddRecipeModal';
 import { useRecipes } from './useRecipes';
 import './recipes.css';
 
@@ -68,6 +69,7 @@ export default function Recipes() {
     currentPage,
     totalPages,
     handlePageChange,
+    reloadRecipes,
   } = useRecipes();
 
   const canCreate =
@@ -185,6 +187,8 @@ export default function Recipes() {
         totalPages={totalPages}
         onPageChange={handlePageChange}
       />
+
+      {canCreate && <AddRecipeModal onSuccess={reloadRecipes} />}
     </>
   );
 }

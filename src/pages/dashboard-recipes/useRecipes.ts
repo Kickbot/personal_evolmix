@@ -40,7 +40,10 @@ export function useRecipes() {
   const [statusFilter, setStatusFilter] = useState<IRecipeStatus | ''>('');
   const [dateFilter, setDateFilter] = useState('');
   const [expandedRecipeId, setExpandedRecipeId] = useState<string | null>(null);
+  const [reloadKey, setReloadKey] = useState(0);
   const debouncedSearchName = useDebounce(searchName.trim(), 300);
+
+  const reloadRecipes = () => setReloadKey((k) => k + 1);
 
   const handlePageChange = (page: number) => {
     onPageChange(page);
@@ -150,6 +153,7 @@ export function useRecipes() {
     offset,
     sortField,
     sortDirection,
+    reloadKey,
   ]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const visibleSearchResults = debouncedSearchName ? searchResults : [];
@@ -180,5 +184,6 @@ export function useRecipes() {
     currentPage,
     totalPages,
     handlePageChange,
+    reloadRecipes,
   };
 }
