@@ -103,6 +103,11 @@ export function useUsers() {
   };
 
   useEffect(() => {
+    const hasSearch = searchName.trim().length > 0;
+    const debouncedHasSearch = debouncedSearchName.length > 0;
+    // Debounce in flight — avoid firing a request with a stale name.
+    if (hasSearch !== debouncedHasSearch) return;
+
     const sortMap = debouncedSearchName ? SORT_MAP_SEARCH : SORT_MAP_ALL;
     const beField = sortField ? (sortMap as Record<string, string>)[sortField] : undefined;
     const sortParams: Pick<IUserSearchParams, 'order_by' | 'sort_direction'> = {};
@@ -161,7 +166,7 @@ export function useUsers() {
         })
         .finally(() => setIsLoading(false));
     }
-  }, [activeTab, archivedStatus, debouncedSearchName, offset, sortField, sortDirection]);// eslint-disable-line react-hooks/exhaustive-deps
+  }, [activeTab, archivedStatus, debouncedSearchName, searchName, offset, sortField, sortDirection]);// eslint-disable-line react-hooks/exhaustive-deps
 
   const visibleSearchResults = debouncedSearchName ? searchResults : [];
 

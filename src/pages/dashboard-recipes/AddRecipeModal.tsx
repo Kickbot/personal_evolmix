@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -8,7 +8,6 @@ import {
   substance as substanceApi,
   user as userApi,
 } from 'api';
-import Context from 'context';
 import ROLES from 'const/roles';
 import { Input } from 'ui/input';
 import { Select } from 'ui/select';
@@ -16,6 +15,7 @@ import { Button } from 'ui/button';
 import { AddSaveIcon } from 'ui/icons/AddSaveIcon';
 import { CheckCircleIcon } from 'ui/icons/CheckCircleIcon';
 import { SearchInput, SearchDropdown } from 'components/search-input';
+import Loader from 'ui/loader';
 import { useDebounce } from 'hooks/useDebounce';
 import { formatDate, formatNowDate } from 'utils/date';
 import { fullName, shortName } from 'utils/name';
@@ -25,7 +25,6 @@ import {
   addRecipeSchema,
   type AddRecipeFormValues,
 } from 'features/recipes/model/addRecipe.schema';
-import type { IUser } from 'types/auth.types';
 import type { IPatientListItem, IPatientResponse } from 'types/patients.types';
 import type { IUserListItem, IUserResponse } from 'types/users.types';
 import type {
@@ -61,7 +60,6 @@ const genderLabel = (g: 'male' | 'female' | null | undefined) =>
   g === 'male' ? 'М' : g === 'female' ? 'Ж' : '';
 
 export function AddRecipeModal({ onSuccess }: AddRecipeModalProps) {
-  const { currentUser } = useContext(Context) as { currentUser: IUser | null };
   const modalRef = useRef<HTMLDivElement | null>(null);
   const lastTriggerRef = useRef<HTMLElement | null>(null);
   const [closeRequestId, setCloseRequestId] = useState(0);
@@ -74,6 +72,7 @@ export function AddRecipeModal({ onSuccess }: AddRecipeModalProps) {
 
   const [history, setHistory] = useState<IRecipeListItem[]>([]);
   const [selectedHistoryId, setSelectedHistoryId] = useState<string | null>(null);
+  const [isHistoryLoading, setIsHistoryLoading] = useState(false);
 
   const [patientResults, setPatientResults] = useState<IPatientListItem[]>([]);
   const [isPatientLoading, setIsPatientLoading] = useState(false);
@@ -99,6 +98,8 @@ export function AddRecipeModal({ onSuccess }: AddRecipeModalProps) {
 
   const patientQuery = watch('patient_query') ?? '';
   const doctorQuery = watch('doctor_query') ?? '';
+  const patientId = watch('patient_id');
+  const doctorId = watch('doctor_id');
   const activeSubstanceId = watch('active_substance_id');
   const activeSubstanceDosage = watch('active_substance_dosage');
   const solventDosage = watch('solvent_dosage');
@@ -132,7 +133,7 @@ export function AddRecipeModal({ onSuccess }: AddRecipeModalProps) {
 
   // Patient search.
   useEffect(() => {
-    if (!debouncedPatientQuery) {
+    if (!debouncedPatientQuery || !patientQuery.trim() || patientId) {
       setPatientResults([]);
       setIsPatientLoading(false);
       return;
@@ -146,11 +147,11 @@ export function AddRecipeModal({ onSuccess }: AddRecipeModalProps) {
       .then((data) => setPatientResults(data.patients ?? []))
       .catch(() => setPatientResults([]))
       .finally(() => setIsPatientLoading(false));
-  }, [debouncedPatientQuery]);
+  }, [debouncedPatientQuery, patientQuery, patientId]);
 
   // Doctor search.
   useEffect(() => {
-    if (!debouncedDoctorQuery) {
+    if (!debouncedDoctorQuery || !doctorQuery.trim() || doctorId) {
       setDoctorResults([]);
       setIsDoctorLoading(false);
       return;
@@ -158,14 +159,19 @@ export function AddRecipeModal({ onSuccess }: AddRecipeModalProps) {
     setIsDoctorLoading(true);
     (userApi.search({
       name: debouncedDoctorQuery,
-      role: ROLES.DOCTOR,
-      limit: 10,
+      limit: 1000,
       offset: 0,
     }) as Promise<IUserResponse>)
-      .then((data) => setDoctorResults(data.users ?? []))
+      .then((data) =>
+        setDoctorResults(
+          (data.users ?? []).filter(
+            (u) => u.role === ROLES.DOCTOR || u.role === ROLES.HEAD_DOCTOR,
+          ),
+        ),
+      )
       .catch(() => setDoctorResults([]))
       .finally(() => setIsDoctorLoading(false));
-  }, [debouncedDoctorQuery]);
+  }, [debouncedDoctorQuery, doctorQuery, doctorId]);
 
   const handlePatientPick = (p: IPatientListItem) => {
     setValue('patient_id', p.id, { shouldValidate: true });
@@ -237,18 +243,6 @@ export function AddRecipeModal({ onSuccess }: AddRecipeModalProps) {
       const trigger = customEvent.relatedTarget;
       lastTriggerRef.current = trigger instanceof HTMLElement ? trigger : null;
       setCreatedAt(formatNowDate());
-
-      if (currentUser?.id) {
-        (recipeApi.postSearchRecipe(
-          { doctor_id: currentUser.id },
-          { limit: 50, offset: 0, order_by: 'date', sort_direction: 'desc' },
-        ) as Promise<IRecipesResponse>)
-          .then((data) => setHistory(data.recipes ?? []))
-          .catch(() => setHistory([]));
-      } else {
-        setHistory([]);
-      }
-      setSelectedHistoryId(null);
     };
     const handleHide = () => {
       const activeElement = document.activeElement as HTMLElement | null;
@@ -274,7 +268,24 @@ export function AddRecipeModal({ onSuccess }: AddRecipeModalProps) {
       modalElement.removeEventListener('hide.bs.modal', handleHide);
       modalElement.removeEventListener('hidden.bs.modal', handleHidden);
     };
-  }, [clearErrors, reset, currentUser?.id]);
+  }, [clearErrors, reset]);
+
+  useEffect(() => {
+    if (!doctorId) {
+      setHistory([]);
+      setSelectedHistoryId(null);
+      return;
+    }
+    setIsHistoryLoading(true);
+    (recipeApi.postSearchRecipe(
+      { doctor_id: doctorId },
+      { limit: 50, offset: 0, order_by: 'date', sort_direction: 'desc' },
+    ) as Promise<IRecipesResponse>)
+      .then((data) => setHistory(data.recipes ?? []))
+      .catch(() => setHistory([]))
+      .finally(() => setIsHistoryLoading(false));
+    setSelectedHistoryId(null);
+  }, [doctorId]);
 
   useEffect(() => {
     if (closeRequestId === 0) return;
@@ -590,7 +601,9 @@ export function AddRecipeModal({ onSuccess }: AddRecipeModalProps) {
 
               <div className="add-recipe-layout__card">
                 <h6 className="add-recipe-layout__title">История рецептов</h6>
-                {history.length === 0 ? (
+                {isHistoryLoading ? (
+                  <Loader position="absolute" />
+                ) : history.length === 0 ? (
                   <div className="add-recipe-history__empty">Нет рецептов</div>
                 ) : (
                   <div className="add-recipe-history__table-wrap">

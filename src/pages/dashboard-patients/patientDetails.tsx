@@ -157,7 +157,7 @@ export function PatientDetails({
                 ) : recipes.length === 0 ? (
                   <div className="text-center py-4">Нет назначений</div>
                 ) : (
-                  recipes.map((recipe) => (
+                  recipes.slice(0, 3).map((recipe) => (
                     <div key={recipe.id} className="pd-prescription-item">
                       <div className="pd-prescription-item__meta">
                         <span className="pd-prescription-item__id">

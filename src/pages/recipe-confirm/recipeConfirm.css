@@ -167,6 +167,7 @@
 .rc-dialog__actions {
   display: flex;
   gap: 12px;
+  justify-content: space-between;
 }
 
 @media (min-width: 576px) {
