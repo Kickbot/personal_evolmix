@@ -28,7 +28,7 @@ const CONFIRM_OPTIONS: {
   { value: '', label: 'Все' },
   { value: 'new', label: 'Ожидает' },
   { value: 'confirmed_by_doctor', label: 'Заверено' },
-  { value: 'rejected_by_doctor', label: 'Отклонено' },
+  { value: 'rejected_by_doctor', label: 'Отклонен' },
 ];
 
 const STATUS_OPTIONS: { value: IRecipeStatus | ''; label: string }[] = [

@@ -11,7 +11,7 @@ type ConfirmStatusBadgeProps = {
 const LABELS: Record<IRecipeDoctorConfirmStatus, string> = {
   new: 'Ожидает',
   confirmed_by_doctor: 'Заверено',
-  rejected_by_doctor: 'Отклонено',
+  rejected_by_doctor: 'Отклонен',
 };
 
 const ICONS: Record<IRecipeDoctorConfirmStatus, React.ComponentType> = {

@@ -81,7 +81,7 @@
     background-color: rgba(220, 53, 69, .12);
     & .approval-signature__icon,
     & .approval-signature__label {
-      color: #DC3545;
+      color: #ff3131;
     }
   }
 }

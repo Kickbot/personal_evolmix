@@ -41,8 +41,8 @@ export function RecipeDetails({ recipe, onClose, onArchive }: RecipeDetailsProps
 
         <div className="col-12">
           <div className="dt-details-btn">
-            <Button className="primary has-icon" disabled>
-              Взять в работу
+            <Button className="primary has-icon" >
+              Редактировать
             </Button>
             <Button
               className="bordered has-icon"

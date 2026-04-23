@@ -17,6 +17,6 @@
     color: var(--green-color);
   }
   &--rejected_by_doctor {
-    color: #DC3545;
+    color: #ff3131;
   }
 }

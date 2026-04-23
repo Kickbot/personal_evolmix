@@ -18,12 +18,14 @@ interface RecipeConfirmDetailsProps {
   recipe: IRecipeListItem;
   onClose: () => void;
   onConfirm?: () => void;
+  onReject?: () => void;
 }
 
 export function RecipeConfirmDetails({
   recipe,
   onClose,
   onConfirm,
+  onReject,
 }: RecipeConfirmDetailsProps) {
   const { currentUser } = useContext(Context) as { currentUser: IUser | null };
   const [comment, setComment] = useState('');
@@ -168,7 +170,7 @@ export function RecipeConfirmDetails({
         <Button
           className="secondary has-icon"
           iconBefore={<CloseIcon />}
-          onClick={undefined}
+          onClick={onReject}
         >
           Отклонить рецепт
         </Button>

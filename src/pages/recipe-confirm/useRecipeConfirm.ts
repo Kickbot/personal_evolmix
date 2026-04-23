@@ -43,6 +43,19 @@ export function useRecipeConfirm({ recipeId }: UseRecipeConfirmOptions = {}) {
     }
   };
 
+  const handleReject = async (recipeId: string) => {
+    try {
+      await recipeApi.patchRecipe(recipeId, {
+        doctor_confirm_status: 'rejected_by_doctor',
+      });
+      setRecipes((current) => current.filter((r) => r.id !== recipeId));
+      setExpandedRecipeId(null);
+      window.dispatchEvent(new CustomEvent('recipe-approval-updated'));
+    } catch {
+      setError('Не удалось отклонить рецепт');
+    }
+  };
+
   useEffect(() => {
     const body: IRecipeSearchBody = {
       doctor_confirm_status: 'new',
@@ -73,6 +86,7 @@ export function useRecipeConfirm({ recipeId }: UseRecipeConfirmOptions = {}) {
     expandedRecipeId,
     handleRowClick,
     handleToggleConfirm,
+    handleReject,
     currentPage,
     totalPages,
     handlePageChange,

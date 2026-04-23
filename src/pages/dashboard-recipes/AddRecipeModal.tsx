@@ -102,11 +102,13 @@ export function AddRecipeModal({ onSuccess }: AddRecipeModalProps) {
   const doctorId = watch('doctor_id');
   const activeSubstanceId = watch('active_substance_id');
   const activeSubstanceDosage = watch('active_substance_dosage');
+  const solventId = watch('solvent_id');
   const solventDosage = watch('solvent_dosage');
   const debouncedPatientQuery = useDebounce(patientQuery.trim(), 300);
   const debouncedDoctorQuery = useDebounce(doctorQuery.trim(), 300);
 
   const selectedSubstance = substances.find((s) => s.id === activeSubstanceId) ?? null;
+  const selectedSolvent = solvents.find((s) => s.id === solventId) ?? null;
 
   const toNumber = (v: string | undefined) => {
     if (!v) return null;
@@ -115,10 +117,24 @@ export function AddRecipeModal({ onSuccess }: AddRecipeModalProps) {
   };
   const substanceDosageNum = toNumber(activeSubstanceDosage);
   const solventDosageNum = toNumber(solventDosage);
-  const totalWeight =
-    substanceDosageNum != null || solventDosageNum != null
-      ? (substanceDosageNum ?? 0) + (solventDosageNum ?? 0)
+  const concentration = selectedSubstance?.concentration ?? null;
+  const substanceDosageMl =
+    substanceDosageNum != null && concentration != null && concentration !== 0
+      ? substanceDosageNum / concentration
       : null;
+  const totalWeight =
+    substanceDosageMl != null || solventDosageNum != null
+      ? (substanceDosageMl ?? 0) + (solventDosageNum ?? 0)
+      : null;
+
+  useEffect(() => {
+    if (selectedSolvent?.is_prefilled) {
+      setValue('solvent_dosage', String(selectedSolvent.prefilled_volume), {
+        shouldValidate: true,
+      });
+      clearErrors('solvent_dosage');
+    }
+  }, [selectedSolvent, setValue, clearErrors]);
 
   // Load substances + solvents once on mount.
   useEffect(() => {
@@ -535,7 +551,7 @@ export function AddRecipeModal({ onSuccess }: AddRecipeModalProps) {
                     />
                     <Input
                       id="add-recipe-substance-dosage-ml"
-                      value="1"
+                      value={substanceDosageMl != null ? String(substanceDosageMl) : ''}
                       readOnly
                       disabled
                       autoComplete="off"
@@ -569,6 +585,7 @@ export function AddRecipeModal({ onSuccess }: AddRecipeModalProps) {
                     inputMode="decimal"
                     required
                     autoComplete="off"
+                    disabled={selectedSolvent?.is_prefilled}
                     error={errors.solvent_dosage?.message}
                   />
 

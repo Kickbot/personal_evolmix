@@ -21,6 +21,7 @@ export default function RecipeConfirm() {
     expandedRecipeId,
     handleRowClick,
     handleToggleConfirm,
+    handleReject,
     currentPage,
     totalPages,
     handlePageChange,
@@ -62,6 +63,7 @@ export default function RecipeConfirm() {
             recipe={r}
             onClose={() => handleRowClick(r.id)}
             onConfirm={() => handleToggleConfirm(r.id, r.doctor_confirm_status)}
+            onReject={() => handleReject(r.id)}
           />
         )}
         emptyMessage="Нет рецептов на подтверждение"
