@@ -2,13 +2,14 @@ import { useContext, useState, useEffect } from 'react';
 import Context from 'context';
 import ROLES from 'const/roles';
 import type { IPatientListItem } from 'types/patients.types';
-import type { IRecipeListItem } from 'types/recipes.types';
+import type { IRecipeListItem, IRecipesResponse } from 'types/recipes.types';
 import { Button } from 'ui/button';
 import { ArchiveIcon, CloseIcon, EditIcon } from 'ui/icons';
 import { StatusBadge } from 'ui/statusBadge';
 import { recipe } from 'api';
 import Loader from 'ui/loader';
 import { shortName } from 'utils/name';
+import { RecipeInfoModal } from './RecipeInfoModal';
 
 const GENDER_SHORT: Record<string, string> = {
   male: 'М',
@@ -43,16 +44,16 @@ export function PatientDetails({
   const genderLabel = GENDER_SHORT[patient.gender] ?? patient.gender;
   const [recipes, setRecipes] = useState<IRecipeListItem[]>([]);
   const [isLoadingRecipes, setIsLoadingRecipes] = useState(false);
+  const [selectedRecipe, setSelectedRecipe] = useState<IRecipeListItem | null>(null);
 
   useEffect(() => {
     const fetchPatientRecipes = async () => {
       setIsLoadingRecipes(true);
       try {
-        const response = await recipe.postSearchRecipe({
-          patient_id: patient.id,
-          limit: 10,
-          offset: 0,
-        }) as { recipes: IRecipeListItem[] };
+        const response = await recipe.postSearchRecipe(
+          { patient_id: patient.id },
+          { limit: 3, offset: 0 },
+        ) as IRecipesResponse;
         setRecipes(response.recipes || []);
       } catch (error) {
         console.error('Failed to fetch recipes:', error);
@@ -157,8 +158,15 @@ export function PatientDetails({
                 ) : recipes.length === 0 ? (
                   <div className="text-center py-4">Нет назначений</div>
                 ) : (
-                  recipes.slice(0, 3).map((recipe) => (
-                    <div key={recipe.id} className="pd-prescription-item">
+                  recipes.map((recipe) => (
+                    <button
+                      key={recipe.id}
+                      type="button"
+                      className="pd-prescription-item"
+                      data-bs-toggle="modal"
+                      data-bs-target="#recipeInfoModal"
+                      onClick={() => setSelectedRecipe(recipe)}
+                    >
                       <div className="pd-prescription-item__meta">
                         <span className="pd-prescription-item__id">
                           {recipe.recipe_number}
@@ -179,7 +187,7 @@ export function PatientDetails({
                           )}
                         </div>
                       </div>
-                    </div>
+                    </button>
                   ))
                 )}
               </div>
@@ -209,6 +217,8 @@ export function PatientDetails({
           </div>
         </div>
       </div>
+
+      <RecipeInfoModal recipe={selectedRecipe} />
     </div>
   );
 }

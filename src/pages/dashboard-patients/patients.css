@@ -201,9 +201,20 @@
 
 .pd-prescription-item {
   border-left: 4px solid var(--green-color);
-  padding-left: 16px;
+  padding: 0 0 0 16px;
   display: flex;
   justify-content: space-between;
+  width: 100%;
+  background: none;
+  border-top: none;
+  border-right: none;
+  border-bottom: none;
+  text-align: left;
+  cursor: pointer;
+}
+
+.pd-prescription-item:hover {
+  opacity: 0.85;
 }
 
 .pd-prescription-item__meta {
