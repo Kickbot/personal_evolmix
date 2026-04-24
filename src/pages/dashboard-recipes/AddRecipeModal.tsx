@@ -43,6 +43,8 @@ import './addRecipeModal.css';
 
 interface AddRecipeModalProps {
   onSuccess?: () => void;
+  editRecipe?: IRecipeListItem | null;
+  onClose?: () => void;
 }
 
 const EMPTY_VALUES: AddRecipeFormValues = {
@@ -59,7 +61,8 @@ const EMPTY_VALUES: AddRecipeFormValues = {
 const genderLabel = (g: 'male' | 'female' | null | undefined) =>
   g === 'male' ? 'М' : g === 'female' ? 'Ж' : '';
 
-export function AddRecipeModal({ onSuccess }: AddRecipeModalProps) {
+export function AddRecipeModal({ onSuccess, editRecipe, onClose }: AddRecipeModalProps) {
+  const isEditMode = editRecipe != null;
   const modalRef = useRef<HTMLDivElement | null>(null);
   const lastTriggerRef = useRef<HTMLElement | null>(null);
   const [closeRequestId, setCloseRequestId] = useState(0);
@@ -88,7 +91,7 @@ export function AddRecipeModal({ onSuccess }: AddRecipeModalProps) {
     clearErrors,
     reset,
     watch,
-    formState: { errors },
+    formState: { errors, isDirty },
   } = useForm<AddRecipeFormValues>({
     resolver: zodResolver(addRecipeSchema),
     mode: 'onBlur',
@@ -126,6 +129,21 @@ export function AddRecipeModal({ onSuccess }: AddRecipeModalProps) {
     substanceDosageMl != null || solventDosageNum != null
       ? (substanceDosageMl ?? 0) + (solventDosageNum ?? 0)
       : null;
+
+  useEffect(() => {
+    if (!editRecipe) return;
+    reset({
+      patient_id: editRecipe.patient.id,
+      patient_query: fullName(editRecipe.patient),
+      doctor_id: editRecipe.doctor.id,
+      doctor_query: fullName(editRecipe.doctor),
+      active_substance_id: editRecipe.active_substance.id,
+      solvent_id: editRecipe.solvent.id,
+      active_substance_dosage: String(editRecipe.active_substance_dosage ?? ''),
+      solvent_dosage: String(editRecipe.solvent_dosage ?? ''),
+    });
+    setSelectedPatient(editRecipe.patient);
+  }, [editRecipe, reset]);
 
   useEffect(() => {
     if (selectedSolvent?.is_prefilled) {
@@ -240,7 +258,16 @@ export function AddRecipeModal({ onSuccess }: AddRecipeModalProps) {
     };
 
     try {
-      await recipeApi.createRecipe(payload);
+      if (isEditMode && editRecipe) {
+        await recipeApi.patchRecipe(editRecipe.id, {
+          ...payload,
+          doctor_confirm_status: 'new',
+          updated_at: new Date().toISOString(),
+        });
+        window.dispatchEvent(new CustomEvent('recipe-approval-updated'));
+      } else {
+        await recipeApi.createRecipe(payload);
+      }
       onSuccess?.();
       reset(EMPTY_VALUES);
       setCloseRequestId((current) => current + 1);
@@ -275,6 +302,7 @@ export function AddRecipeModal({ onSuccess }: AddRecipeModalProps) {
       setHistory([]);
       setSelectedHistoryId(null);
       lastTriggerRef.current?.focus();
+      onClose?.();
     };
     modalElement.addEventListener('show.bs.modal', handleShow);
     modalElement.addEventListener('hide.bs.modal', handleHide);
@@ -284,7 +312,7 @@ export function AddRecipeModal({ onSuccess }: AddRecipeModalProps) {
       modalElement.removeEventListener('hide.bs.modal', handleHide);
       modalElement.removeEventListener('hidden.bs.modal', handleHidden);
     };
-  }, [clearErrors, reset]);
+  }, [clearErrors, reset, onClose]);
 
   useEffect(() => {
     if (!doctorId) {
@@ -325,7 +353,7 @@ export function AddRecipeModal({ onSuccess }: AddRecipeModalProps) {
         <div className="modal-content">
           <div className="modal-header">
             <h5 className="modal-title" id="addRecipeModalLabel">
-              Создание рецепта
+              {isEditMode ? 'Редактирование рецепта' : 'Создание рецепта'}
             </h5>
             <button
               type="button"
@@ -338,7 +366,9 @@ export function AddRecipeModal({ onSuccess }: AddRecipeModalProps) {
           <div className="modal-body">
             <div className="add-recipe-layout">
               <div className="add-recipe-layout__card">
-                <h6 className="add-recipe-layout__title">Новый рецепт</h6>
+                <h6 className="add-recipe-layout__title">
+                  {isEditMode ? 'Редактируемый рецепт' : 'Новый рецепт'}
+                </h6>
                 <form
                   className="add-recipe-form"
                   noValidate
@@ -610,8 +640,9 @@ export function AddRecipeModal({ onSuccess }: AddRecipeModalProps) {
                     className="primary w-100 has-icon"
                     type="submit"
                     iconBefore={<AddSaveIcon />}
+                    disabled={isEditMode && !isDirty}
                   >
-                    Создать рецепт
+                    {isEditMode ? 'Сохранить изменения' : 'Создать рецепт'}
                   </Button>
                 </form>
               </div>

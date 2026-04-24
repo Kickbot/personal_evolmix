@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import Context from 'context';
 import ROLES from 'const/roles';
 import { DataTable } from 'components/data-table';
@@ -12,6 +12,7 @@ import { AddPlusIcon } from 'ui/icons/AddPlusIcon';
 import { ArchiveIcon } from 'ui/icons/ArchiveIcon';
 import Loader from 'ui/loader';
 import type {
+  IRecipeListItem,
   IRecipeDoctorConfirmStatus,
   IRecipeStatus,
 } from 'types/recipes.types';
@@ -40,6 +41,7 @@ const STATUS_OPTIONS: { value: IRecipeStatus | ''; label: string }[] = [
 ];
 
 export default function Recipes() {
+  const [editRecipe, setEditRecipe] = useState<IRecipeListItem | null>(null);
   const { currentUser } = useContext(Context) as {
     currentUser: { role: string };
   };
@@ -175,6 +177,7 @@ export default function Recipes() {
             recipe={r}
             onClose={() => handleRowClick(r.id)}
             onArchive={() => handleArchiveRecipe(r.id, r.is_archived)}
+            onEdit={() => setEditRecipe(r)}
           />
         )}
         sortField={sortField}
@@ -188,7 +191,13 @@ export default function Recipes() {
         onPageChange={handlePageChange}
       />
 
-      {canCreate && <AddRecipeModal onSuccess={reloadRecipes} />}
+      {canCreate && (
+        <AddRecipeModal
+          onSuccess={reloadRecipes}
+          editRecipe={editRecipe}
+          onClose={() => setEditRecipe(null)}
+        />
+      )}
     </>
   );
 }

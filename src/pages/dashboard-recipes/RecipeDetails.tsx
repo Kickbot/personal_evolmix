@@ -12,9 +12,10 @@ interface RecipeDetailsProps {
   recipe: IRecipeListItem;
   onClose: () => void;
   onArchive: () => void;
+  onEdit: () => void;
 }
 
-export function RecipeDetails({ recipe, onClose, onArchive }: RecipeDetailsProps) {
+export function RecipeDetails({ recipe, onClose, onArchive, onEdit }: RecipeDetailsProps) {
   const { currentUser } = useContext(Context) as { currentUser: IUser | null };
 
   return (
@@ -41,7 +42,12 @@ export function RecipeDetails({ recipe, onClose, onArchive }: RecipeDetailsProps
 
         <div className="col-12">
           <div className="dt-details-btn">
-            <Button className="primary has-icon" >
+            <Button
+              className="primary has-icon"
+              data-bs-toggle="modal"
+              data-bs-target="#addRecipeModal"
+              onClick={onEdit}
+            >
               Редактировать
             </Button>
             <Button

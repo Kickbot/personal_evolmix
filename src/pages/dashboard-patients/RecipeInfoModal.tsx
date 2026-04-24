@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { RecipeInfoCard } from 'components/recipeInfoCard';
 import type { IRecipeListItem } from 'types/recipes.types';
@@ -7,8 +8,22 @@ interface RecipeInfoModalProps {
 }
 
 export function RecipeInfoModal({ recipe }: RecipeInfoModalProps) {
+  const modalRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const modalElement = modalRef.current;
+    if (!modalElement) return;
+    const handleHide = () => {
+      const active = document.activeElement as HTMLElement | null;
+      if (active && modalElement.contains(active)) active.blur();
+    };
+    modalElement.addEventListener('hide.bs.modal', handleHide);
+    return () => modalElement.removeEventListener('hide.bs.modal', handleHide);
+  }, []);
+
   return createPortal(
     <div
+      ref={modalRef}
       className="modal fade"
       id="recipeInfoModal"
       tabIndex={-1}
