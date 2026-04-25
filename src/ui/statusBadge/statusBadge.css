@@ -29,4 +29,16 @@
     background-color: rgba(220, 53, 69, .2);
     color: #DC3545;
   }
+  &--completed {
+    background-color: rgba(58, 176, 107, .3);
+    color: #16944A;
+  }
+  &--confirmed_by_pharmacist {
+    background-color: rgba(58, 143, 230, .2);
+    color: #2E7BD6;
+  }
+  &--failed {
+    background-color: rgba(220, 53, 69, .2);
+    color: #DC3545;
+  }
 }

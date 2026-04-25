@@ -7,7 +7,10 @@ type StatusBadgeStatus =
   | 'created'
   | 'processing'
   | 'completed_success'
-  | 'completed_failed';
+  | 'completed_failed'
+  | 'completed'
+  | 'confirmed_by_pharmacist'
+  | 'failed';
 
 type StatusBadgeProps = {
   status: StatusBadgeStatus;
@@ -21,6 +24,9 @@ const LABELS: Record<StatusBadgeStatus, string> = {
   processing: 'В работе',
   completed_success: 'Готово',
   completed_failed: 'Ошибка',
+  completed: 'Готово',
+  confirmed_by_pharmacist: 'Подтверждено',
+  failed: 'Ошибка',
 };
 
 export function StatusBadge({ status, className }: StatusBadgeProps) {

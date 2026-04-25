@@ -59,7 +59,12 @@ export const solvent = {
 export const task = {
   getAllTask: bind(get, URLS.task.getAllTask),
   getTaskById: (taskId) => get(URLS.task.getTaskById.replace('{task_id}', taskId)),
-  getSearchTask: bind(get, URLS.task.getSearchTask),
+  postSearchTask: (body, query) => {
+    const qs = query && Object.keys(query).length
+      ? '?' + new URLSearchParams(query).toString()
+      : ''
+    return post(URLS.task.postSearchTask + qs, body)
+  },
   postCreateTask: bind(post, URLS.task.postCreateTask),
   patchTask: (taskId, data) => patch(URLS.task.patchTask.replace('{task_id}', taskId), data),
   deleteTask: (taskId) => remove(URLS.task.deleteTask.replace('{task_id}', taskId)),

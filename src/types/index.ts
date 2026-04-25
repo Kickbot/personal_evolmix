@@ -4,3 +4,4 @@ export * from './notifications.types';
 export * from './patients.types';
 export * from './recipes.types';
 export * from './substances.types';
+export * from './tasks.types';

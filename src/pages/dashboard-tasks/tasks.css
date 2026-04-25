@@ -1,0 +1,121 @@
+.tasks-header {
+  & .tasks-header-wrap {
+    display: flex;
+    flex: 1;
+    gap: 24px;
+  }
+  & .tasks-filter {
+    min-width: 140px;
+  }
+}
+
+/* ── TaskDetails ─────────────────────────── */
+
+.td-card__header {
+  display: flex;
+  gap: 16px;
+  background-color: #fff7d6;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.td-card__doses {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #3ab06b;
+  color: #fff;
+  border-radius: 8px;
+  padding: 8px 16px;
+  min-width: 64px;
+}
+
+.td-card__doses-num {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.td-card__doses-label {
+  font-size: 12px;
+}
+
+.td-card__info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  justify-content: center;
+}
+
+.td-card__info-row {
+  display: grid;
+  grid-template-columns: 140px 1fr auto;
+  gap: 16px;
+  align-items: center;
+  font-size: 14px;
+}
+
+.td-card__info-label {
+  color: var(--second-text-color, #6c757d);
+}
+
+.td-card__info-date {
+  color: var(--second-text-color, #6c757d);
+}
+
+.td-modules {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}
+
+.td-module__title {
+  font-size: 16px;
+  font-weight: 600;
+  padding-bottom: 8px;
+  margin-bottom: 16px;
+  border-bottom: 2px solid #ddd;
+}
+
+.td-module__title--a {
+  border-bottom-color: #ec6cb3;
+}
+
+.td-module__title--b {
+  border-bottom-color: #5aa9e6;
+}
+
+.td-module__section-title {
+  font-size: 13px;
+  color: var(--second-text-color, #6c757d);
+  margin-bottom: 8px;
+}
+
+.td-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.td-table th,
+.td-table td {
+  padding: 8px;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid #eee;
+}
+
+.td-table th {
+  color: var(--second-text-color, #6c757d);
+  font-weight: 500;
+  background-color: #f7f9fb;
+}
+
+.td-empty {
+  text-align: center;
+  color: var(--second-text-color, #6c757d);
+  padding: 16px;
+}

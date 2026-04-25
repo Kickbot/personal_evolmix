@@ -25,7 +25,7 @@
   "task": {
     "getAllTask": "task/",
     "getTaskById": "task/{task_id}",
-    "getSearchTask": "task/search",
+    "postSearchTask": "task/search",
     "postCreateTask": "task/",
     "patchTask": "task/{task_id}",
     "deleteTask": "task/{task_id}",
