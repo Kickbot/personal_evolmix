@@ -7,7 +7,7 @@ function RegisterSuccess() {
     <div className="container-fluid auth-bg">
       <div className="register-success-wrap">
         <div className="register-success-top">
-          <a href={routes.login} className="auth-logo d-block"></a>
+          <a href={routes.login} className="auth-logo d-block mb-0"></a>
         </div>
         <div className="register-success-middle">
           <h1>Спасибо за регистрацию в EvolMIX</h1>

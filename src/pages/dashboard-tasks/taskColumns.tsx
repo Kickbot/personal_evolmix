@@ -30,7 +30,7 @@ export const taskColumns: ColumnDef<ITaskListItem>[] = [
     key: 'created_at',
     header: 'Дата',
     sortable: true,
-    width: '220px',
+    width: '120px',
     className: 'justify-content-center',
     render: (t) => formatDate(t.created_at),
   },

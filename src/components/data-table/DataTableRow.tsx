@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import type { TransitionEvent } from 'react';
 import type { ColumnDef } from './types';
 
@@ -20,10 +20,12 @@ export function DataTableRow<T>({
   index,
 }: DataTableRowProps<T>) {
   const [shouldRender, setShouldRender] = useState(isExpanded);
+  const [prevExpanded, setPrevExpanded] = useState(isExpanded);
 
-  useEffect(() => {
+  if (isExpanded !== prevExpanded) {
+    setPrevExpanded(isExpanded);
     if (isExpanded) setShouldRender(true);
-  }, [isExpanded]);
+  }
 
   const handleTransitionEnd = (e: TransitionEvent<HTMLDivElement>) => {
     if (e.target !== e.currentTarget || e.propertyName !== 'max-height') return;

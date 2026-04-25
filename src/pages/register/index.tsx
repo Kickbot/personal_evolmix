@@ -11,7 +11,11 @@ import { Select } from 'ui/select';
 import Loader from 'ui/loader';
 import type { ApiFormError } from 'features/form/types/api-error';
 import { applyServerErrors } from 'features/form/lib/applyServerErrors';
-import { registerSchema, type RegisterFormValues } from 'features/auth/model/register.schema';
+import {
+  registerSchema,
+  type RegisterFormValues,
+} from 'features/auth/model/register.schema';
+import ROLES, { ROLE_NAMES } from 'const/roles';
 
 function Register() {
   const navigate = useNavigate();
@@ -57,11 +61,9 @@ function Register() {
         <div className="register-wrap">
           <div className="auth-logo"></div>
           <h2 className="text-center">Регистрация в EvolMIX</h2>
-          <div className="auth-text">
-            <span className="d-block w-100 fs-6 text-center">Регистрация нового пользователя в системе EvolMIX</span>
-          </div>
+          <span>Регистрация нового пользователя в системе EvolMIX</span>
           <form
-            className="row g-3 needs-validation mb-3"
+            className="row g-3 needs-validation mb-4"
             noValidate
             autoComplete="off"
             onSubmit={handleSubmit(onSubmit)}
@@ -78,10 +80,11 @@ function Register() {
               error={errors.role?.message}
               placeholder="Выберите должность"
               options={[
-                { value: 'admin', label: 'Администратор' },
-                { value: 'doctor', label: 'Доктор' },
-                { value: 'pharmacist', label: 'Фармацевт' },
-                { value: 'tech', label: 'Оператор' },
+                { value: ROLES.ADMIN, label: ROLE_NAMES[ROLES.ADMIN] }, 
+                { value: ROLES.DOCTOR, label: ROLE_NAMES[ROLES.DOCTOR] },
+                { value: ROLES.PHARMACIST, label: ROLE_NAMES[ROLES.PHARMACIST] },
+                { value: ROLES.OPERATOR, label: ROLE_NAMES[ROLES.OPERATOR] },
+                { value: ROLES.HEAD_DOCTOR, label: ROLE_NAMES[ROLES.HEAD_DOCTOR] },
               ]}
             />
             <Input
@@ -157,7 +160,9 @@ function Register() {
 
             {errors.root?.server?.message ? (
               <div className="col-12 field-error">
-                <div className="invalid-feedback d-block">{errors.root.server.message}</div>
+                <div className="invalid-feedback d-block">
+                  {errors.root.server.message}
+                </div>
               </div>
             ) : null}
 
@@ -167,8 +172,8 @@ function Register() {
               </Button>
             </div>
           </form>
-          <hr />
-          <div className="register-text">
+          <hr className="my-4" />
+          <div className="auth-text">
             <span>Уже есть учётная запись?</span>
             <Link to={routes.login}>Войти в систему</Link>
           </div>

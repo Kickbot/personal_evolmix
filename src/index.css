@@ -91,7 +91,6 @@ h6 {
   margin-top: 0;
   margin-bottom: 12px;
   font-weight: 500;
-  line-height: 1;
   color: var(--bs-heading-color);
 }
 
@@ -119,22 +118,20 @@ a {
   height: 69px;
   background: url('./assets/img/Logo.svg') center no-repeat;
   background-size: cover;
-  margin-bottom: 32px;
+  margin-bottom: 48px;
 }
 
 .auth-text {
   display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   gap: 8px;
-  margin-bottom: 32px;
-}
-
-.auth-text span {
-  color: var(--second-text-color);
-}
-
-.auth-text a {
-  font-weight: 500;
+  font-size: 16px;
+  margin-top: 16px;
+  & span {
+    color: var(--second-text-color);
+  }
 }
 
 .form-label {

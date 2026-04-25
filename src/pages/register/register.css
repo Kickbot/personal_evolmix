@@ -4,14 +4,22 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  max-width: 669px;
+  max-width: 740px;
   background-color: #fff;
-  padding: 32px;
+  padding: 48px;
   border-radius: 20px;
   box-shadow: 0 0 48px rgba(0, 0, 0, 0.15);
   font-size: 14px;
   & h2 {
     width: 100%;
+  }
+  & > span {
+    display: block;
+    text-align: center;
+    color: var(--second-text-color);
+    font-size: 18px;
+    font-weight: 400;
+    margin-bottom: 24px;
   }
   & .form-control,
   & .form-select {
@@ -60,17 +68,4 @@
   .field-confirm { order: 7; }
   .field-error { order: 8; }
   .field-submit { order: 9; }
-}
-
-.register-text {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  gap: 8px;
-  font-size: 16px;
-  margin-top: 16px;
-  & span {
-    color: var(--second-text-color);
-  }
 }

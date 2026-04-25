@@ -14,7 +14,10 @@ import routes from 'const/routes';
 import type { IAuthResponse } from 'types/auth.types';
 import type { ApiFormError } from 'features/form/types/api-error';
 import { applyServerErrors } from 'features/form/lib/applyServerErrors';
-import { loginSchema, type LoginFormValues } from 'features/auth/model/login.schema';
+import {
+  loginSchema,
+  type LoginFormValues,
+} from 'features/auth/model/login.schema';
 import './login.css';
 
 export default function Login() {
@@ -62,14 +65,13 @@ export default function Login() {
       <div className="container-fluid auth-bg">
         <div className="login-wrap">
           <div className="auth-logo"></div>
-          <h2 className="fw-semibold">Вход в систему EvolMIX</h2>
-          <div className="auth-text">
-            <span>Нет учетной записи?</span>
-            <Link to={routes.register} theme="" className="">
-              Зарегистрироваться
-            </Link>
-          </div>
-          <form onSubmit={handleSubmit(onSubmit)} autoComplete="off" noValidate>
+          <h2 className="fw-semibold mb-5">Вход в систему EvolMIX</h2>
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            autoComplete="off"
+            noValidate
+            className="mb-4"
+          >
             <Input
               id="login-email"
               {...register('email_address', {
@@ -96,7 +98,9 @@ export default function Login() {
             />
 
             {errors.root?.server?.message ? (
-              <div className="invalid-feedback d-block mb-2">{errors.root.server.message}</div>
+              <div className="invalid-feedback d-block mb-2">
+                {errors.root.server.message}
+              </div>
             ) : null}
 
             {/* <div className="mb-4 text-end fw-medium">
@@ -107,6 +111,13 @@ export default function Login() {
               Вход
             </Button>
           </form>
+          <hr className='my-4' />
+          <div className="auth-text mt-4">
+            <span>Нет учетной записи?</span>
+            <Link to={routes.register} theme="" className="">
+              Зарегистрироваться
+            </Link>
+          </div>
         </div>
       </div>
     </>
