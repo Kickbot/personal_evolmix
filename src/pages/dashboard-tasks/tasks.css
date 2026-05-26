@@ -11,12 +11,19 @@
 
 /* ── TaskDetails ─────────────────────────── */
 
+.td-card {
+  padding: 24px;
+  background-color: #eaeff2;
+  border-radius: 10px;
+}
+
 .td-card__header {
   display: flex;
-  gap: 16px;
-  background-color: #fff7d6;
+  gap: 24px;
+  background-color: #fef9e3;
   border-radius: 10px;
-  padding: 16px;
+  border: 1px solid #c1c7c9;
+  padding-right: 24px;
   margin-bottom: 24px;
 }
 
@@ -28,18 +35,19 @@
   background-color: #3ab06b;
   color: #fff;
   border-radius: 8px;
-  padding: 8px 16px;
+  padding: 16px 8px;
   min-width: 64px;
 }
 
 .td-card__doses-num {
-  font-size: 20px;
-  font-weight: 600;
-  line-height: 1;
+  font-size: 24px;
+  font-weight: 500;
+  margin-bottom: 4px;
 }
 
 .td-card__doses-label {
   font-size: 12px;
+  font-weight: 500;
 }
 
 .td-card__info {
@@ -56,66 +64,87 @@
   gap: 16px;
   align-items: center;
   font-size: 14px;
+  font-weight: 500;
 }
 
-.td-card__info-label {
-  color: var(--second-text-color, #6c757d);
-}
-
-.td-card__info-date {
-  color: var(--second-text-color, #6c757d);
+.td-card__info-value {
+  text-align: center;
 }
 
 .td-modules {
   display: grid;
-  /* grid-template-rows: 1fr 1fr; */
+  grid-template-columns: 1fr 1fr;
   gap: 32px;
 }
 
 .td-module__title {
-  font-size: 16px;
-  font-weight: 600;
+  font-size: 18px;
+  font-weight: 500;
   padding-bottom: 8px;
-  margin-bottom: 16px;
-  border-bottom: 2px solid #ddd;
+  border-bottom: 4px solid #ddd;
 }
 
 .td-module__title--a {
-  border-bottom-color: #ec6cb3;
+  border-bottom-color: #ff95fd;
 }
 
 .td-module__title--b {
-  border-bottom-color: #5aa9e6;
+  border-bottom-color: #95bfff;
 }
 
 .td-module__section-title {
-  font-size: 13px;
-  color: var(--second-text-color, #6c757d);
-  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 24px;
+  color: var(--main-text-color);
+  margin: 8px 0;
 }
 
 .td-table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0 4px;
   font-size: 13px;
+
+  & thead tr th:first-child {
+    border-radius: 4px 0 0 4px;
+  }
+  & thead tr th:last-child {
+    border-radius: 0 4px 4px 0;
+  }
+  & thead tr th {
+    background-color: #CAD4DB;
+  }
+
+  & tbody tr td:first-child {
+    border-radius: 4px 0 0 4px;
+  }
+  & tbody tr td:last-child {
+    border-radius: 0 4px 4px 0;
+  }
+  & tbody tr td {
+    background-color: #fff;
+  }
 }
+
 
 .td-table th,
 .td-table td {
-  padding: 8px;
+  padding: 16px;
+  font-size: 14px;
   text-align: left;
   vertical-align: top;
-  border-bottom: 1px solid #eee;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .td-table th {
-  color: var(--second-text-color, #6c757d);
   font-weight: 500;
-  background-color: #f7f9fb;
+  font-size: 12px;
+  vertical-align: middle;
 }
 
 .td-empty {
   text-align: center;
-  color: var(--second-text-color, #6c757d);
   padding: 16px;
 }

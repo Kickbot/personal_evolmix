@@ -13,7 +13,15 @@ interface TaskDetailsProps {
 
 function DoseTable({ recipes }: { recipes: IRecipeListItem[] }) {
   return (
-    <table className="td-table">
+    <table className="td-table" style={{ tableLayout: 'fixed' }}>
+      <colgroup>
+        <col style={{ width: '40px' }} />
+        <col />
+        <col />
+        <col />
+        <col />
+        <col style={{ width: '100px' }} />
+      </colgroup>
       <thead>
         <tr>
           <th>№</th>
