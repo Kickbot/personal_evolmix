@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import { DataTable } from 'components/data-table';
 import { SearchInput, SearchDropdown } from 'components/search-input';
 import { PageToolbar } from 'components/page-toolbar';
@@ -8,7 +9,7 @@ import { AddPlusIcon } from 'ui/icons/AddPlusIcon';
 import { ArchiveIcon } from 'ui/icons/ArchiveIcon';
 import Loader from 'ui/loader';
 import { shortName } from 'utils/name';
-import type { ITaskStatus } from 'types/tasks.types';
+import type { ITaskListItem, ITaskStatus } from 'types/tasks.types';
 import { taskColumns } from './taskColumns';
 import { TaskDetails } from './TaskDetails';
 import { useTasks } from './useTasks';
@@ -22,6 +23,17 @@ const STATUS_OPTIONS: { value: ITaskStatus | ''; label: string }[] = [
   { value: 'completed', label: 'Готово' },
   { value: 'failed', label: 'Ошибка' },
 ];
+
+const getTaskKey = (task: ITaskListItem) => task.id;
+
+const renderSearchResult = (task: ITaskListItem) => (
+  <span className="search-dropdown__name">
+    <strong>{task.id.slice(0, 12)}</strong>
+    <span className="search-dropdown__label ms-2">
+      {shortName(task.pharmacist)}
+    </span>
+  </span>
+);
 
 export default function Tasks() {
   const {
@@ -47,6 +59,20 @@ export default function Tasks() {
     handlePageChange,
   } = useTasks();
 
+  const handleStatusChange = useCallback(
+    (event: React.ChangeEvent<HTMLSelectElement>) => {
+      handleStatusFilterChange(event.target.value as ITaskStatus | '');
+    },
+    [handleStatusFilterChange],
+  );
+
+  const renderExpanded = useCallback(
+    (task: ITaskListItem) => (
+      <TaskDetails task={task} onClose={() => handleRowClick(task.id)} />
+    ),
+    [handleRowClick],
+  );
+
   if (isLoading) return <Loader position="fixed" />;
 
   return (
@@ -64,25 +90,16 @@ export default function Tasks() {
             >
               <SearchDropdown
                 items={visibleSearchResults}
-                getKey={(t) => t.id}
+                getKey={getTaskKey}
                 onSelect={handleSearchResultClick}
-                renderItem={(t) => (
-                  <span className="search-dropdown__name">
-                    <strong>{t.id.slice(0, 12)}</strong>
-                    <span className="search-dropdown__label ms-2">
-                      {shortName(t.pharmacist)}
-                    </span>
-                  </span>
-                )}
+                renderItem={renderSearchResult}
               />
             </SearchInput>
 
             <Select
               id="tasks-status-filter"
               value={statusFilter}
-              onChange={(e) =>
-                handleStatusFilterChange(e.target.value as ITaskStatus | '')
-              }
+              onChange={handleStatusChange}
               options={STATUS_OPTIONS}
               wrapperClassName="tasks-filter"
             />
@@ -116,12 +133,10 @@ export default function Tasks() {
       <DataTable
         columns={taskColumns}
         data={tasks}
-        keyExtractor={(t) => t.id}
+        keyExtractor={getTaskKey}
         expandedId={expandedTaskId}
         onRowClick={handleRowClick}
-        renderExpanded={(t) => (
-          <TaskDetails task={t} onClose={() => handleRowClick(t.id)} />
-        )}
+        renderExpanded={renderExpanded}
         sortField={sortField}
         sortDirection={sortDirection}
         onSort={handleSort}

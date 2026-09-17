@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import type { SortDirection } from 'components/data-table';
 
 export function useListControls() {
@@ -7,19 +7,19 @@ export function useListControls() {
   const [searchName, setSearchName] = useState('');
   const [isSearchLoading, setIsSearchLoading] = useState(false);
 
-  const handleSort = (field: string) => {
+  const handleSort = useCallback((field: string) => {
     if (sortField !== field) {
       setSortField(field);
       setSortDirection('asc');
     } else {
       setSortDirection((current) => (current === 'asc' ? 'desc' : 'asc'));
     }
-  };
+  }, [sortField]);
 
-  const resetSort = () => {
+  const resetSort = useCallback(() => {
     setSortField(undefined);
     setSortDirection('none');
-  };
+  }, []);
 
   return {
     sortField,

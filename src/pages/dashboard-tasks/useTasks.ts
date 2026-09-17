@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { task as taskApi } from 'api';
 import { useDebounce } from 'hooks/useDebounce';
 import { useListControls } from 'hooks/useListControls';
@@ -36,19 +36,18 @@ export function useTasks() {
   const [expandedTaskId, setExpandedTaskId] = useState<string | null>(null);
   const debouncedSearchName = useDebounce(searchName.trim(), 300);
 
-  const handlePageChange = (page: number) => {
+  const handlePageChange = useCallback((page: number) => {
     onPageChange(page);
     setExpandedTaskId(null);
-  };
+  }, [onPageChange]);
 
-  const handleSort = (field: string) => {
+  const handleSort = useCallback((field: string) => {
     onSort(field);
     resetPage();
     setExpandedTaskId(null);
-  };
+  }, [onSort, resetPage]);
 
-  const handleArchiveToggle = () => {
-    setIsLoading(true);
+  const handleArchiveToggle = useCallback(() => {
     if (searchName.trim()) setIsSearchLoading(true);
     setExpandedTaskId(null);
     resetPage();
@@ -56,9 +55,9 @@ export function useTasks() {
     setArchivedStatus((current) =>
       current === 'nonarchived' ? 'archived' : 'nonarchived',
     );
-  };
+  }, [resetPage, resetSort, searchName, setIsSearchLoading]);
 
-  const handleSearchNameChange = (value: string) => {
+  const handleSearchNameChange = useCallback((value: string) => {
     setSearchName(value);
     resetPage();
     if (value.trim()) {
@@ -67,22 +66,23 @@ export function useTasks() {
       setIsSearchLoading(false);
       setSearchResults([]);
     }
-  };
+  }, [resetPage, setIsSearchLoading, setSearchName]);
 
-  const handleStatusFilterChange = (value: ITaskStatus | '') => {
+  const handleStatusFilterChange = useCallback((value: ITaskStatus | '') => {
     setStatusFilter(value);
     resetPage();
-  };
+  }, [resetPage]);
 
-  const handleRowClick = (taskId: string) => {
+  const handleRowClick = useCallback((taskId: string) => {
     setExpandedTaskId((current) => (current === taskId ? null : taskId));
-  };
+  }, []);
 
-  const handleSearchResultClick = (t: ITaskListItem) => {
+  const handleSearchResultClick = useCallback((t: ITaskListItem) => {
     setExpandedTaskId(t.id);
-  };
+  }, []);
 
   useEffect(() => {
+    let isCurrentRequest = true;
     const body: ITaskSearchBody = {
       is_archived: archivedStatus === 'archived',
     };
@@ -98,20 +98,27 @@ export function useTasks() {
 
     (taskApi.postSearchTask(body, query) as Promise<ITasksResponse>)
       .then((data) => {
+        if (!isCurrentRequest) return;
         setError(null);
         setTotal(data.total);
         setTasks(data.tasks);
         if (debouncedSearchName) setSearchResults(data.tasks);
       })
       .catch(() => {
+        if (!isCurrentRequest) return;
         setTasks([]);
         if (debouncedSearchName) setSearchResults([]);
         setError('Не удалось загрузить задачи');
       })
       .finally(() => {
+        if (!isCurrentRequest) return;
         setIsLoading(false);
         setIsSearchLoading(false);
       });
+
+    return () => {
+      isCurrentRequest = false;
+    };
   }, [archivedStatus, statusFilter, debouncedSearchName, offset, sortField, sortDirection]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const visibleSearchResults = debouncedSearchName ? searchResults : [];

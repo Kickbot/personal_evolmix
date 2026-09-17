@@ -53,7 +53,8 @@ export function DataTable<T>({
                 columns={columns}
                 isExpanded={expandedId === id}
                 index={index}
-                onToggle={() => onRowClick?.(id)}
+                itemId={id}
+                onRowClick={onRowClick}
                 renderExpanded={renderExpanded}
               />
             );

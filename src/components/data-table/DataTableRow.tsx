@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import type { TransitionEvent } from 'react';
 import type { ColumnDef } from './types';
 
@@ -6,16 +6,18 @@ interface DataTableRowProps<T> {
   item: T;
   columns: ColumnDef<T>[];
   isExpanded: boolean;
-  onToggle: () => void;
+  itemId: string;
+  onRowClick?: (id: string) => void;
   renderExpanded?: (item: T) => React.ReactNode;
   index: number;
 }
 
-export function DataTableRow<T>({
+function DataTableRowComponent<T>({
   item,
   columns,
   isExpanded,
-  onToggle,
+  itemId,
+  onRowClick,
   renderExpanded,
   index,
 }: DataTableRowProps<T>) {
@@ -37,7 +39,7 @@ export function DataTableRow<T>({
       <button
         type="button"
         className="dt-row"
-        onClick={onToggle}
+        onClick={() => onRowClick?.(itemId)}
         aria-expanded={isExpanded}
       >
         {columns.map((col) => (
@@ -54,3 +56,5 @@ export function DataTableRow<T>({
     </div>
   );
 }
+
+export const DataTableRow = memo(DataTableRowComponent) as typeof DataTableRowComponent;
